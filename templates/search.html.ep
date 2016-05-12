@@ -1,0 +1,39 @@
+<div id="search" class="container">
+  <TMPL_IF NAME=message>
+    <div class="alert alert-<TMPL_VAR NAME=message_type>" role="alert">
+      <p><TMPL_VAR NAME=message></p>
+    </div>
+  </TMPL_IF>
+
+%= tag div => (id => 'panel_image') => begin
+<img src="/images/G2P-ALL.png" alt="panel_image" height="150" width="150">
+% end
+
+  <div id="search-body">
+
+    %= form_for search => (id => 'search_field') => begin
+      %= tag div => (id => 'search_div_123a') => begin
+        <label>Search panel </label>
+        %= select_field panel => $panel_imgs, id => 'select_panel'
+        <label>for:</label>
+      % end
+      %= tag div => (id => 'search_div_123b') => begin
+        %= submit_button 'Search', class => 'btn btn-primary btn-sm search_div_123d', id => 'button'
+        %= tag div => (id => 'search_div_123c') => begin
+          %= text_field 'search_term', id => 'query', class => 'search_div_123e'
+        % end
+      % end
+    % end
+
+    <div class="hint">
+      <p>
+        For example:
+        <var onclick="document.forms.namedItem('search_field').search_term.value=this.innerHTML;">CRYBA1</var>,
+        <var onclick="document.forms.namedItem('search_field').search_term.value=this.innerHTML;">ZEB2</var>,
+        <var onclick="document.forms.namedItem('search_field').search_term.value=this.innerHTML;">TBX1</var>,
+        <var onclick="document.forms.namedItem('search_field').search_term.value=this.innerHTML;">CHANARIN-DORFMAN SYNDROME</var> or
+        <var onclick="document.forms.namedItem('search_field').search_term.value=this.innerHTML;">MITOCHONDRIAL COMPLEX III DEFICIENCY, NUCLEAR TYPE 1</var>
+      </p>
+    </div>
+  </div> <!-- End search body-->
+</div> <!--End search container-->

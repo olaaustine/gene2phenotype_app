@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+  <head>
+    <!--meta http-equiv="Content-Type" content="text/html; charset=utf-8"/-->
+    <title>gene2phenotype</title>
+%= stylesheet '/css/G2P.css'
+%= stylesheet '/css/bootstrap.min.css'
+%= stylesheet '/css/jquery-ui.css'
+%= stylesheet '/css/nv.d3.css'
+%= stylesheet '/css/docs.min.css'
+%= stylesheet '/css/jquery.dataTables.min.css'
+%= stylesheet '/scripts/jstree/themes/default/style.min.css'
+%= javascript '/scripts/jquery-1.11.1.js'
+%= javascript '/scripts/jquery-ui.min.js'
+%= javascript '/scripts/d3.min.js'
+%= javascript '/scripts/nv.d3.js'
+%= javascript '/scripts/behavior.js'
+%= javascript '/scripts/piecharts.js'
+%= javascript '/scripts/jstree.min.js'
+%= javascript '/scripts/ontology_tree.js'
+%= javascript '/scripts/jquery.dataTables.min.js'
+  </head>
+ <body><%= content %></body>
+</html>

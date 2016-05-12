@@ -1,0 +1,76 @@
+%= include 'header'
+%= include 'search'
+
+
+<div class="container">
+
+  <h3>Search results for <%= $search_term %>  </h3>
+  <% if ($search_results->{gene_names}) { %>
+    <li>
+      <div>
+        <h4>Genes:</h4>
+        <ul>
+          <% foreach my $gene (@{$search_results->{gene_names}}) { %>
+            <li>
+               %= form_for gene => (id => $gene->{dbID}) => begin
+                 %= hidden_field search_type => $gene->{search_type}
+                 %= hidden_field dbID => $gene->{dbID}
+                <%= link_to '#' => ( onclick => "document.getElementById($gene->{dbID}).submit();") => begin %><%== $gene->{gene_symbol} %><% end %>
+               % end
+            </li>
+            <% if ($gene->{gfd_results}) { %>
+              <ul>
+                <% foreach my $gfd (@{$gene->{gfd_results}}){ %>              
+                  <li>
+                    %= form_for gfd => (id => $gfd->{dbID}) => begin
+                      %= hidden_field search_type => $gfd->{search_type}
+                      %= hidden_field dbID => $gfd->{dbID}
+                      <%= link_to '#' => ( onclick => "document.getElementById($gfd->{dbID}).submit();") => begin %>
+                        <strong>Panel:</strong> <em><%== $gfd->{GFD_panel} %></em> <strong>Gene:</strong> <em><%== $gfd->{gene_symbol} %></em> <strong>Disease:</strong> <em><%== $gfd->{disease_name} %></em>
+                      <% end %>
+                    % end
+                  </li>
+                <% } %>
+              </ul>
+            <% } %>
+          <% } %>
+        </ul>
+      </div>
+    </li>
+  <% } %>
+  <% if ($search_results->{disease_names}) { %>
+    <li>
+      <div>
+        <h4>Diseases:</h4>
+        <ul>
+          <% foreach my $disease (@{$search_results->{disease_names}}) { %>
+            <li>
+               %= form_for disease => (id => $disease->{dbID}) => begin
+                 %= hidden_field search_type => $disease->{search_type}
+                 %= hidden_field dbID => $disease->{dbID}
+                <%= link_to '#' => ( onclick => "document.getElementById($disease->{dbID}).submit();") => begin %><%== $disease->{display_disease_name} %><% end %>
+               % end
+            </li>
+            <% if ($disease->{gfd_results}) { %>
+              <ul>
+                <% foreach my $gfd (@{$disease->{gfd_results}}){ %>              
+                  <li>
+                    %= form_for gfd => (id => $gfd->{dbID}) => begin
+                      %= hidden_field search_type => $gfd->{search_type}
+                      %= hidden_field dbID => $gfd->{dbID}
+                      <%= link_to '#' => ( onclick => "document.getElementById($gfd->{dbID}).submit();") => begin %>
+                        <strong>Panel:</strong> <em><%== $gfd->{GFD_panel} %></em> <strong>Gene:</strong> <em><%== $gfd->{gene_symbol} %></em> <strong>Disease:</strong> <em><%== $gfd->{disease_name} %></em>
+                      <% end %>
+                    % end
+                  </li>
+                <% } %>
+              </ul>
+            <% } %>
+          <% } %>
+        </ul>
+      </div>
+    </li>
+  <% } %>
+</div>
+
+%= include 'footer'

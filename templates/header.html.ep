@@ -1,0 +1,46 @@
+<div>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <ul class="nav navbar-nav">
+        <li><a class="navbar-brand" href="/gene2phenotype">Gene2Phenotype</a></li>
+          <li class="navbar-brand">
+            <form id="show_download_page" action="./handler.cgi" method="get">
+              <fieldset>
+                <input type="hidden" name="show_downloads" value="all"/>
+                <a href='#' onclick="document.getElementById('show_download_page').submit();">Downloads</a>
+              </fieldset>
+            </form>
+          </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <TMPL_IF NAME=logged_in>
+          <li class="navbar-brand">
+            <form id="logout_form" action="./handler.cgi" method="get">
+              <fieldset>
+                <input type="hidden" name="logout" value="logout"/>
+                <a href='#' onclick="document.getElementById('logout_form').submit();">Sign out</a>
+              </fieldset>
+            </form>
+          </li>
+          <li class="navbar-brand">
+            <form id="account_form" action="./handler.cgi" method="get">
+              <fieldset>
+                <input type="hidden" name="account" value="account"/>
+                <a href='#' onclick="document.getElementById('account_form').submit();">Account</a>
+              </fieldset>
+            </form>
+          </li>
+        <TMPL_ELSE>
+          <li class="navbar-brand">
+            <form id="login_form" action="./handler.cgi" method="get">
+              <fieldset>
+                <input type="hidden" name="login" value="login"/>
+                <a href='#' onclick="document.getElementById('login_form').submit();">Sign in</a>
+              </fieldset>
+            </form>
+          </li>
+        </TMPL_IF>
+      </ul>
+    </div><!-- /.container-fluid -->
+  </nav>
+</div>
