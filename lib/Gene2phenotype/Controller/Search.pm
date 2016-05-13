@@ -1,7 +1,6 @@
 package Gene2phenotype::Controller::Search;
 use Mojo::Base 'Mojolicious::Controller';
 
-
 sub results {
   my $self = shift;
 
@@ -17,6 +16,7 @@ sub results {
   $self->stash(search_term => $search_term);
 
   $self->render(template => 'searchresults');
+
 }
 
 

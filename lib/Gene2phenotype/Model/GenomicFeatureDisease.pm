@@ -1,12 +1,16 @@
-package
+package Gene2phenotype::Model::GenomicFeatureDisease; 
+use Mojo::Base 'MojoX::Model';
+
+
+sub fetch_by_dbID {
+  my $self = shift;
+  my $dbID = shift;
+
+
+
+}
 
 
 
 
-
-# fetch_
-
-
-
-
-# to_array / to_hash
+1;
