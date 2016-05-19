@@ -1,0 +1,9 @@
+%= include 'header'
+%= include 'search'
+<div class="container">
+  %= include 'gfd_attributes'
+  %= include 'publication'
+  %= include 'phenotype'
+  %= include 'organ'
+</div>
+%= include 'footer'
