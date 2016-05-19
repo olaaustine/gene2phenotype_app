@@ -83,8 +83,12 @@ sub g2p_defaults {
   $self->defaults(panel_imgs => \@panel_imgs);
   $self->defaults(registry => $registry);
   $self->defaults(panel => 'ALL');
-}
 
+  my $logged_in = $self->session('logged_in');
+  $logged_in = 1;
+  $self->defaults(logged_in => $logged_in);
+
+}
 
 
 
