@@ -3,9 +3,7 @@ use Mojo::Base 'Mojolicious::Controller';
 
 sub show {
   my $self = shift;
-
-
-  my $model = $self->model('genomicfeaturedisease');  
+  my $model = $self->model('genomic_feature_disease');  
 
   my $dbID = $self->param('dbID');
 
@@ -13,9 +11,8 @@ sub show {
 
   $self->stash(gfd => $gfd);
 
-  $self->render(template => 'g2p');
+  $self->render(template => 'gfd');
 }
-
 
 # show
 # update
