@@ -64,7 +64,6 @@
     </div> <!--End show edit content-->
     </div>
   <% } %>
-
   <% foreach my $GFD_action (@{$gfd->{GFD_actions}}) { %>
     <div class="show_db_content">
       <div class="display_attributes">
