@@ -2,7 +2,7 @@ $(document).ready(function(){
  
   $("#select_panel").change(function(){
     var value =  $(this).val(); 
-    var img_src = '/images/G2P-' + value + '.png';
+    var img_src = '../images/G2P-' + value + '.png';
     $('img[alt="panel_image"]').attr('src', img_src);
   }); 
 
@@ -12,7 +12,7 @@ $(document).ready(function(){
     $(this).autocomplete({
       source: function(request, response) {
         $.ajax({
-          url: "/cgi-bin/autocomplete.cgi",
+          url: "autocomplete.cgi",
           dataType: "json",
           data: {
             term : request.term,
@@ -23,7 +23,7 @@ $(document).ready(function(){
             response(items);
           },
           error: function(data, type){
-            console.log(data);
+            console.log( type);
           }
         });
       },
@@ -98,7 +98,7 @@ $(document).ready(function(){
     $button = $(this);
     $button_parent = $button.parent();
     $this_content = $button.closest(".show_add_comment");
-    $show_content = $this_content.next();
+    $show_content = $this_content.parent().parent().next();
     $show_content.show(function(){
       $button_parent.hide();
     });
@@ -108,8 +108,9 @@ $(document).ready(function(){
     $button = $(this);
     $this_content = $button.closest(".add_comment");
     $prev_content = $this_content.prev();
+    $prev_div_child = $prev_content.find('.show_add_comment');
     $this_content.hide(function(){
-      $prev_content.show();
+      $prev_div_child.show();
     });
   });
 
@@ -180,6 +181,23 @@ $(document).ready(function(){
     $(".add_publication_feedback").empty();
     $(".add_publication_feedback").removeClass("alert alert-danger");
     return 1;
+  });
+
+  $(".confirm").confirm({
+    text: "Delete entry?",
+    title: "Confirmation required",
+    confirm: function(button) {
+      var form = button.closest("form");
+      form.submit();  
+    },
+    cancel: function() {
+    },
+    confirmButton: "Confirm",
+    cancelButton: "Discard",
+    post: false,
+    confirmButtonClass: "btn btn-primary btn-sm",
+    cancelButtonClass: "btn btn-primary btn-sm",
+    dialogClass: "modal-dialog modal-lg" // Bootstrap classes for large modal 
   });
 
 });
