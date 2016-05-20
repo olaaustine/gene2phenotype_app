@@ -12,7 +12,7 @@ $(document).ready(function(){
     $(this).autocomplete({
       source: function(request, response) {
         $.ajax({
-          url: "autocomplete.cgi",
+          url: "/cgi-bin/autocomplete.cgi",
           dataType: "json",
           data: {
             term : request.term,
