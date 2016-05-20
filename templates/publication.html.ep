@@ -1,0 +1,114 @@
+<div>
+  <h3>
+  <a class="anchor" name="publications">Publications</a>
+  
+  <a title="Back to Top" href='#top'>
+
+  <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+
+  </a>
+
+  </h3>
+
+  <% if ($logged_in) { %>
+    <div id="new_publication">
+      <div class="show_add_publication button_right">
+        <input type="button" name="show_add_publication" value="Add New Publication" class="btn btn-primary btn-sm show_add_publication_button"/>
+      </div>
+      <div class="add_publication">
+        <h4>Add new publication</h4>
+        <div class="add_publication_feedback" role="alert">
+        </div>
+        %= form_for add_publication => (method => 'POST') => begin
+          <div class="form-group">
+            <label>PMID</label>
+            <div id="find_article">
+              <input type="button" name="find_article" value="Find article" class="btn btn-primary btn-sm find"/>
+              <div id="pmid">
+                <input type="text" class="form-control pmid" name="pmid" placeholder="PMID e.g. 24509478" value="">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" class="form-control title" name="title" placeholder="Title" value="">
+          </div>
+          <div class="form-group">
+            <label>Source</label>
+            <input type="text" class="form-control source" name="source" placeholder="Source" value="">
+          </div>
+          <div class="align_buttons_right">
+            %= hidden_field genomic_feature_disease_id => $gfd->{GFD_id}
+            <input id="button" type="submit" class="btn btn-primary btn-sm" name="add_publication" value="Add"/>
+            <input type="button" value="Discard" class="btn btn-primary btn-sm discard_add_publication"/>
+          </div>
+        %end
+      </div>
+    </div>
+    <div class="clear"></div>
+  <% } %>    
+
+  <% foreach my $publication (@{$gfd->{publications}}) { %>
+    <div class="publication">
+      <div class="align_left" style="width:75%">
+        <% if ($publication->{pmid}) { %>
+          <p>
+          <% my $url = 'http://europepmc.org/search?query=' . $publication->{pmid}; %>
+          <%= link_to $url => begin %> <%= $publication->{title} %>  <% end %>
+          </p>
+        <% } else {%>
+          <p><%= $publication->{title} %></p>
+        <% } %>
+      </div>
+
+      <% if ($logged_in) { %>
+        <div class="align_right">
+          <div class="align_inline">
+            %= form_for delete_GFD_publication => begin
+              %= hidden_field GFD_publication_id => $publication->{GFD_publication_id}
+              %= hidden_field genomic_feature_disease_id => $gfd->{GFD_id}
+              <input type="hidden" name="delete_GFD_publication" value="Delete Publication"/>
+              <input id="button" type="submit" name="delete_GFD_publication" value="Delete Publication" class="btn btn-primary btn-sm confirm"/>
+            %end
+          </div>
+          <div class="align_inline">
+            <div class="show_add_comment">
+              <input type="button" name="show_add_comment" value="Add New Comment" class="btn btn-primary btn-sm show"/>
+            </div>
+          </div>
+        </div>
+        <div class="add_comment">
+          %= form_for add_GFD_publication_comment => begin
+            <div class="comment_text_area"><textarea class="form-control" name="GFD_publication_comment" rows="3"></textarea></div>
+            %= hidden_field GFD_publication_id => $publication->{GFD_publication_id}
+            %= hidden_field genomic_feature_disease_id => $gfd->{GFD_id}
+            <div class="align_buttons_right">
+              <input id="button" type="submit" name="add_GFD_publication_comment" value="Add" class="btn btn-primary btn-sm"/>
+              <input type="button" value="Discard" class="btn btn-primary btn-sm discard_add_comment"/>
+            </div>
+          %end
+        </div>
+      <% } %>
+    </div>
+    <div class="clear"></div>
+    <div>
+      <% foreach my $comment (@{$publication->{comments}}) { %>
+        <label>Comments:</label>
+        <div class="comment">
+          <div class="align_left"><p><%= $comment->{comment_text} %> (<%= $comment->{user} %> <%= $comment->{date} %>)</p></div>
+          <% if ($logged_in) { %>
+            <div class="align_right">
+              %= form_for delete_GFD_publication_comment => begin
+                %= hidden_field GFD_publication_comment_id => $comment->{GFD_publication_comment_id}
+                %= hidden_field genomic_feature_disease_id => $gfd->{GFD_id}
+                <input type="hidden" name="delete_GFD_publication_comment" value="Delete Comment"/>
+                <input id="button" type="submit" name="delete_GFD_publication_comment" value="Delete Comment" class="btn btn-primary btn-sm confirm"/>
+              %end
+            </div>
+          <% } %>
+        </div>
+        <div class="clear"></div>
+      <% } %>
+    </div>
+  <% } %>
+</div>
