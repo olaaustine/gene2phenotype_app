@@ -3,9 +3,8 @@
 }
 
 .publication {
-  border-top-style: solid;
-  border-top-color: #D4D8D1;
-  margin-bottom: 4em;
+  margin-top: 1em;
+  margin-bottom: 3em;
 }
 
 #DDD_category {
@@ -22,13 +21,13 @@
 
 .display_attributes {
   float: left;
-  width: 60%;
+  width: auto;
 }
 
 .align_buttons_right, .show_toggle_view_button {
   float: right;
   display: block;
- /* margin-right: 23%*/
+  margin-left: 0.5em;
 }
 
 .header_gene_disease {
@@ -55,8 +54,10 @@
 }
 
 dl {
- width:100%;
- overflow:hidden;
+  width:100%;
+  overflow:hidden;
+  padding: 0;
+  margin: 0;
 }
 
 dt {
@@ -82,12 +83,14 @@ dd {
 .show_edit_content {
   background: #D4D8D1;
   border-top-style: solid;
+  border-color: #737373;
   display: none;
   margin-bottom: 8em;
 }
 
 .add_comment {
   display: none;
+  padding-top: 3em;
 }
 
 .show_add_comment {
@@ -157,7 +160,7 @@ dd {
 /*  border-bottom-color: #D4D8D1;*/
 }
 
-#disclaimer_form {
+#disclaimer_form, #documentation_form {
   display: inline-block;
 }
 
@@ -210,6 +213,15 @@ dd {
   padding-top: 3em;
 }
 
+.comment {
+  margin-left: 0.5em;
+  margin-top: 0.5em;
+}
+
+.add_GDM {
+  margin-bottom: 1.5em;
+}
+
 #panel_image {
   float: left;
   margin-right: 25px;
@@ -236,5 +248,4 @@ dd {
 .search_div_123e {
   width: 100%;
 }
-
 
