@@ -1,0 +1,30 @@
+%= include 'header'
+<div class="container">
+  <h3>Downloads</h3>
+  <ul>
+    <li><a href='../files/README'>README</a></li>
+    <li>
+      %= link_to 'G2P.csv.gz' => '/downloads/G2P.csv.gz'
+    </li>
+
+    <li>
+      <form id="download_form_DD" action="./handler.cgi" method="get">
+        <fieldset>
+          <input type="hidden" name="download" value="DD"/>
+          <a href='#' onclick="document.getElementById('download_form_DD').submit();">DD gene-disease pairs and attributes (DDG2P.csv.gz)<img src="../images/export.png" alt="export"></a>
+        </fieldset>
+      </form>
+    </li>
+
+    <li>
+      <form id="download_form_Skin" action="./handler.cgi" method="get">
+        <fieldset>
+          <input type="hidden" name="download" value="Skin"/>
+          <a href='#' onclick="document.getElementById('download_form_Skin').submit();">Skin gene-disease pairs and attributes (SkinG2P.csv.gz)<img src="../images/export.png" alt="export"></a>
+        </fieldset>
+      </form>
+    </li>
+
+  </ul>
+</div>
+%= include 'footer'
