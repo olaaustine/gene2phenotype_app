@@ -22,7 +22,7 @@
         <input type="password" class="form-control" name="password" placeholder="Password">
         </fieldset>
         </div>
-        <input id="button" type="submit" class="btn btn-primary" name="login_button" value="Sign in"/>
+        <input id="button" type="submit" class="btn btn-primary"/>
       %end
       %= link_to 'Forgot password?' => 'recover'
     </div> <!--End login-->
