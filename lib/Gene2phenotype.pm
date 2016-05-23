@@ -3,8 +3,11 @@ use Mojo::Base 'Mojolicious';
 use Bio::EnsEMBL::Registry;
 use Mojo::Home;
 use Apache::Htpasswd;
+use File::Path qw(make_path remove_tree);
 
 # This method will run once at server start
+require "/Users/anjathormann/Documents/develop/gene2phenotype_app/cgi-bin/downloads.pl";
+
 sub startup {
   my $self = shift;
 
@@ -15,8 +18,10 @@ sub startup {
 
   $self->plugin('CGI');
   $self->plugin('Model');
+  $self->plugin('RenderFile');
 
   my $password_file = '/Users/anjathormann/Sites/gene2phenotype_users';
+  my $downloads_dir = '/Users/anjathormann/Documents/develop/gene2phenotype_app/downloads/';
 
   $self->plugin('authentication' => {
     'load_user' => sub {
@@ -36,39 +41,55 @@ sub startup {
   # Router
   my $r = $self->routes;
 
-  my $authorized = $r->under('/admin')->to('Login#is_logged_in');
-  $authorized->get('/')->name('restricted_area')->to(text => 'Session');
-
-
-  $r->get('/logout')->name('do_logout')->to(cb => sub {
-    my $self = shift;
-    $self->session(expires => 1);
-    $self->redirect_to('/search');
- });
-
-  $r->get('/' => sub {
+# before_dispatch
+  $self->hook(after_dispatch => sub {
     my $c = shift;
-    $c->render(template => 'home');
+    $self->defaults(logged_in => $c->session->{logged_in});
   });
 
-  $r->get('/login')->to('login#on_user_login');
+  $r->get('/')->to(template => 'home');
+
+
+  $r->get('/account')->to(template => 'login', account_info => 1);
+  $r->get('/login')->to(template => 'login', show_login => 1);
+  $r->get('/recover')->to(template => 'login', recover_pwd => 1);
+  $r->get('/reset')->to(template => 'login', change_pwd => 1);
+  $r->get('/logout')->to('login#on_user_logout');
+  
+  $r->post('/login')->to('login#on_user_login');
+  $r->post('/recover')->to(template => 'login', recover_pwd => 1);
+  $r->post('/reset')->to('login#reset_pwd');
+
+  $r->get('/downloads')->to(template => 'downloads');
 
   $r->get('/gfd')->to('genomic_feature_disease#show');
-
   $r->get('/search')->to('search#results');
-
   $r->get('/cgi-bin/#script_name' => sub {
     my $c = shift;
     my $script_name = $c->stash('script_name');
     my $home =  $c->app->home;
     $c->cgi->run(script => "$home/cgi-bin/$script_name");
   });
-  
+
+  $r->get('/downloads/*' => sub {
+    my $c = shift;
+    my $panel = 'ALL';
+    my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime(time);
+    my $stamp = join('_', ($mday, $mon, $hour, $min, $sec));
+    my $tmp_dir = "$downloads_dir/$stamp";
+    make_path($tmp_dir);
+    my $file = download_data($tmp_dir, $panel);
+    $c->render_file('filepath' => "$tmp_dir/$file");
+    unlink "$tmp_dir/$file";
+    remove_tree($tmp_dir);
+  });
+
 }
 
 
 sub g2p_defaults {
   my $self = shift;
+
   my $registry = 'Bio::EnsEMBL::Registry';
 
   $registry->load_all('/Users/anjathormann/Documents/G2P/scripts/ensembl.registry');
@@ -83,10 +104,11 @@ sub g2p_defaults {
   $self->defaults(panel_imgs => \@panel_imgs);
   $self->defaults(registry => $registry);
   $self->defaults(panel => 'ALL');
-
-  my $logged_in = $self->session('logged_in');
-  $logged_in = 1;
-  $self->defaults(logged_in => $logged_in);
+  $self->defaults(show_login => 0);
+  $self->defaults(recover_pwd => 0);
+  $self->defaults(change_pwd => 0);
+  $self->defaults(account_info => 0);
+  $self->defaults(logged_in => 0);
 
 }
 

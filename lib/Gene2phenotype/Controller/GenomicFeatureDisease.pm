@@ -9,8 +9,9 @@ sub show {
 
   my $gfd = $model->fetch_by_dbID($dbID); 
 
+  my $logged_in = $self->session('logged_in');
+  $self->stash(logged_in => $logged_in);
   $self->stash(gfd => $gfd);
-
   $self->render(template => 'gfd');
 }
 
