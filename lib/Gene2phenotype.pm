@@ -13,7 +13,7 @@ sub startup {
 
 # $self->secrets
 # $self->app->sessions->cookie_name('moblo');
-# $self->app->sessions->default_expiration('600');
+  $self->app->sessions->default_expiration('36000');
 
 
   $self->plugin('CGI');
@@ -63,6 +63,13 @@ sub startup {
   $r->get('/downloads')->to(template => 'downloads');
 
   $r->get('/gfd')->to('genomic_feature_disease#show');
+
+# :action=add, delete, update, add_comment, delete_comment
+  $r->get('/gfd/category/update')->to(controller => 'genomic_feature_disease#update');
+  $r->get('/gfd/attributes/:action')->to(controller => 'genomic_feature_disease_attributes');
+  $r->get('/gfd/phenotype/:action')->to(controller => 'genomic_feature_disease_phenotype');
+  $r->get('/gfd/publication/:action')->to(controller => 'genomic_feature_disease_publication');
+
   $r->get('/search')->to('search#results');
   $r->get('/cgi-bin/#script_name' => sub {
     my $c = shift;
