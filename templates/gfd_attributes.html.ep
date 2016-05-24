@@ -19,13 +19,13 @@
     </div>
     <div class="show_edit_content">
       <h4>Edit DDD category:</h4>
-      %= form_for update_gfd_category => begin
+      %= form_for '/gfd/category/update' => begin
         <div class="form-group">
           <label>DDD category: </label>
-          %= select_field DDD_category => $gfd->{GFD_category_list} 
+          %= select_field category_attrib_id => $gfd->{GFD_category_list} 
         </div>
         <div class="align_buttons_right">
-          %= hidden_field genomic_feature_disease_id => $gfd->{GFD_id}
+          %= hidden_field GFD_id => $gfd->{GFD_id}
           %= submit_button 'Save', class => 'btn btn-primary btn-sm', id => 'button'
           <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
         </div>
@@ -43,21 +43,21 @@
     </div>
     <div class="show_edit_content">
       <h4>Add allelic requirements and mutation consequence:</h4>
-      %= form_for add_gfda => begin
+      %= form_for '/gfd/attributes/add' => begin
         <div class="form-group">
           <% foreach my $AR (@{$gfd->{add_AR_loop}}) { %>
-            %= check_box allelic_requirement => $AR->{AR_attrib_id}
+            %= check_box allelic_requirement_attrib_id => $AR->{AR_attrib_id}
             <%= $AR->{AR_attrib_value}%>
             %= tag 'br'
           <% } %>
         </div>
         <div class="form-group">
           <label>Mutation consequence summary:</label>
-          %= select_field mutation_consequence => $gfd->{add_MC_loop} 
+          %= select_field mutation_consequence_attrib_id => $gfd->{add_MC_loop} 
         </div>
         <div class="align_buttons_right">
-          %= hidden_field genomic_feature_disease_id => $gfd->{GFD_id}
-          <input id="button" type="submit" name="add_GFD_action" value="Add" class="btn btn-primary btn-sm"/>
+          %= hidden_field GFD_id => $gfd->{GFD_id}
+          <input id="button" type="submit" value="Add" class="btn btn-primary btn-sm"/>
           <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
         </div>
       %end
@@ -77,11 +77,10 @@
       <% if ($logged_in) { %>
         <div class="align_right">
           <div class="align_inline">
-            %= form_for delete_gfda => begin
+            %= form_for '/gfd/attributes/delete' => begin
               %= hidden_field GFD_action_id => $GFD_action->{GFD_action_id}
-              %= hidden_field genomic_feature_disease_id => $gfd->{GFD_id}
-              <input name="delete_GFD_action" value="Delete" type="hidden">
-              <input id="button" type="submit" name="delete_GFD_action" value="Delete" class="btn btn-primary btn-sm confirm"/>
+              %= hidden_field GFD_id => $gfd->{GFD_id}
+              <input id="button" type="submit" value="Delete" class="btn btn-primary btn-sm confirm"/>
             %end
           </div>
           <div class="align_right show_toggle_view_button">
@@ -93,14 +92,14 @@
     </div>
     <div class="show_edit_content">
       <h4>Edit allelic requirements and mutation consequence:</h4>
-      %= form_for edit_gfd_action => begin
+      %= form_for '/gfd/attributes/update' => begin
         <div class="form-group">
           <label>Allelic requirement:</label><br>
           <% foreach my $AR (@{$GFD_action->{AR_loop}}) { %>
             <% if ($AR->{checked}) { %> 
-              %= check_box allelic_requirement => $AR->{AR_attrib_id}, checked => undef
+              %= check_box allelic_requirement_attrib_id => $AR->{AR_attrib_id}, checked => undef
             <% } else { %>
-              %= check_box allelic_requirement => $AR->{AR_attrib_id}
+              %= check_box allelic_requirement_attrib_id => $AR->{AR_attrib_id}
             <% } %>
             <%= $AR->{AR_attrib_value}%>
             %= tag 'br'
@@ -108,12 +107,12 @@
         </div>
         <div class="form-group">
           <label>Mutation consequence summary:</label>
-          %= select_field mutation_consequence => $GFD_action->{MC_loop} 
+          %= select_field mutation_consequence_attrib_id => $GFD_action->{MC_loop} 
         </div>
         <div class="align_buttons_right">
           %= hidden_field GFD_action_id => $GFD_action->{GFD_action_id}
-          %= hidden_field genomic_feature_disease_id => $gfd->{GFD_id}
-          <input id="button" type="submit" name="edit_GFD_action" value="Save" class="btn btn-primary btn-sm"/>
+          %= hidden_field GFD_id => $gfd->{GFD_id}
+          <input id="button" type="submit" value="Save" class="btn btn-primary btn-sm"/>
           <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
         </div>
       %end
