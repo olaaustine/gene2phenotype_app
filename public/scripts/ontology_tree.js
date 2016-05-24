@@ -7,13 +7,15 @@ $( document ).ready(function() {
 
   // store list of phenotypes
   var init_ids_string = $("#update_phenotype_tree input[name=phenotype_ids]").val();
-  var init_list = init_ids_string.split(',');
-
+  var init_list = [];
+  if (init_ids_string) {
+    init_list = init_ids_string.split(',');
+  }
   $('#phenotype_tree').jstree({
     
     "search" : {
       'ajax' : {
-        url : 'populate_onotology_tree.cgi',
+        url : '/cgi-bin/populate_onotology_tree.cgi',
         dataType : "json",
         error : function(data, type){
           console.log(type);
@@ -31,7 +33,7 @@ $( document ).ready(function() {
 
     'core' : {
       'data' : {
-        "url" : "populate_onotology_tree.cgi",
+        "url" : "/cgi-bin/populate_onotology_tree.cgi",
         "data" : function (node) {
           return { "id" : node.id,
                    "GFD_id" : GFD_id,
