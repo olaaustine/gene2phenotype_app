@@ -4,7 +4,7 @@ use Mojo::Base 'Mojolicious::Controller';
 sub show {
   my $self = shift;
   my $model = $self->model('genomic_feature_disease');  
-  my $dbID = $self->param('dbID');
+  my $dbID = $self->param('dbID') || $self->param('GFD_id');
   my $gfd = $model->fetch_by_dbID($dbID); 
   $self->stash(gfd => $gfd);
   $self->render(template => 'gfd');

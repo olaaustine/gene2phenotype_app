@@ -15,8 +15,8 @@ sub fetch_by_dbID {
   my $attributes = $self->_get_GFD_action_attributes($GFD);
   my $publications = $self->_get_publications($GFD);
   my $phenotypes = $self->_get_phenotypes($GFD);
+  my $phenotype_ids_list = $self->get_phenotype_ids_list($GFD);
   my $organs = $self->_get_organs($GFD); 
-
 
   my $add_GFD_action = $self->_get_GFD_action_attributes_list('add');
   my $add_AR_loop = $add_GFD_action->{AR};
@@ -29,6 +29,7 @@ sub fetch_by_dbID {
     GFD_actions => $attributes,
     publications => $publications,
     phenotypes => $phenotypes,
+    phenotype_ids_list => $phenotype_ids_list,
     organs => $organs,
     add_AR_loop => $add_AR_loop,
     add_MC_loop => $add_MC_loop,
@@ -197,7 +198,7 @@ sub _get_phenotypes {
     }
 
     push @phenotypes, {
-      GFD_phenotype_comments => \@comments_tmpl,
+      comments => \@comments_tmpl,
       stable_id => $stable_id,
       name => $name,
       GFD_phenotype_id => $GFD_phenotype->dbID,
@@ -218,5 +219,17 @@ sub _get_organs {
   }
   return \@organ_list;
 }
+
+sub get_phenotype_ids_list {
+  my $self = shift;
+  my $GFD = shift;
+  my @phenotype_ids = ();
+  my $GFDPhenotypes = $GFD->get_all_GFDPhenotypes;
+  foreach my $GFDPhenotype (@$GFDPhenotypes) {
+    push @phenotype_ids, $GFDPhenotype->get_Phenotype->dbID;
+  }
+  return join(',', @phenotype_ids);
+}
+
 
 1;
