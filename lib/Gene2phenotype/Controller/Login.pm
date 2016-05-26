@@ -10,8 +10,8 @@ sub on_user_login {
   if ($self->authenticate($email, $password)) {
     $self->session(logged_in => 1);
     $self->session(email => $email);
-    my $last_page = $self->session('last_page') || '/';
-    return $self->redirect_to('/');
+    my $last_page = $self->session('last_url') || '/';
+    return $self->redirect_to($last_page);
   }
 
   return $self->render(text => 'Wrong username/password', status => 403);
@@ -21,7 +21,7 @@ sub on_user_logout {
   my $self = shift;
   $self->session(logged_in => 0);
   $self->session(expires => 1);
-  my $last_page = $self->session('last_page') || '/';
+  my $last_page = $self->session('last_url') || '/';
   return $self->redirect_to($last_page);
 }
 

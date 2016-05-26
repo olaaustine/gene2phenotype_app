@@ -1,12 +1,15 @@
 package Gene2phenotype::Controller::GenomicFeatureDisease;
 use Mojo::Base 'Mojolicious::Controller';
 
+
+
 sub show {
   my $self = shift;
   my $model = $self->model('genomic_feature_disease');  
   my $dbID = $self->param('dbID') || $self->param('GFD_id');
   my $gfd = $model->fetch_by_dbID($dbID); 
   $self->stash(gfd => $gfd);
+  $self->session(last_url => "/gfd?GFD_id=$dbID");
   $self->render(template => 'gfd');
 }
 
@@ -26,6 +29,7 @@ sub update {
   my $model = $self->model('genomic_feature_disease');  
   my $email = $self->session('email');
   $model->update_GFD_category($email, $GFD_id, $category_attrib_id);
+  $self->session(last_url => "/gfd?GFD_id=$GFD_id");
   return $self->redirect_to("/gfd?GFD_id=$GFD_id");
 }
 

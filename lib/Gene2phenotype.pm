@@ -38,12 +38,11 @@ sub startup {
   $self->defaults(layout => 'base');
   $self->g2p_defaults;
 
-  # Router
   my $r = $self->routes;
 
-  $self->hook(before_routes => sub {
+  $self->hook(before_dispatch => sub {
     my $c = shift;
-    $self->defaults(logged_in => $c->session->{logged_in});
+    $c->stash(logged_in => $c->session->{logged_in});
   });
 
   $r->get('/')->to(template => 'home');
