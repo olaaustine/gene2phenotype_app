@@ -19,6 +19,7 @@ sub startup {
   $self->plugin('CGI');
   $self->plugin('Model');
   $self->plugin('RenderFile');
+#http://mojolicious.org/perldoc/Mojolicious/Plugin/Config
 
   my $password_file = '/Users/anjathormann/Sites/gene2phenotype_users';
   my $downloads_dir = '/Users/anjathormann/Documents/develop/gene2phenotype_app/downloads/';
@@ -46,6 +47,7 @@ sub startup {
   });
 
   $r->get('/')->to(template => 'home');
+  $r->get('/disclaimer')->to(template => 'disclaimer');
 
   $r->get('/account')->to(template => 'login', account_info => 1);
   $r->get('/login')->to(template => 'login', show_login => 1);
@@ -63,6 +65,7 @@ sub startup {
 
 # :action=add, delete, update, add_comment, delete_comment
   $r->get('/gfd/category/update')->to('genomic_feature_disease#update');
+  $r->get('/gfd/organ/update')->to('genomic_feature_disease#update_organ_list');
   $r->get('/gfd/attributes/:action')->to(controller => 'genomic_feature_disease_attributes');
   $r->get('/gfd/phenotype/:action')->to(controller => 'genomic_feature_disease_phenotype');
   $r->get('/gfd/publication/:action')->to(controller => 'genomic_feature_disease_publication');

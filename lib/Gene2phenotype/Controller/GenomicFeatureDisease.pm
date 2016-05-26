@@ -1,6 +1,5 @@
 package Gene2phenotype::Controller::GenomicFeatureDisease;
-use Mojo::Base 'Mojolicious::Controller';
-
+use base qw(Gene2phenotype::Controller::BaseController);
 
 
 sub show {
@@ -33,5 +32,15 @@ sub update {
   return $self->redirect_to("/gfd?GFD_id=$GFD_id");
 }
 
+sub update_organ_list {
+  my $self = shift;
+  my $GFD_id = $self->param('GFD_id');
+  my $organ_id_list = join(',', @{$self->every_param('organ_id')});
+  my $model = $self->model('genomic_feature_disease');  
+  my $email = $self->session('email');
+  $model->update_organ_list($email, $GFD_id, $organ_id_list);
+  $self->session(last_url => "/gfd?GFD_id=$GFD_id");
+  return $self->redirect_to("/gfd?GFD_id=$GFD_id");
+}
 
 1;

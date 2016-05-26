@@ -17,6 +17,7 @@ sub fetch_by_dbID {
   my $phenotypes = $self->_get_phenotypes($GFD);
   my $phenotype_ids_list = $self->get_phenotype_ids_list($GFD);
   my $organs = $self->_get_organs($GFD); 
+  my $edit_organs = $self->_get_edit_organs($GFD, $organs); 
 
   my $add_GFD_action = $self->_get_GFD_action_attributes_list('add');
   my $add_AR_loop = $add_GFD_action->{AR};
@@ -31,6 +32,7 @@ sub fetch_by_dbID {
     phenotypes => $phenotypes,
     phenotype_ids_list => $phenotype_ids_list,
     organs => $organs,
+    edit_organs => $edit_organs,
     add_AR_loop => $add_AR_loop,
     add_MC_loop => $add_MC_loop,
   };
@@ -220,6 +222,28 @@ sub _get_organs {
   return \@organ_list;
 }
 
+sub _get_edit_organs {
+  my $self = shift;
+  my $GFD = shift;  
+  my $organ_list = shift;
+ 
+  my $registry = $self->app->defaults('registry');
+  my $organ_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'Organ');
+
+  my %all_organs = map {$_->name => $_->dbID} @{$organ_adaptor->fetch_all};
+  my @organs = (); 
+  foreach my $value (sort keys %all_organs) {
+    my $id = $all_organs{$value};
+    my $checked = (grep $_ eq $value, @$organ_list) ? 'checked' : '';
+    push @organs, {
+      organ_id => $id,
+      organ_name => $value,
+      checked => $checked,
+    };
+  }
+  return \@organs;
+}
+
 sub get_phenotype_ids_list {
   my $self = shift;
   my $GFD = shift;
@@ -245,7 +269,27 @@ sub update_GFD_category {
   $GFD_adaptor->update($GFD, $user); 
 }
 
+sub update_organ_list {
+  my $self = shift;
+  my $email = shift;
+  my $GFD_id = shift;
+  my $organ_id_list = shift;
 
+  my $registry = $self->app->defaults('registry');
+  my $GFDOrgan_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseaseOrgan');
+  my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
+  my $user = $user_adaptor->fetch_by_email($email);
+
+  $GFDOrgan_adaptor->delete_all_by_GFD_id($GFD_id);
+  foreach my $organ_id (split(',', $organ_id_list)) {
+    my $GFDOrgan =  Bio::EnsEMBL::G2P::GenomicFeatureDiseaseOrgan->new(
+      -organ_id => $organ_id,
+      -genomic_feature_disease_id => $GFD_id,
+      -adaptor => $GFDOrgan_adaptor, 
+    );
+    $GFDOrgan_adaptor->store($GFDOrgan);
+  }  
+}
 
 
 1;
