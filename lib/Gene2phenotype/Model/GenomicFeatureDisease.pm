@@ -231,5 +231,21 @@ sub get_phenotype_ids_list {
   return join(',', @phenotype_ids);
 }
 
+sub update_GFD_category {
+  my $self = shift;
+  my $email = shift;
+  my $GFD_id = shift;
+  my $category_attrib_id = shift;
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDisease');
+  my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
+  my $user = $user_adaptor->fetch_by_email($email);
+  my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
+  $GFD->DDD_category_attrib($category_attrib_id);
+  $GFD_adaptor->update($GFD, $user); 
+}
+
+
+
 
 1;

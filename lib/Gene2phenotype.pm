@@ -14,7 +14,7 @@ sub startup {
 # $self->secrets
 # $self->app->sessions->cookie_name('moblo');
   $self->app->sessions->default_expiration('36000');
-
+#  $self->app->sessions->load();
 
   $self->plugin('CGI');
   $self->plugin('Model');
@@ -41,14 +41,12 @@ sub startup {
   # Router
   my $r = $self->routes;
 
-# before_dispatch
-  $self->hook(after_dispatch => sub {
+  $self->hook(before_routes => sub {
     my $c = shift;
     $self->defaults(logged_in => $c->session->{logged_in});
   });
 
   $r->get('/')->to(template => 'home');
-
 
   $r->get('/account')->to(template => 'login', account_info => 1);
   $r->get('/login')->to(template => 'login', show_login => 1);
@@ -65,7 +63,7 @@ sub startup {
   $r->get('/gfd')->to('genomic_feature_disease#show');
 
 # :action=add, delete, update, add_comment, delete_comment
-  $r->get('/gfd/category/update')->to(controller => 'genomic_feature_disease#update');
+  $r->get('/gfd/category/update')->to('genomic_feature_disease#update');
   $r->get('/gfd/attributes/:action')->to(controller => 'genomic_feature_disease_attributes');
   $r->get('/gfd/phenotype/:action')->to(controller => 'genomic_feature_disease_phenotype');
   $r->get('/gfd/publication/:action')->to(controller => 'genomic_feature_disease_publication');

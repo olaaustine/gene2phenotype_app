@@ -24,10 +24,9 @@ sub update {
   my $category_attrib_id = $self->param('category_attrib_id'); 
   my $GFD_id = $self->param('GFD_id');
   my $model = $self->model('genomic_feature_disease');  
-
-  my $return = $model->update_GFD_category($GFD_id, $category_attrib_id);
-
-  $self->render(text => "Update GFD category $return");  
+  my $email = $self->session('email');
+  $model->update_GFD_category($email, $GFD_id, $category_attrib_id);
+  return $self->redirect_to("/gfd?GFD_id=$GFD_id");
 }
 
 
