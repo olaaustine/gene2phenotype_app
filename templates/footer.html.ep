@@ -6,12 +6,7 @@
           <li>Currently v0.1</li>
           <li>&middot;</li>
           <li>
-            <form id="disclaimer_form" action="./handler.cgi" method="get">
-              <fieldset>
-                <input type="hidden" name="show_disclaimer" value="view"/>
-                <a href='#' onclick="document.getElementById('disclaimer_form').submit();">Disclaimer</a>
-              </fieldset>
-            </form>
+            %= link_to Disclaimer  => '/disclaimer'
           </li>
           <li>&middot;</li>
           <li>Help</li>

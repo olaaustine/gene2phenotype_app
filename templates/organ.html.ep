@@ -1,0 +1,42 @@
+<div>
+  <div id="organs">
+    <div class="show_db_content">
+      <h3><a class="anchor" name="organ_specificity">Organ specificity</a><a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a></h3>
+      <ul id="organ_list">
+        <% foreach my $organ (@{$gfd->{organs}}) { %>
+          <li><%= $organ %></li>
+        <% } %>
+      </ul>
+
+      <% if ($logged_in) { %>
+        <div class="show_toggle_view_button">
+          <input type="button" name="show_edit_content" value="Edit Organ Specificity List" class="btn btn-primary btn-sm edit"/>
+        </div>
+      <% } %>
+      <div class="clear"></div>
+    </div>
+
+    <div class="show_edit_content">
+      <h4>Edit organ specificity list:</h4>
+      %= form_for '/gfd/organ/update' => begin
+        <div class="form-group">
+          <label>Organ specificity:</label><br>
+          <% foreach my $organ (@{$gfd->{edit_organs}}) { %>
+            <% if ($organ->{checked}) { %>
+              %= check_box organ_id => $organ->{organ_id}, checked => undef
+            <% } else { %>
+              %= check_box organ_id => $organ->{organ_id}
+            <% } %>
+            <%= $organ->{organ_name}%>
+            %= tag 'br'
+          <% } %>
+        </div>
+        <div class="align_buttons_right">
+          %= hidden_field GFD_id => $gfd->{GFD_id}
+          <input id="button" type="submit" value="Save" class="btn btn-primary btn-sm"/>
+          <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
+        </div>
+      % end
+    </div> <!--End show edit content -->
+  </div> <!--End organs-->
+</div>
