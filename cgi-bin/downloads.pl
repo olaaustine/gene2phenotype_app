@@ -10,7 +10,7 @@ my $configuration_file = '../../../../config/registry';
 #my $registry = G2P::Registry->new($configuration_file);
 
 my $registry = 'Bio::EnsEMBL::Registry';
-$registry->load_all('/Users/anjathormann/Documents/G2P/scripts/ensembl.registry');
+$registry->load_all('/Users/anjathormann/Documents/develop/ensembl.registry');
 
 sub download_data_api {
   my $downloads_dir = shift;

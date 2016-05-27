@@ -31,7 +31,7 @@ if ($type eq 'expand') {
 }
 
 my $registry = 'Bio::EnsEMBL::Registry';
-$registry->load_all('/Users/anjathormann/Documents/G2P/scripts/ensembl.registry');  
+$registry->load_all('/Users/anjathormann/Documents/develop/ensembl.registry');  
 
 my @phenotype_ids = ();
 my $ontology = $registry->get_adaptor( 'Multi', 'Ontology', 'OntologyTerm' );
