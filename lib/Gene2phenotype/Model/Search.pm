@@ -27,7 +27,11 @@ sub identify_search_type {
 sub fetch_all_by_substring {
   my $self = shift;
   my $search_term = shift; 
-  my $panel = $self->app->defaults('panel');
+  my $panel = shift;
+  my $only_authorised = shift; 
+
+#  my $panel = $self->app->defaults('panel');
+
   my $registry = $self->app->defaults('registry');
   my $disease_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'disease');
   my $gfd_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease'); 
@@ -47,7 +51,7 @@ sub fetch_all_by_substring {
     $disease_name =~ s/$uc_search_term/<b>$uc_search_term<\/b>/g;
     my $gfds = $gfd_adaptor->fetch_all_by_Disease_panel($disease, $panel);
     @$gfds = sort { ( $a->panel cmp $b->panel ) || ( $a->get_GenomicFeature->gene_symbol cmp $b->get_GenomicFeature->gene_symbol ) } @$gfds;
-    my $gfd_results = $self->_get_gfd_results($gfds);
+    my $gfd_results = $self->_get_gfd_results($gfds, $only_authorised);
     push @disease_names, {display_disease_name => $disease_name, gfd_results => $gfd_results, search_type => 'disease', dbID => $dbID};
 
   }
@@ -60,7 +64,7 @@ sub fetch_all_by_substring {
     $gene_symbol =~ s/$uc_search_term/<b>$uc_search_term<\/b>/g;
     my $gfds = $gfd_adaptor->fetch_all_by_GenomicFeature_panel($gene, $panel);
     @$gfds = sort { ( $a->panel cmp $b->panel ) || ( $a->get_Disease->name cmp $b->get_Disease->name ) } @$gfds;
-    my $gfd_results = $self->_get_gfd_results($gfds);
+    my $gfd_results = $self->_get_gfd_results($gfds, $only_authorised);
     push @gene_names, {gene_symbol => $gene_symbol, gfd_results => $gfd_results, search_type => 'gene_symbol', dbID => $dbID};
   }
 
@@ -81,8 +85,12 @@ sub fetch_all_by_substring {
 sub _get_gfd_results {
   my $self = shift;
   my $gfds = shift;
+  my $only_authorised = shift;
   my @gfd_results = ();
   foreach my $gfd (@$gfds) {
+    if ($only_authorised) {
+      next if (!$gfd->is_visible);
+    }
     my $genomic_feature = $gfd->get_GenomicFeature;
     my $gene_symbol = $genomic_feature->gene_symbol;
     my $disease = $gfd->get_Disease;

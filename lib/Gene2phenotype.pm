@@ -64,11 +64,16 @@ sub startup {
   $r->get('/gfd')->to('genomic_feature_disease#show');
 
 # :action=add, delete, update, add_comment, delete_comment
+  $r->get('/gfd/authorised/update')->to('genomic_feature_disease#update_visibility');
   $r->get('/gfd/category/update')->to('genomic_feature_disease#update');
   $r->get('/gfd/organ/update')->to('genomic_feature_disease#update_organ_list');
   $r->get('/gfd/attributes/:action')->to(controller => 'genomic_feature_disease_attributes');
   $r->get('/gfd/phenotype/:action')->to(controller => 'genomic_feature_disease_phenotype');
   $r->get('/gfd/publication/:action')->to(controller => 'genomic_feature_disease_publication');
+
+
+  $r->get('/gene')->to('gene#show');
+  $r->get('/disease')->to('disease#show');
 
   $r->get('/search')->to('search#results');
   $r->get('/cgi-bin/#script_name' => sub {
@@ -99,7 +104,7 @@ sub g2p_defaults {
 
   my $registry = 'Bio::EnsEMBL::Registry';
 
-  $registry->load_all('/Users/anjathormann/Documents/G2P/scripts/ensembl.registry');
+  $registry->load_all('/Users/anjathormann/Documents/develop/ensembl.registry');
   my @panel_imgs = ();
   my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
   my $attribs = $attribute_adaptor->get_attribs_by_type_value('g2p_panel');

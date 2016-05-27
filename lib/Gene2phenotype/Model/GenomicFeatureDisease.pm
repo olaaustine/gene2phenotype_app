@@ -9,6 +9,10 @@ sub fetch_by_dbID {
   my $registry = $self->app->defaults('registry');
   my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease');
   my $GFD = $GFD_adaptor->fetch_by_dbID($dbID);
+  my $panel = $GFD->panel;
+  my $authorised = $GFD->is_visible;
+  my $gene_symbol = $GFD->get_GenomicFeature->gene_symbol;
+  my $disease_name = $GFD->get_Disease->name; 
 
   my $GFD_category = $self->_get_GFD_category($GFD);
   my $GFD_category_list = $self->_get_GFD_category_list($GFD);
@@ -24,6 +28,10 @@ sub fetch_by_dbID {
   my $add_MC_loop = $add_GFD_action->{MC};
 
   return {
+    panel => $panel,
+    gene_symbol => $gene_symbol,
+    disease_name => $disease_name,
+    authorised => $authorised,
     GFD_id => $dbID,
     GFD_category => $GFD_category,
     GFD_category_list => $GFD_category_list,
@@ -291,5 +299,21 @@ sub update_organ_list {
   }  
 }
 
+sub update_visibility {
+  my $self = shift;
+  my $email = shift;
+  my $GFD_id = shift;
+  my $visibility = shift;
+
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDisease');
+  my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
+  my $user = $user_adaptor->fetch_by_email($email);
+
+  my $is_visible = $visibility eq 'authorised' ? 1 : 0;
+  my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
+  $GFD->is_visible($is_visible);
+  $GFD_adaptor->update($GFD, $user); 
+}
 
 1;

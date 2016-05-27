@@ -6,6 +6,9 @@ sub show {
   my $self = shift;
   my $model = $self->model('genomic_feature_disease');  
   my $dbID = $self->param('dbID') || $self->param('GFD_id');
+
+  # check if GFD is authorised
+
   my $gfd = $model->fetch_by_dbID($dbID); 
   $self->stash(gfd => $gfd);
   $self->session(last_url => "/gfd?GFD_id=$dbID");
@@ -39,6 +42,17 @@ sub update_organ_list {
   my $model = $self->model('genomic_feature_disease');  
   my $email = $self->session('email');
   $model->update_organ_list($email, $GFD_id, $organ_id_list);
+  $self->session(last_url => "/gfd?GFD_id=$GFD_id");
+  return $self->redirect_to("/gfd?GFD_id=$GFD_id");
+}
+
+sub update_visibility {
+  my $self = shift;
+  my $GFD_id = $self->param('GFD_id');
+  my $visibility = $self->param('visibility'); #restricted, authorised 
+  my $model = $self->model('genomic_feature_disease');  
+  my $email = $self->session('email');
+  $model->update_visibility($email, $GFD_id, $visibility);
   $self->session(last_url => "/gfd?GFD_id=$GFD_id");
   return $self->redirect_to("/gfd?GFD_id=$GFD_id");
 }
