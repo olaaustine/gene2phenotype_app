@@ -137,7 +137,7 @@ $(document).ready(function(){
     function localjsonpcallback(json) {
     };
     var pmid = $(':input.pmid[type=text]').val();
-    var europepmcAPI = 'http://www.ebi.ac.uk/europepmc/webservices/rest/search/query=' + pmid + '&format=json&callback=?';
+    var europepmcAPI = 'http://www.ebi.ac.uk/europepmc/webservices/rest/search/query=ext_id:' + pmid + '&format=json&callback=?';
 
     $.ajax({
       url: europepmcAPI,
