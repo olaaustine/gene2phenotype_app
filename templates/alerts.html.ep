@@ -1,0 +1,12 @@
+<div class="container">
+  % if (my $alert_class = flash 'alert_class') {
+    <div class="alert <%= $alert_class %>" role="alert">
+      % if (my $message = flash 'message') {
+        <p><%= $message %></p>
+      % }
+    </div>
+  % } else {
+    <div class="alert" role="alert">
+    </div>
+  % }
+</div>

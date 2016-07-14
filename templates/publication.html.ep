@@ -47,7 +47,7 @@
       <div class="align_left" style="width:75%">
         <% if ($publication->{pmid}) { %>
           <p>
-          <% my $url = 'http://europepmc.org/search?query=' . $publication->{pmid}; %>
+          <% my $url = 'http://europepmc.org/search?query=ext_id:' . $publication->{pmid}; %>
           <%= link_to $url => begin %> <%= $publication->{title} %>  <% end %>
           </p>
         <% } else {%>

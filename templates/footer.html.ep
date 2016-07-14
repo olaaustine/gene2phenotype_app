@@ -14,8 +14,12 @@
       </div>
       <div class="container">
         <ul class="bs-docs-footer-links text-muted">
-          <li><img src="../images/EBI.png" alt="EBI" width="20%" height="auto"></li>
-          <li><img src="../images/sanger.png" alt="sanger" width="20%" height="auto"></li>
+          <li>
+            %= image '/images/EBI.png', alt => 'EBI', width => '20%', height => 'auto' 
+          </li>
+          <li>
+            %= image '/images/sanger.png', alt => 'sanger', width => '20%', height => 'auto' 
+          </li>
         </ul>
       </div>
     </div>

@@ -1,9 +1,4 @@
 <div id="search" class="container">
-  <TMPL_IF NAME=message>
-    <div class="alert alert-<TMPL_VAR NAME=message_type>" role="alert">
-      <p><TMPL_VAR NAME=message></p>
-    </div>
-  </TMPL_IF>
 
 %= tag div => (id => 'panel_image') => begin
 <img src="/images/G2P-ALL.png" alt="panel_image" height="150" width="150">

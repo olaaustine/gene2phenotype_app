@@ -1,0 +1,17 @@
+%= include 'header'
+<div class="container">
+  <div id="login" class="container">
+    <h2>Recover password</h2>
+    %= form_for '/login/recovery/mail' => (method => 'POST') => (class => 'submit_form') => begin
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <fieldset>
+          <input type="text" class="form-control" name="email" placeholder="Enter email">
+        </fieldset>
+      </div>
+      %= submit_button 'Send mail', class => 'btn btn-primary btn-sm', id => 'button'
+    %end
+  </div> <!--End login-->
+
+</div>
+%= include 'footer'

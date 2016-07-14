@@ -16,6 +16,7 @@
 %= javascript '/scripts/d3.min.js'
 %= javascript '/scripts/nv.d3.js'
 %= javascript '/scripts/behavior.js'
+%= javascript '/scripts/alerts.js'
 %= javascript '/scripts/piecharts.js'
 %= javascript '/scripts/jstree/jstree.min.js'
 %= javascript '/scripts/ontology_tree.js'

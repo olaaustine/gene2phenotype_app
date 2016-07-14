@@ -1,0 +1,22 @@
+%= include 'header'
+<div class="container">
+  <div id="login" class="container">
+    <h2>Account</h2>
+    <dl>
+      <dt>Username</dt>
+      <dd></dd>
+      <dt>Email</dt>
+      <dd></dd>
+      <dt>Panel</dt>
+      <dd></dd>
+      <dt>Password</dt>
+      <dd>
+        %= link_to 'Edit' => 'reset'
+      </dd>
+    </dl>
+  </div>
+  <div class="clear"></div>
+
+</div>
+%= include 'footer'
+~
