@@ -1,13 +1,12 @@
 package Gene2phenotype;
 use Mojo::Base 'Mojolicious';
-use Bio::EnsEMBL::Registry;
 use Mojo::Home;
 use Apache::Htpasswd;
 use File::Path qw(make_path remove_tree);
+use Bio::EnsEMBL::Registry;
+use Bio::EnsEMBL::G2P::Utils::Downloads qw(download_data);
 
 # This method will run once at server start
-require "/Users/anjathormann/Documents/develop/gene2phenotype_app/cgi-bin/downloads.pl";
-
 sub startup {
   my $self = shift;
 
@@ -19,10 +18,15 @@ sub startup {
   $self->plugin('CGI');
   $self->plugin('Model');
   $self->plugin('RenderFile');
-#http://mojolicious.org/perldoc/Mojolicious/Plugin/Config
+  my $config = $self->plugin('Config' => {file => $self->app->home .'/etc/gene2phenotype.conf'});
+  $self->plugin(mail => {
+    from => 'anja@ebi.ac.uk',
+    type => 'text/html',
+  });
 
-  my $password_file = '/Users/anjathormann/Sites/gene2phenotype_users';
-  my $downloads_dir = '/Users/anjathormann/Documents/develop/gene2phenotype_app/downloads/';
+  my $password_file = $config->{password_file};
+  my $downloads_dir = $config->{downloads_dir};
+  my $registry_file = $config->{registry};
 
   $self->plugin('authentication' => {
     'load_user' => sub {
@@ -37,29 +41,50 @@ sub startup {
   });
 
   $self->defaults(layout => 'base');
-  $self->g2p_defaults;
+  $self->g2p_defaults($registry_file);
 
   my $r = $self->routes;
 
   $self->hook(before_dispatch => sub {
     my $c = shift;
-    $c->stash(logged_in => $c->session->{logged_in});
+    $c->stash(logged_in => $c->session('logged_in'));
   });
 
   $r->get('/')->to(template => 'home');
   $r->get('/disclaimer')->to(template => 'disclaimer');
 
-  $r->get('/account')->to(template => 'login', account_info => 1);
-  $r->get('/login')->to(template => 'login', show_login => 1);
-  $r->get('/recover')->to(template => 'login', recover_pwd => 1);
+  $r->get('/account')->to(template => 'login/account_info');
+  $r->get('/login')->to(template => 'login/login');
+  $r->get('/login/recovery')->to(template => 'login/recovery');
+  $r->post('/login/recovery/mail')->to('login#send_recover_pwd_mail');
+  $r->get('/login/recovery/reset')->to('login#validate_pwd_recovery');
+  $r->post('/login/recovery/update' => sub {
+    my $c = shift;
+    my $auth = new Apache::Htpasswd({ passwdFile => $password_file, ReadOnly => 0, UseMD5 => 1,});
+    my $email = $c->param('email');
+    my $new_pwd = $c->param('new_password');
+    my $retyped_pwd = $c->param('retyped_password');
+    my $authcode = $c->param('authcode');
+    my $saved_authcode = $c->session('code');
+    my $saved_email = $c->session('email');
+    if ($authcode eq $saved_authcode) {
+      if ($new_pwd eq $retyped_pwd) {
+        my $success = $auth->htpasswd($email, $new_pwd, {'overwrite' => 1});        
+        $c->session(logged_in => 1);
+        $c->stash(logged_in => 1);
+        $c->flash({message => 'Successfully updated password', alert_class => 'alert-success'});
+        return $c->redirect_to('/');
+      }
+    }
+    $c->flash(message => 'Error occurred while resetting your password. Please contact g2p-help@ebi.ac.uk', alert_class => 'alert-danger');
+    return $c->redirect_to('/');
+  });
+
   $r->get('/reset')->to(template => 'login', change_pwd => 1);
   $r->get('/logout')->to('login#on_user_logout');
   
   $r->post('/login')->to('login#on_user_login');
-  $r->post('/recover')->to(template => 'login', recover_pwd => 1);
   $r->post('/reset')->to('login#reset_pwd');
-
-  $r->get('/downloads')->to(template => 'downloads');
 
   $r->get('/gfd')->to('genomic_feature_disease#show');
 
@@ -71,40 +96,39 @@ sub startup {
   $r->get('/gfd/phenotype/:action')->to(controller => 'genomic_feature_disease_phenotype');
   $r->get('/gfd/publication/:action')->to(controller => 'genomic_feature_disease_publication');
 
-
   $r->get('/gene')->to('gene#show');
   $r->get('/disease')->to('disease#show');
 
   $r->get('/search')->to('search#results');
-  $r->get('/cgi-bin/#script_name' => sub {
+  $r->get('/cgi-bin/#script_name/*path_info' => {path_info => ''}, sub {
     my $c = shift;
     my $script_name = $c->stash('script_name');
     my $home =  $c->app->home;
-    $c->cgi->run(script => "$home/cgi-bin/$script_name");
+    $c->cgi->run( script => "$home/cgi-bin/$script_name");
   });
-
-  $r->get('/downloads/*' => sub {
+  $r->get('/downloads')->to(template => 'downloads');
+  $r->get('/downloads/#file_name' => sub {
     my $c = shift;
-    my $panel = 'ALL';
+    my $file_name = $c->stash('file_name');
+    $file_name =~ s/\.gz//;
     my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime(time);
     my $stamp = join('_', ($mday, $mon, $hour, $min, $sec));
     my $tmp_dir = "$downloads_dir/$stamp";
     make_path($tmp_dir);
-    my $file = download_data($tmp_dir, $panel);
-    $c->render_file('filepath' => "$tmp_dir/$file");
-    unlink "$tmp_dir/$file";
+    download_data($tmp_dir, $file_name, $registry_file);
+    $c->render_file('filepath' => "$tmp_dir/$file_name.gz");
+    unlink "$tmp_dir/$file_name.gz";
     remove_tree($tmp_dir);
   });
 
 }
 
-
 sub g2p_defaults {
   my $self = shift;
-
+  my $registry_file = shift; 
   my $registry = 'Bio::EnsEMBL::Registry';
 
-  $registry->load_all('/Users/anjathormann/Documents/develop/ensembl.registry');
+  $registry->load_all($registry_file);
   my @panel_imgs = ();
   my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
   my $attribs = $attribute_adaptor->get_attribs_by_type_value('g2p_panel');
@@ -116,14 +140,8 @@ sub g2p_defaults {
   $self->defaults(panel_imgs => \@panel_imgs);
   $self->defaults(registry => $registry);
   $self->defaults(panel => 'ALL');
-  $self->defaults(show_login => 0);
-  $self->defaults(recover_pwd => 0);
-  $self->defaults(change_pwd => 0);
-  $self->defaults(account_info => 0);
   $self->defaults(logged_in => 0);
-
+  $self->defaults(alert_class => '');
 }
-
-
 
 1;
