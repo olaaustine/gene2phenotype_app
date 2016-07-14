@@ -1,6 +1,6 @@
 package Gene2phenotype::Controller::Login;
 use Mojo::Base 'Mojolicious::Controller';
-
+use Digest::MD5 qw/md5_hex/;
 
 sub on_user_login {
   my $self = shift;
@@ -29,5 +29,35 @@ sub is_logged_in {
   my $self = shift;
   return 1 if $self->session('logged_in');
 }
+
+sub send_recover_pwd_mail {
+  my $self = shift;
+  my $email = $self->param('email');
+
+  my $autologin_code = md5_hex( time + rand(time) );
+
+  my $url = $self->url_for('/login/recovery/reset')->query(code => $autologin_code)->to_abs;
+
+  $self->session(email => $email);
+  $self->session(code => $autologin_code);
+  $self->session(send_recover_email_mail => 1);
+
+  $self->mail(
+    to      => $email,
+    subject => 'Reset your password for gene2phenotype website',
+    data    => $url,
+  );
+  return $self->redirect_to('/');
+
+}
+
+sub validate_pwd_recovery {
+  my $self = shift;
+  my $code = $self->param('code');
+  my $email = $self->session('email');
+  $self->render(template => 'login/reset_password', email => $email, authcode => "$code");
+}
+
+
 
 1;
