@@ -1,4 +1,13 @@
 $(document).ready(function(){
+  $("#edit_pwd_link").click(function(){
+    $("#update_pwd").show();
+    $(this).hide();
+  });
+
+  $("#cancel_update_pwd_button").click(function(){
+    $("#update_pwd").hide();
+    $("#edit_pwd_link").show();
+  });
  
   $("#select_panel").change(function(){
     var value =  $(this).val(); 
