@@ -1,6 +1,8 @@
 package Gene2phenotype::Controller::BaseController;
 use Mojo::Base 'Mojolicious::Controller';
 
+use base qw(Exporter);
+
 our %MESSAGES = (
   RESET_PWD_SUC => { msg => 'Password was successfully updated.', type => 'success'}, 
   PWD_ERROR => { msg  => 'Error. Password verification failed.', type => 'danger',},
@@ -29,13 +31,20 @@ our %MESSAGES = (
   ADDED_PUBLICATION_SUC => { msg => 'Successfully added a new publication', type => 'success'},
   DELETED_GFDPHENOTYPE_SUC => { msg => 'Successfully deleted a phenotype entry.', type => 'success'},
   DELETED_GFDPUBLICATION_SUC => { msg => 'Successfully deleted publication entry.', type => 'success'},
-  ADDED_GFDPC_SUC => { msg => 'Successfully added a new comment.', type => 'success'},
-  ADDED_GFDPhenotypeC_SUC => {msg => 'Successfully added a new comment.', type => 'success'},
+  ADDED_COMMENT_SUC => { msg => 'Successfully added a new comment.', type => 'success'},
   DELETED_GFD_ACTION_SUC => { msg => 'Successfully deleted a genomic feature disease action.', type => 'success'},
-  DELETED_GFDPC_SUC => { msg => 'Successfully deleted the comment.', type => 'success'},
+  DELETED_COMMENT_SUC => { msg => 'Successfully deleted the comment.', type => 'success'},
   UPDATED_PHENOTYPES_SUC => {msg => 'Successfully updated the list of phenotypes.', type => 'success'},
 );
 
-our @EXPORT_OK = keys %MESSAGES; 
+our @EXPORT_OK = (%MESSAGES); 
+
+sub feedback_message {
+  my $self = shift;
+  my $feedback = shift;
+  my $message = $MESSAGES{$feedback};
+  $self->flash({'message' => $message->{msg}, 'alert_class' => 'alert-' . $message->{type}});
+}
+
 
 1;

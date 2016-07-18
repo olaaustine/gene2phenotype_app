@@ -1,5 +1,5 @@
 package Gene2phenotype::Controller::GenomicFeatureDiseasePhenotype;
-use Mojo::Base 'Mojolicious::Controller';
+use base qw(Gene2phenotype::Controller::BaseController);
 
 sub update {
   my $self = shift;
@@ -8,6 +8,7 @@ sub update {
   my $email = $self->session('email');
   my $model = $self->model('genomic_feature_disease_phenotype');
   $model->update_phenotype_list($GFD_id, $email, $phenotype_ids);
+  $self->feedback_message('UPDATED_PHENOTYPES_SUC');
   return $self->redirect_to("/gfd?GFD_id=$GFD_id");
 }
 
@@ -18,6 +19,7 @@ sub delete {
   my $email = $self->session('email');  
   my $model = $self->model('genomic_feature_disease_phenotype');
   $model->delete($GFD_phenotype_id, $email);
+  $self->feedback_message('DELETED_GFDPHENOTYPE_SUC');
   return $self->redirect_to("/gfd?GFD_id=$GFD_id");
 }
 
@@ -29,6 +31,7 @@ sub add_comment {
   my $email = $self->session('email');  
   my $model = $self->model('genomic_feature_disease_phenotype');
   $model->add_comment($GFD_phenotype_id, $GFD_phenotype_comment, $email);
+  $self->feedback_message('ADDED_COMMENT_SUC');
   return $self->redirect_to("/gfd?GFD_id=$GFD_id");
 }
 
@@ -39,6 +42,7 @@ sub delete_comment {
   my $email = $self->session('email');  
   my $model = $self->model('genomic_feature_disease_phenotype');
   $model->delete_comment($GFD_phenotype_comment_id, $email);
+  $self->feedback_message('DELETED_COMMENT_SUC');
   return $self->redirect_to("/gfd?GFD_id=$GFD_id");
 }
 

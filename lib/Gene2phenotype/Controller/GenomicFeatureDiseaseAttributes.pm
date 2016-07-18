@@ -1,6 +1,5 @@
 package Gene2phenotype::Controller::GenomicFeatureDiseaseAttributes;
-use Mojo::Base 'Mojolicious::Controller';
-
+use base qw(Gene2phenotype::Controller::BaseController);
 
 sub add {
   my $self = shift;
@@ -11,6 +10,7 @@ sub add {
   my $email = $self->session('email');
   my $model = $self->model('genomic_feature_disease_attributes');
   $model->add($GFD_id, $email, $allelic_requirement_attrib_ids, $mutation_consequence_attrib_id);
+  $self->feedback_message('ADDED_GFD_ACTION_SUC');
   return $self->redirect_to("/gfd?GFD_id=$GFD_id");
 }
 
@@ -24,6 +24,7 @@ sub update {
   my $email = $self->session('email');
   my $model = $self->model('genomic_feature_disease_attributes');
   $model->update($email, $allelic_requirement_attrib_ids, $mutation_consequence_attrib_id, $GFD_action_id);
+  $self->feedback_message('UPDATED_GFD_ACTION_SUC');
   return $self->redirect_to("/gfd?GFD_id=$GFD_id");
 }
 
@@ -34,6 +35,7 @@ sub delete {
   my $email = $self->session('email');
   my $model = $self->model('genomic_feature_disease_attributes');
   $model->delete($GFD_id, $email, $GFD_action_id);
+  $self->feedback_message('DELETED_GFD_ACTION_SUC');
   return $self->redirect_to("/gfd?GFD_id=$GFD_id");
 }
 
