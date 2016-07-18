@@ -60,5 +60,20 @@ sub validate_pwd_recovery {
 }
 
 
+sub account_info {
+  my $self = shift;
+  my $email = $self->session('email');
+
+  my $registry = $self->app->defaults('registry');
+  my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
+  my $user = $user_adaptor->fetch_by_email($email);
+
+  my $username = $user->username; 
+  my $panel = $user->panel;
+
+  $self->stash(email => $email, username => $username, panel => $panel);
+  $self->render(template => 'login/account_info');
+
+}
 
 1;

@@ -53,7 +53,35 @@ sub startup {
   $r->get('/')->to(template => 'home');
   $r->get('/disclaimer')->to(template => 'disclaimer');
 
-  $r->get('/account')->to(template => 'login/account_info');
+  $r->get('/account')->to('login#account_info');
+  $r->post('/account/update' => sub {
+    my $c = shift;
+    my $auth = new Apache::Htpasswd({ passwdFile => $password_file, ReadOnly => 0, UseMD5 => 1,});
+
+    my $email = $c->param('email');
+    my $current_pwd = $c->param('current_password');
+    my $new_pwd = $c->param('new_password');
+    my $retyped_pwd = $c->param('retyped_password');
+
+    if (!$self->authenticate($email, $current_pwd)) { 
+      $c->flash({message => 'Your current password is incorrect', alert_class => 'alert-danger'});
+      return $c->redirect_to('account');
+    }
+
+    if ($new_pwd ne $retyped_pwd) {
+      $c->flash({message => 'Passwords don\'t match. Please ensure retyped password matches your new password.', alert_class => 'alert-danger'});
+      return $c->redirect_to('account');
+    }
+
+    my $success = $auth->htpasswd($email, $new_pwd, {'overwrite' => 1});        
+    if ($success) {
+      $c->flash({message => 'Successfully updated password', alert_class => 'alert-success'});
+      return $c->redirect_to('account');
+    } else {
+      $c->flash(message => 'Error occurred while resetting your password. Please contact g2p-help@ebi.ac.uk', alert_class => 'alert-danger');
+      return $c->redirect_to('account');
+    }
+  });
   $r->get('/login')->to(template => 'login/login');
   $r->get('/login/recovery')->to(template => 'login/recovery');
   $r->post('/login/recovery/mail')->to('login#send_recover_pwd_mail');
