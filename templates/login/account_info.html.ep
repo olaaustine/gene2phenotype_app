@@ -4,19 +4,47 @@
     <h2>Account</h2>
     <dl>
       <dt>Username</dt>
-      <dd></dd>
+      <dd><%= $username %></dd>
       <dt>Email</dt>
-      <dd></dd>
+      <dd><%= $email %></dd>
       <dt>Panel</dt>
-      <dd></dd>
+      <dd><%= $panel %></dd>
       <dt>Password</dt>
       <dd>
-        %= link_to 'Edit' => 'reset'
+        <div id="edit_pwd_link">
+          <input id="button" class="btn btn-primary btn-xs" value="Edit"/>
+        </div>
       </dd>
     </dl>
   </div>
   <div class="clear"></div>
 
+  <div id="update_pwd" class="container">
+    <h3>Edit password</h3>
+    %= form_for '/account/update' => (method => 'POST') => (id => 'update_pwd_form') => begin
+      <div class="form-group">
+        <label>Current password</label>
+        <fieldset>
+          <input type="password" class="form-control" name="current_password" placeholder="Enter current password">
+        </fieldset>
+      </div>
+      <div class="form-group">
+        <label>New password</label>
+        <fieldset>
+        <input type="password" class="form-control" name="new_password" placeholder="Enter new password">
+        </fieldset>
+      </div>
+      <div class="form-group">
+        <label>Retype password</label>
+        <fieldset>
+        <input type="password" class="form-control" name="retyped_password" placeholder="Retype new password">
+        </fieldset>
+      </div>
+      %= hidden_field email => $email
+      <input id="button" type="submit" class="btn btn-primary" value="Change password"/>
+      <input type="button" class="btn btn-primary" id="cancel_update_pwd_button" value="Cancel"/>
+    %end
+  </div>
 </div>
 %= include 'footer'
 ~
