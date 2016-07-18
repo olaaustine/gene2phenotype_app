@@ -47,6 +47,7 @@ sub send_recover_pwd_mail {
     subject => 'Reset your password for gene2phenotype website',
     data    => $url,
   );
+  $self->flash(message => "An email with instructions for how to reset your email has been sent to $email", alert_class => 'alert-info');
   return $self->redirect_to('/');
 
 }
