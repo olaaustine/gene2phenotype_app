@@ -25,11 +25,11 @@ sub add_publication {
   }
 
   if (!$publication) {
-    $publication = Bio::EnsEMBL::G2P::Publication->new({
-      pmid => $pmid || undef,
-      title => $title || undef,
-      source => $source || undef,
-    });
+    $publication = Bio::EnsEMBL::G2P::Publication->new(
+      -pmid => $pmid,
+      -title => $title,
+      -source => $source,
+    );
     $publication = $publication_adaptor->store($publication);
   }
   my $GFDPublication = $GFDPublication_adaptor->fetch_by_GFD_id_publication_id($GFD_id, $publication->dbID);
