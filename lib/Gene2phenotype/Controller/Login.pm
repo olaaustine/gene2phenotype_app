@@ -9,6 +9,7 @@ sub on_user_login {
 
   if ($self->authenticate($email, $password)) {
     $self->session(logged_in => 1);
+    $self->session(expiration => 3600);
     $self->session(email => $email);
     my $last_page = $self->session('last_url') || '/';
     return $self->redirect_to($last_page);

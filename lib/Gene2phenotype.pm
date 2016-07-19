@@ -12,8 +12,7 @@ sub startup {
 
 # $self->secrets
 # $self->app->sessions->cookie_name('moblo');
-  $self->app->sessions->default_expiration('36000');
-#  $self->app->sessions->load();
+  $self->sessions->default_expiration(3600);
 
   $self->plugin('CGI');
   $self->plugin('Model');
