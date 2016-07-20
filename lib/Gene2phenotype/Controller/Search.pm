@@ -22,7 +22,7 @@ sub results {
   } elsif ($search_type eq 'contains_search_term') {
     $search_results = $model->fetch_all_by_substring($search_term, $panel, $only_authorised); 
   } else {
-    $search_results = {};        
+    $search_results = undef;
   }
   $self->stash(search_results => $search_results);
   $self->stash(search_term => $search_term);

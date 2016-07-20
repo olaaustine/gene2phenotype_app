@@ -18,7 +18,7 @@ our %MESSAGES = (
   SESSION_IDS_DONT_MATCH => { msg => 'Session ids don\'t match. Please contact g2p-help@ebi.ac.uk.', type => 'danger',},
   ERROR_ADD_GENE_DISEASE_PAIR => { msg => 'You must provide a gene name and a disease name.', type => 'danger',},  
   LOGIN_FAILED => { msg => 'Login failed. You entered a wrong password. Try again or reset your password.', type => 'danger',},
-  DISEASE_NAME_IN_DB => { msg => 'Disease name is already in database.', type => 'danger',},
+  DISEASE_NAME_IN_DB => { msg => 'Disease name is already in database.', type => 'info',},
   UPDATED_DISEASE_ATTRIBS_SUC => { msg => 'Successfully updated disease attributes.', type => 'success',},
   UPDATED_VISIBILITY_STATUS_SUC => { msg => 'Successfully updated visibility status.', type => 'success',},
   DISEASE_MIM_IN_DB => { msg => 'Disease mim is already in database.', type => 'danger',},
@@ -35,6 +35,7 @@ our %MESSAGES = (
   DELETED_GFD_ACTION_SUC => { msg => 'Successfully deleted a genomic feature disease action.', type => 'success'},
   DELETED_COMMENT_SUC => { msg => 'Successfully deleted the comment.', type => 'success'},
   UPDATED_PHENOTYPES_SUC => {msg => 'Successfully updated the list of phenotypes.', type => 'success'},
+  DATA_NOT_CHANGED => {msg => 'Data has not changed.', type => 'info'},
 );
 
 our @EXPORT_OK = (%MESSAGES); 

@@ -125,6 +125,7 @@ sub startup {
 
   $r->get('/gene')->to('gene#show');
   $r->get('/disease')->to('disease#show');
+  $r->get('/disease/update/')->to('disease#update');
 
   $r->get('/search')->to('search#results');
   $r->get('/cgi-bin/#script_name/*path_info' => {path_info => ''}, sub {
