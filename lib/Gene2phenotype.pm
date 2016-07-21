@@ -123,7 +123,7 @@ sub startup {
   $r->get('/gfd/phenotype/:action')->to(controller => 'genomic_feature_disease_phenotype');
   $r->get('/gfd/publication/:action')->to(controller => 'genomic_feature_disease_publication');
 
-  $r->get('/gene')->to('gene#show');
+  $r->get('/gene')->to('genomic_feature#show');
   $r->get('/disease')->to('disease#show');
   $r->get('/disease/update/')->to('disease#update');
 
