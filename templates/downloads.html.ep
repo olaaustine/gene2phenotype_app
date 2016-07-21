@@ -2,7 +2,9 @@
 <div class="container">
   <h3>Downloads</h3>
   <ul>
-    <li><a href='../files/README'>README</a></li>
+    <li>
+      %= link_to README => 'README'
+    </li>
     <li>
       <%= link_to '/downloads/DDG2P.csv.gz' => begin %>
         DD gene-disease pairs and attributes (DDG2P.csv.gz) <img src="../images/export.png" alt="export">
