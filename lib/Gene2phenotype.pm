@@ -14,18 +14,23 @@ sub startup {
 # $self->app->sessions->cookie_name('moblo');
   $self->sessions->default_expiration(3600);
 
-  $self->plugin('CGI');
+  my $config = $self->plugin('Config' => {file => $self->app->home .'/etc/gene2phenotype.conf'});
+  my $password_file = $config->{password_file};
+  my $downloads_dir = $config->{downloads_dir};
+  my $registry_file = $config->{registry};
+
+  $self->plugin('CGI' => {
+    before => sub {
+      my $c = shift;
+      $c->req->url->query->param(registry_file => $registry_file);
+    },
+  });
   $self->plugin('Model');
   $self->plugin('RenderFile');
-  my $config = $self->plugin('Config' => {file => $self->app->home .'/etc/gene2phenotype.conf'});
   $self->plugin(mail => {
     from => 'anja@ebi.ac.uk',
     type => 'text/html',
   });
-
-  my $password_file = $config->{password_file};
-  my $downloads_dir = $config->{downloads_dir};
-  my $registry_file = $config->{registry};
 
   $self->plugin('authentication' => {
     'load_user' => sub {
