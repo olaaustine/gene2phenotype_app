@@ -30,8 +30,9 @@ if ($type eq 'expand') {
   $GFD_id = $cgi->param('GFD_id');
 }
 
+my $registry_file = $cgi->param('registry_file');
 my $registry = 'Bio::EnsEMBL::Registry';
-$registry->load_all('/Users/anjathormann/Documents/develop/ensembl.registry');  
+$registry->load_all($registry_file);
 
 my @phenotype_ids = ();
 my $ontology = $registry->get_adaptor( 'Multi', 'Ontology', 'OntologyTerm' );
