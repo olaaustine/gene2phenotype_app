@@ -5,39 +5,20 @@
 use strict;
 use lib '/nfs/web-hx/vg/gene2phenotype/perl/lib/share/perl5';
 use CGI;
-use DBI;
-use DBD::mysql;
 use JSON;
-use FileHandle;
+use Bio::EnsEMBL::Registry;
 
 # HTTP HEADER
 print "Content-type: application/json\n\n";
  
-# CONFIG VARIABLES
-my $platform = "mysql";
-
-my $configuration_file = '/Users/anjathormann/Documents/develop/registry';
-my $fh = FileHandle->new($configuration_file, 'r');
-my $params = {};
-while (<$fh>) {
-  chomp;
-  my ($db_connection_parameter, $value) = split /=/;
-  $params->{$db_connection_parameter} = $value;
-}
-$fh->close();
-my $database = $params->{database};
-my $host = $params->{host};
-my $port = $params->{port};
-my $user = $params->{user};
-my $password = $params->{password};
-my $tablename = "genomic_feature";
-
-# DATA SOURCE NAME
-my $dsn = "dbi:mysql:$database:$host:$port";
-# PERL DBI CONNECT
-my $connect = DBI->connect($dsn, $user, $password);
-
 my $cgi = CGI->new();
+
+my $registry_file = $cgi->param('registry_file'); 
+my $registry = 'Bio::EnsEMBL::Registry';
+$registry->load_all($registry_file);
+my $DBAdaptor = $registry->get_DBAdaptor('human', 'gene2phenotype');
+my $dbh = $DBAdaptor->dbc->db_handle;
+
 my $term = $cgi->param('term');
 my $type = $cgi->param('query_type');
 my $query = '';
@@ -55,20 +36,12 @@ else { # query
   $query = 'select search_term AS value FROM search where search_term like ?';
 } 
  
-# PREPARE THE QUERY
-my $query_handle = $connect->prepare($query);
-
-# EXECUTE THE QUERY
-#$query_handle->execute('%'.$term.'%');
-$query_handle->execute($term.'%');
- 
-# LOOP THROUGH RESULTS
+my $sth = $dbh->prepare($query);
+$sth->execute($term . '%') or die $dbh->errstr;
 my @query_output = ();
-while ( my $row = $query_handle->fetchrow_hashref ){
-    push @query_output, $row;
+while ( my $row = $sth->fetchrow_hashref ) {
+  push @query_output, $row;
 }
-# CLOSE THE DATABASE CONNECTION
-$connect->disconnect();
+$dbh->disconnect();
  
-# JSON OUTPUT
 print JSON::to_json(\@query_output);
