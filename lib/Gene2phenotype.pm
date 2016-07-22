@@ -151,8 +151,7 @@ sub startup {
     my $tmp_dir = "$downloads_dir/$stamp";
     make_path($tmp_dir);
     download_data($tmp_dir, $file_name, $registry_file);
-    $c->render_file('filepath' => "$tmp_dir/$file_name.gz");
-    unlink "$tmp_dir/$file_name.gz";
+    $c->render_file('filepath' => "$tmp_dir/$file_name.gz", 'cleanup' => 1);
     remove_tree($tmp_dir);
   });
 
