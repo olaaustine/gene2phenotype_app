@@ -154,15 +154,6 @@ sub startup {
     mkpath($tmp_dir);
     download_data($tmp_dir, $file_name, $registry_file);
     $c->render_file('filepath' => "$tmp_dir/$file_name.gz", 'filename' => "$file_name.gz", 'format' => 'zip', 'cleanup' => 1);
-    opendir my $dir, $tmp_dir or die "Cannot open directory: $!";
-    my @files = readdir $dir;
-    closedir $dir;
-    foreach my $file (@files) {
-      next if ($file =~ m/^\./);
-#      unlink "$tmp_dir/$file";
-    }
-#    rmtree($tmp_dir, {result => \my $list} );
-#    print STDERR "unlinked $_\n" for @$list;
   });
 
 }
