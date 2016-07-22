@@ -159,10 +159,10 @@ sub startup {
     closedir $dir;
     foreach my $file (@files) {
       next if ($file =~ m/^\./);
-      unlink "$tmp_dir/$file";
+#      unlink "$tmp_dir/$file";
     }
-    rmtree($tmp_dir, {result => \my $list} );
-    print STDERR "unlinked $_\n" for @$list;
+#    rmtree($tmp_dir, {result => \my $list} );
+#    print STDERR "unlinked $_\n" for @$list;
   });
 
 }
