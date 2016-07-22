@@ -1,0 +1,9 @@
+%= include 'header'
+%= include 'search'
+<div class="container">
+  <div class="bg-danger">
+    <h1>Page not found</h1>
+    <p>Please send an email to <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a> including the URL <%= $c->req->url->to_abs %> for which you are expecting a result.</p>
+  </div>
+</div>
+%= include 'footer'
