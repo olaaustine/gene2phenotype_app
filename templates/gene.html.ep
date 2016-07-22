@@ -66,3 +66,4 @@
     <% } %>
   </div> <!--end variations-->
 </div>
+%= include 'footer'
