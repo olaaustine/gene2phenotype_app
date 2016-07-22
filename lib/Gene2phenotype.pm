@@ -56,6 +56,8 @@ sub startup {
 
   $r->get('/')->to(template => 'home');
   $r->get('/disclaimer')->to(template => 'disclaimer');
+  $r->get('/documentation')->to(template => 'documentation');
+  $r->get('/help')->to(template => 'help');
 
   $r->get('/account')->to('login#account_info');
   $r->post('/account/update' => sub {
