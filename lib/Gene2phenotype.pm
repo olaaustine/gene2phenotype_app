@@ -153,7 +153,7 @@ sub startup {
     my $tmp_dir = "$downloads_dir/$stamp";
     mkpath($tmp_dir);
     download_data($tmp_dir, $file_name, $registry_file);
-    $c->render_file('filepath' => "$tmp_dir/$file_name.gz");
+    $c->render_file('filepath' => "$tmp_dir/$file_name.gz", 'filename' => "$file_name.gz", 'format' => 'zip', 'cleanup' => 1);
     opendir my $dir, $tmp_dir or die "Cannot open directory: $!";
     my @files = readdir $dir;
     closedir $dir;
