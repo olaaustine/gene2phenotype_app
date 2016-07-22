@@ -153,8 +153,12 @@ sub startup {
     my $tmp_dir = "$downloads_dir/$stamp";
     mkpath($tmp_dir);
     download_data($tmp_dir, $file_name, $registry_file);
-    $c->render_file('filepath' => "$tmp_dir/$file_name.gz", 'cleanup' => 1);
-    rmtree($tmp_dir);
+    $c->render_file('filepath' => "$tmp_dir/$file_name.gz");
+    while (-e "$tmp_dir/$file_name.gz") {
+      unlink "$tmp_dir/$file_name.gz";
+    }
+    rmtree($tmp_dir, {result => \my $list} );
+    print STDERR "unlinked $_\n" for @$list;
   });
 
 }
