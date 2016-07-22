@@ -2,7 +2,9 @@ package Gene2phenotype;
 use Mojo::Base 'Mojolicious';
 use Mojo::Home;
 use Apache::Htpasswd;
-use File::Path qw(make_path remove_tree);
+#use File::Path qw(make_path remove_tree);
+use File::Path;
+
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::G2P::Utils::Downloads qw(download_data);
 
@@ -149,10 +151,10 @@ sub startup {
     my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime(time);
     my $stamp = join('_', ($mday, $mon, $hour, $min, $sec));
     my $tmp_dir = "$downloads_dir/$stamp";
-    make_path($tmp_dir);
+    mkpath($tmp_dir);
     download_data($tmp_dir, $file_name, $registry_file);
     $c->render_file('filepath' => "$tmp_dir/$file_name.gz", 'cleanup' => 1);
-    remove_tree($tmp_dir);
+    rmtree($tmp_dir);
   });
 
 }
