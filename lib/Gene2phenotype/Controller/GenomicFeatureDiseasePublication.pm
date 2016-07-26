@@ -11,7 +11,7 @@ sub add {
   my $model = $self->model('genomic_feature_disease_publication'); 
   $model->add_publication($GFD_id, $email, $source, $pmid, $title);
   $self->feedback_message('ADDED_PUBLICATION_SUC');
-  return $self->redirect_to("/gfd?GFD_id=$GFD_id");
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
 
 sub delete {
@@ -22,7 +22,7 @@ sub delete {
   my $model = $self->model('genomic_feature_disease_publication'); 
   $model->delete($GFD_publication_id, $email);
   $self->feedback_message('DELETED_GFDPUBLICATION_SUC');
-  return $self->redirect_to("/gfd?GFD_id=$GFD_id");
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
 
 sub add_comment {
@@ -34,7 +34,7 @@ sub add_comment {
   my $model = $self->model('genomic_feature_disease_publication'); 
   $model->add_comment($GFD_publication_id, $GFD_publication_comment, $email);
   $self->feedback_message('ADDED_COMMENT_SUC');
-  return $self->redirect_to("/gfd?GFD_id=$GFD_id");
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
 
 sub delete_comment {
@@ -45,7 +45,7 @@ sub delete_comment {
   my $model = $self->model('genomic_feature_disease_publication'); 
   $model->delete_comment($GFD_publication_comment_id, $email);
   $self->feedback_message('DELETED_COMMENT_SUC');
-  return $self->redirect_to("/gfd?GFD_id=$GFD_id");
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
 
 1;

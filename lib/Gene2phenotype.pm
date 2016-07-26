@@ -20,6 +20,9 @@ sub startup {
   my $password_file = $config->{password_file};
   my $downloads_dir = $config->{downloads_dir};
   my $registry_file = $config->{registry};
+  my $public_folder = $config->{public_folder};
+  my $static = $self->app->static();
+  push @{$static->paths}, $public_folder;
 
   $self->plugin('CGI' => {
     before => sub {
@@ -56,13 +59,13 @@ sub startup {
     $c->stash(logged_in => $c->session('logged_in'));
   });
 
-  $r->get('/')->to(template => 'home');
-  $r->get('/disclaimer')->to(template => 'disclaimer');
-  $r->get('/documentation')->to(template => 'documentation');
-  $r->get('/help')->to(template => 'help');
+  $r->get('/gene2phenotype')->to(template => 'home');
+  $r->get('/gene2phenotype/disclaimer')->to(template => 'disclaimer');
+  $r->get('/gene2phenotype/documentation')->to(template => 'documentation');
+  $r->get('/gene2phenotype/help')->to(template => 'help');
 
-  $r->get('/account')->to('login#account_info');
-  $r->post('/account/update' => sub {
+  $r->get('/gene2phenotype/account')->to('login#account_info');
+  $r->post('/gene2phenotype/account/update' => sub {
     my $c = shift;
     my $auth = new Apache::Htpasswd({ passwdFile => $password_file, ReadOnly => 0, UseMD5 => 1,});
 
@@ -87,14 +90,14 @@ sub startup {
       return $c->redirect_to('account');
     } else {
       $c->flash(message => 'Error occurred while resetting your password. Please contact g2p-help@ebi.ac.uk', alert_class => 'alert-danger');
-      return $c->redirect_to('account');
+      return $c->redirect_to('/gene2phenotype/account');
     }
   });
-  $r->get('/login')->to(template => 'login/login');
-  $r->get('/login/recovery')->to(template => 'login/recovery');
-  $r->post('/login/recovery/mail')->to('login#send_recover_pwd_mail');
-  $r->get('/login/recovery/reset')->to('login#validate_pwd_recovery');
-  $r->post('/login/recovery/update' => sub {
+  $r->get('/gene2phenotype/login')->to(template => 'login/login');
+  $r->get('/gene2phenotype/login/recovery')->to(template => 'login/recovery');
+  $r->post('/gene2phenotype/login/recovery/mail')->to('login#send_recover_pwd_mail');
+  $r->get('/gene2phenotype/login/recovery/reset')->to('login#validate_pwd_recovery');
+  $r->post('/gene2phenotype/login/recovery/update' => sub {
     my $c = shift;
     my $auth = new Apache::Htpasswd({ passwdFile => $password_file, ReadOnly => 0, UseMD5 => 1,});
     my $email = $c->param('email');
@@ -109,42 +112,42 @@ sub startup {
         $c->session(logged_in => 1);
         $c->stash(logged_in => 1);
         $c->flash({message => 'Successfully updated password', alert_class => 'alert-success'});
-        return $c->redirect_to('/');
+        return $c->redirect_to('/gene2phenotype');
       }
     }
     $c->flash(message => 'Error occurred while resetting your password. Please contact g2p-help@ebi.ac.uk', alert_class => 'alert-danger');
     return $c->redirect_to('/');
   });
 
-  $r->get('/reset')->to(template => 'login', change_pwd => 1);
-  $r->get('/logout')->to('login#on_user_logout');
+  $r->get('/gene2phenotype/reset')->to(template => 'login', change_pwd => 1);
+  $r->get('/gene2phenotype/logout')->to('login#on_user_logout');
   
-  $r->post('/login')->to('login#on_user_login');
-  $r->post('/reset')->to('login#reset_pwd');
+  $r->post('/gene2phenotype/login')->to('login#on_user_login');
+  $r->post('/gene2phenotype/reset')->to('login#reset_pwd');
 
-  $r->get('/gfd')->to('genomic_feature_disease#show');
+  $r->get('/gene2phenotype/gfd')->to('genomic_feature_disease#show');
 
 # :action=add, delete, update, add_comment, delete_comment
-  $r->get('/gfd/authorised/update')->to('genomic_feature_disease#update_visibility');
-  $r->get('/gfd/category/update')->to('genomic_feature_disease#update');
-  $r->get('/gfd/organ/update')->to('genomic_feature_disease#update_organ_list');
-  $r->get('/gfd/attributes/:action')->to(controller => 'genomic_feature_disease_attributes');
-  $r->get('/gfd/phenotype/:action')->to(controller => 'genomic_feature_disease_phenotype');
-  $r->get('/gfd/publication/:action')->to(controller => 'genomic_feature_disease_publication');
+  $r->get('/gene2phenotype/gfd/authorised/update')->to('genomic_feature_disease#update_visibility');
+  $r->get('/gene2phenotype/gfd/category/update')->to('genomic_feature_disease#update');
+  $r->get('/gene2phenotype/gfd/organ/update')->to('genomic_feature_disease#update_organ_list');
+  $r->get('/gene2phenotype/gfd/attributes/:action')->to(controller => 'genomic_feature_disease_attributes');
+  $r->get('/gene2phenotype/gfd/phenotype/:action')->to(controller => 'genomic_feature_disease_phenotype');
+  $r->get('/gene2phenotype/gfd/publication/:action')->to(controller => 'genomic_feature_disease_publication');
 
-  $r->get('/gene')->to('genomic_feature#show');
-  $r->get('/disease')->to('disease#show');
-  $r->get('/disease/update/')->to('disease#update');
+  $r->get('/gene2phenotype/gene')->to('genomic_feature#show');
+  $r->get('/gene2phenotype/disease')->to('disease#show');
+  $r->get('/gene2phenotype/disease/update/')->to('disease#update');
 
-  $r->get('/search')->to('search#results');
+  $r->get('/gene2phenotype/search')->to('search#results');
   $r->get('/cgi-bin/#script_name/*path_info' => {path_info => ''}, sub {
     my $c = shift;
     my $script_name = $c->stash('script_name');
     my $home =  $c->app->home;
     $c->cgi->run( script => "$home/cgi-bin/$script_name");
   });
-  $r->get('/downloads')->to(template => 'downloads');
-  $r->get('/downloads/#file_name' => sub {
+  $r->get('/gene2phenotype/downloads')->to(template => 'downloads');
+  $r->get('/gene2phenotype/downloads/#file_name' => sub {
     my $c = shift;
     my $file_name = $c->stash('file_name');
     $file_name =~ s/\.gz//;

@@ -11,7 +11,7 @@ sub on_user_login {
     $self->session(logged_in => 1);
     $self->session(expiration => 3600);
     $self->session(email => $email);
-    my $last_page = $self->session('last_url') || '/';
+    my $last_page = $self->session('last_url') || '/gene2phenotype';
     return $self->redirect_to($last_page);
   }
 
@@ -22,7 +22,7 @@ sub on_user_logout {
   my $self = shift;
   $self->session(logged_in => 0);
   $self->session(expires => 1);
-  my $last_page = $self->session('last_url') || '/';
+  my $last_page = $self->session('last_url') || '/gene2phenotype';
   return $self->redirect_to($last_page);
 }
 
@@ -37,7 +37,7 @@ sub send_recover_pwd_mail {
 
   my $autologin_code = md5_hex( time + rand(time) );
 
-  my $url = $self->url_for('/login/recovery/reset')->query(code => $autologin_code)->to_abs;
+  my $url = $self->url_for('/gene2phenotype/login/recovery/reset')->query(code => $autologin_code)->to_abs;
 
   $self->session(email => $email);
   $self->session(code => $autologin_code);
@@ -49,7 +49,7 @@ sub send_recover_pwd_mail {
     data    => $url,
   );
   $self->flash(message => "An email with instructions for how to reset your email has been sent to $email", alert_class => 'alert-info');
-  return $self->redirect_to('/');
+  return $self->redirect_to('/gene2phenotype');
 
 }
 

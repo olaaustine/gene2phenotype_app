@@ -11,7 +11,7 @@ sub add {
   my $model = $self->model('genomic_feature_disease_attributes');
   $model->add($GFD_id, $email, $allelic_requirement_attrib_ids, $mutation_consequence_attrib_id);
   $self->feedback_message('ADDED_GFD_ACTION_SUC');
-  return $self->redirect_to("/gfd?GFD_id=$GFD_id");
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
 
 sub update {
@@ -25,7 +25,7 @@ sub update {
   my $model = $self->model('genomic_feature_disease_attributes');
   $model->update($email, $allelic_requirement_attrib_ids, $mutation_consequence_attrib_id, $GFD_action_id);
   $self->feedback_message('UPDATED_GFD_ACTION_SUC');
-  return $self->redirect_to("/gfd?GFD_id=$GFD_id");
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
 
 sub delete {
@@ -36,7 +36,7 @@ sub delete {
   my $model = $self->model('genomic_feature_disease_attributes');
   $model->delete($GFD_id, $email, $GFD_action_id);
   $self->feedback_message('DELETED_GFD_ACTION_SUC');
-  return $self->redirect_to("/gfd?GFD_id=$GFD_id");
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
 
 1;
