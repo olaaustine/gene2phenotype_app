@@ -18,7 +18,7 @@
 
   <% if ($logged_in) { %>  
     <div class="form-group visibility">
-      %= form_for '/gfd/authorised/update' => begin
+      %= form_for '/gene2phenotype/gfd/authorised/update' => begin
         <select name="visibility">
           <TMPL_IF NAME="authorised">
           <% if ($gfd->{authorised}) { %>

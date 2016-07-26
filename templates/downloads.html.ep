@@ -6,7 +6,7 @@
       %= link_to README => 'README'
     </li>
     <li>
-      <%= link_to '/downloads/DDG2P.csv.gz' => begin %>
+      <%= link_to '/gene2phenotype/downloads/DDG2P.csv.gz' => begin %>
         DD gene-disease pairs and attributes (DDG2P.csv.gz) <img src="../images/export.png" alt="export">
       <% end %>
     </li>

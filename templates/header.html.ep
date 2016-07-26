@@ -3,23 +3,23 @@
     <div class="container-fluid">
       <ul class="nav navbar-nav">
         <li>
-          %= link_to Gene2Phenotype  => '/' => (class => 'navbar-brand')
+          %= link_to Gene2Phenotype  => '/gene2phenotype' => (class => 'navbar-brand')
         </li>
         <li>
-          %= link_to Downloads => 'downloads' => (class => 'navbar-brand')
+          %= link_to Downloads => '/gene2phenotype/downloads' => (class => 'navbar-brand')
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <% if ($logged_in) { %>
           <li>
-            %= link_to 'Sign out' => 'logout'
+            %= link_to 'Sign out' => '/gene2phenotype/logout'
           </li>
           <li>
-            %= link_to 'Account' => 'account'
+            %= link_to 'Account' => '/gene2phenotype/account'
           </li>
         <% } else { %>
           <li>
-            %= link_to 'Sign in' => 'login'
+            %= link_to 'Sign in' => '/gene2phenotype/login'
           </li>
         <% } %>
       </ul>

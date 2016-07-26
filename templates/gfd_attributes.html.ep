@@ -19,7 +19,7 @@
     </div>
     <div class="show_edit_content">
       <h4>Edit DDD category:</h4>
-      %= form_for '/gfd/category/update' => begin
+      %= form_for '/gene2phenotype/gfd/category/update' => begin
         <div class="form-group">
           <label>DDD category: </label>
           %= select_field category_attrib_id => $gfd->{GFD_category_list} 
@@ -43,7 +43,7 @@
     </div>
     <div class="show_edit_content">
       <h4>Add allelic requirements and mutation consequence:</h4>
-      %= form_for '/gfd/attributes/add' => begin
+      %= form_for '/gene2phenotype/gfd/attributes/add' => begin
         <div class="form-group">
           <% foreach my $AR (@{$gfd->{add_AR_loop}}) { %>
             %= check_box allelic_requirement_attrib_id => $AR->{AR_attrib_id}
@@ -77,7 +77,7 @@
       <% if ($logged_in) { %>
         <div class="align_right">
           <div class="align_inline">
-            %= form_for '/gfd/attributes/delete' => begin
+            %= form_for '/gene2phenotype/gfd/attributes/delete' => begin
               %= hidden_field GFD_action_id => $GFD_action->{GFD_action_id}
               %= hidden_field GFD_id => $gfd->{GFD_id}
               <input id="button" type="submit" value="Delete" class="btn btn-primary btn-sm confirm"/>
@@ -92,7 +92,7 @@
     </div>
     <div class="show_edit_content">
       <h4>Edit allelic requirements and mutation consequence:</h4>
-      %= form_for '/gfd/attributes/update' => begin
+      %= form_for '/gene2phenotype/gfd/attributes/update' => begin
         <div class="form-group">
           <label>Allelic requirement:</label><br>
           <% foreach my $AR (@{$GFD_action->{AR_loop}}) { %>

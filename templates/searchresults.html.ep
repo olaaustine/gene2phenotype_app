@@ -15,7 +15,7 @@
         <ul>
           <% foreach my $gene (@{$search_results->{gene_names}}) { %>
             <li>
-               %= form_for gene => (id => $gene->{dbID}) => begin
+               %= form_for '/gene2phenotype/gene' => (id => $gene->{dbID}) => begin
                  %= hidden_field search_type => $gene->{search_type}
                  %= hidden_field dbID => $gene->{dbID}
                 <%= link_to '#' => ( onclick => "document.getElementById($gene->{dbID}).submit();") => begin %><%== $gene->{gene_symbol} %><% end %>
@@ -25,7 +25,7 @@
               <ul>
                 <% foreach my $gfd (@{$gene->{gfd_results}}){ %>              
                   <li>
-                    %= form_for gfd => (id => $gfd->{dbID}) => begin
+                    %= form_for '/gene2phenotype/gfd' => (id => $gfd->{dbID}) => begin
                       %= hidden_field search_type => $gfd->{search_type}
                       %= hidden_field dbID => $gfd->{dbID}
                       <%= link_to '#' => ( onclick => "document.getElementById($gfd->{dbID}).submit();") => begin %>
@@ -48,7 +48,7 @@
         <ul>
           <% foreach my $disease (@{$search_results->{disease_names}}) { %>
             <li>
-               %= form_for disease => (id => $disease->{dbID}) => begin
+               %= form_for '/gene2phenotype/disease' => (id => $disease->{dbID}) => begin
                  %= hidden_field search_type => $disease->{search_type}
                  %= hidden_field dbID => $disease->{dbID}
                 <%= link_to '#' => ( onclick => "document.getElementById($disease->{dbID}).submit();") => begin %><%== $disease->{display_disease_name} %><% end %>
@@ -58,7 +58,7 @@
               <ul>
                 <% foreach my $gfd (@{$disease->{gfd_results}}){ %>              
                   <li>
-                    %= form_for gfd => (id => $gfd->{dbID}) => begin
+                    %= form_for '/gene2phenotype/gfd' => (id => $gfd->{dbID}) => begin
                       %= hidden_field search_type => $gfd->{search_type}
                       %= hidden_field dbID => $gfd->{dbID}
                       <%= link_to '#' => ( onclick => "document.getElementById($gfd->{dbID}).submit();") => begin %>
