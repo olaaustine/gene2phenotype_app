@@ -59,6 +59,14 @@ sub startup {
     $c->stash(logged_in => $c->session('logged_in'));
   });
 
+# redirect from old page:
+  $r->get('/gene2phenotype/redirect')->to(template => 'redirect');
+
+  $r->get('/gene2phenotype/gene2phenotype-webcode/*' => sub {
+    my $c = shift;
+    return $c->redirect_to('/gene2phenotype/redirect');
+  });
+
   $r->get('/gene2phenotype')->to(template => 'home');
   $r->get('/gene2phenotype/disclaimer')->to(template => 'disclaimer');
   $r->get('/gene2phenotype/documentation')->to(template => 'documentation');
@@ -76,18 +84,18 @@ sub startup {
 
     if (!$self->authenticate($email, $current_pwd)) { 
       $c->flash({message => 'Your current password is incorrect', alert_class => 'alert-danger'});
-      return $c->redirect_to('account');
+      return $c->redirect_to('/gene2phenotype/account');
     }
 
     if ($new_pwd ne $retyped_pwd) {
       $c->flash({message => 'Passwords don\'t match. Please ensure retyped password matches your new password.', alert_class => 'alert-danger'});
-      return $c->redirect_to('account');
+      return $c->redirect_to('/gene2phenotype/account');
     }
 
     my $success = $auth->htpasswd($email, $new_pwd, {'overwrite' => 1});        
     if ($success) {
       $c->flash({message => 'Successfully updated password', alert_class => 'alert-success'});
-      return $c->redirect_to('account');
+      return $c->redirect_to('/gene2phenotype/account');
     } else {
       $c->flash(message => 'Error occurred while resetting your password. Please contact g2p-help@ebi.ac.uk', alert_class => 'alert-danger');
       return $c->redirect_to('/gene2phenotype/account');
@@ -116,7 +124,7 @@ sub startup {
       }
     }
     $c->flash(message => 'Error occurred while resetting your password. Please contact g2p-help@ebi.ac.uk', alert_class => 'alert-danger');
-    return $c->redirect_to('/');
+    return $c->redirect_to('/gene2phenotype');
   });
 
   $r->get('/gene2phenotype/reset')->to(template => 'login', change_pwd => 1);
