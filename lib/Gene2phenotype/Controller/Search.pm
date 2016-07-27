@@ -26,7 +26,7 @@ sub results {
   }
   $self->stash(search_results => $search_results);
   $self->stash(search_term => $search_term);
-  $self->session(last_url => "/search?panel=$panel&search_term=$search_term");
+  $self->session(last_url => "/gene2phenotype/search?panel=$panel&search_term=$search_term");
   $self->render(template => 'searchresults');
 }
 
