@@ -1,14 +1,9 @@
 #!/usr/bin/perl -w
  
 use strict;
-use lib '/nfs/web-hx/vg/gene2phenotype/perl/lib/share/perl5';
-use lib '/nfs/web-hx/vg/gene2phenotype/perl/lib/lib64/perl5';
 use CGI;
-use JSON;
-#use lib "../../lib/ensembl/modules";
-#use lib "../../lib/gene2phenotype/modules";
+use JSON qw//;
 use Bio::EnsEMBL::Registry;
-#use G2P::Registry;
 
 # HTTP HEADER
 print "Content-type: application/json\n\n";
@@ -42,7 +37,7 @@ my @query_output = ();
 
 
 if ($type eq 'expand') {
-  my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease');
+  my $GFD_adaptor = $registry->get_adaptor('homo_sapiens', 'gene2phenotype', 'genomicfeaturedisease');
   my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
   my $GFDPhenotypes = $GFD->get_all_GFDPhenotypes;
   foreach my $GFDPhenotype (@$GFDPhenotypes) {
