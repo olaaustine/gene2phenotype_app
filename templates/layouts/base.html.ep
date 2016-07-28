@@ -10,7 +10,7 @@
 %= stylesheet '/css/docs.min.css'
 %= stylesheet '/css/jquery.dataTables.min.css'
 %= stylesheet '/scripts/jstree/themes/default/style.min.css'
-%= javascript '/scripts/jquery-1.11.1.js'
+%= javascript '/scripts/jquery-2.2.4.min.js'
 %= javascript '/scripts/jquery-ui.min.js'
 %= javascript '/scripts/bootstrap.min.js'
 %= javascript '/scripts/d3.min.js'
