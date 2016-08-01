@@ -8,7 +8,7 @@ sub show {
         
   my $disease_attribs = $model->fetch_by_dbID($disease_id);
   $self->stash(disease => $disease_attribs);  
-  $self->render(template => 'disease');
+  $self->render(template => 'disease_page');
 }
 
 sub update {

@@ -12,7 +12,10 @@ sub fetch_by_dbID {
   my $panel = $GFD->panel;
   my $authorised = $GFD->is_visible;
   my $gene_symbol = $GFD->get_GenomicFeature->gene_symbol;
+  my $gene_id = $GFD->get_GenomicFeature->dbID;
+
   my $disease_name = $GFD->get_Disease->name; 
+  my $disease_id = $GFD->get_Disease->dbID;
 
   my $GFD_category = $self->_get_GFD_category($GFD);
   my $GFD_category_list = $self->_get_GFD_category_list($GFD);
@@ -30,7 +33,9 @@ sub fetch_by_dbID {
   return {
     panel => $panel,
     gene_symbol => $gene_symbol,
+    gene_id => $gene_id,
     disease_name => $disease_name,
+    disease_id => $disease_id,
     authorised => $authorised,
     GFD_id => $dbID,
     GFD_category => $GFD_category,

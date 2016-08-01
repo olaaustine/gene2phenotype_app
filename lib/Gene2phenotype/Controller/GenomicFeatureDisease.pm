@@ -4,11 +4,24 @@ use base qw(Gene2phenotype::Controller::BaseController);
 sub show {
   my $self = shift;
   my $model = $self->model('genomic_feature_disease');  
+  my $disease_model = $self->model('disease');
+  my $GF_model = $self->model('genomic_feature');
+
   my $dbID = $self->param('dbID') || $self->param('GFD_id');
 
   # check if GFD is authorised
   my $gfd = $model->fetch_by_dbID($dbID); 
   $self->stash(gfd => $gfd);
+
+  my $disease_id = $gfd->{disease_id};
+  my $disease_attribs = $disease_model->fetch_by_dbID($disease_id);
+  $self->stash(disease => $disease_attribs);
+
+  my $gene_id = $gfd->{gene_id};
+  my $gene_attribs = $GF_model->fetch_by_dbID($gene_id);
+  my $variations = $GF_model->fetch_variants($gene_id);
+  $self->stash(gene => $gene_attribs, variations => $variations);
+
   $self->session(last_url => "/gene2phenotype/gfd?GFD_id=$dbID");
   $self->render(template => 'gfd');
 }

@@ -9,7 +9,7 @@ sub show {
   my $gene_attribs = $model->fetch_by_dbID($gene_id);
   my $variations = $model->fetch_variants($gene_id);
   $self->stash(gene => $gene_attribs, variations => $variations);
-  $self->render(template => 'gene');
+  $self->render(template => 'gene_page');
 }
 
 1;
