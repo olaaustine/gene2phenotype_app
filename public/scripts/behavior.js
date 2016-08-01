@@ -15,13 +15,13 @@ $(document).ready(function(){
     $('img[alt="panel_image"]').attr('src', img_src);
   }); 
 
-  $('#ensembl_variants_table').DataTable();
   $("#query_phenotype_name, #query, #query_gene_name, #query_disease_name" ).click(function(){
     var id = $(this).attr('id');
     $(this).autocomplete({
       source: function(request, response) {
         $.ajax({
-          url: "/cgi-bin/autocomplete.cgi",
+          url: "/ajax/autocomplete",
+
           dataType: "json",
           data: {
             term : request.term,
@@ -40,6 +40,9 @@ $(document).ready(function(){
       select: function(event, ui) {}
     });
   }); 
+
+  $('#ensembl_variants_table').DataTable();
+
 
   $(".align_right").mouseenter(function(){
     $(this).prev().css('background-color', '#D4D8D1');
