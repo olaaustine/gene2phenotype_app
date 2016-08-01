@@ -15,7 +15,7 @@ $( document ).ready(function() {
     
     "search" : {
       'ajax' : {
-        url : '/cgi-bin/populate_onotology_tree.cgi',
+        url : '/ajax/populate_onotology_tree',
         dataType : "json",
         error : function(data, type){
           console.log(type);
@@ -33,7 +33,7 @@ $( document ).ready(function() {
 
     'core' : {
       'data' : {
-        "url" : "/cgi-bin/populate_onotology_tree.cgi",
+        "url" : "/ajax/populate_onotology_tree",
         "data" : function (node) {
           return { "id" : node.id,
                    "GFD_id" : GFD_id,
