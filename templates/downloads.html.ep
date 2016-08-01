@@ -7,7 +7,7 @@
     </li>
     <li>
       <%= link_to '/gene2phenotype/downloads/DDG2P.csv.gz' => begin %>
-        DD gene-disease pairs and attributes (DDG2P.csv.gz) <img src="../images/export.png" alt="export">
+        DD gene-disease pairs and attributes (DDG2P.csv.gz) <img src="/gene2phenotype/images/export.png" alt="export">
       <% end %>
     </li>
   </ul>

@@ -1,7 +1,7 @@
 <div id="search" class="container">
 
 %= tag div => (id => 'panel_image') => begin
-<img src="/images/G2P-ALL.png" alt="panel_image" height="150" width="150">
+<img src="/gene2phenotype/images/G2P-ALL.png" alt="panel_image" height="150" width="150">
 % end
 
   <div id="search-body">

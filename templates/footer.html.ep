@@ -19,10 +19,10 @@
       <div class="container">
         <ul class="bs-docs-footer-links text-muted">
           <li>
-            %= image '/images/EBI.png', alt => 'EBI', width => '20%', height => 'auto' 
+            %= image '/gene2phenotype/images/EBI.png', alt => 'EBI', width => '20%', height => 'auto' 
           </li>
           <li>
-            %= image '/images/sanger.png', alt => 'sanger', width => '20%', height => 'auto' 
+            %= image '/gene2phenotype/images/sanger.png', alt => 'sanger', width => '20%', height => 'auto' 
           </li>
         </ul>
       </div>
