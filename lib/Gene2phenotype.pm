@@ -20,6 +20,9 @@ sub startup {
   my $downloads_dir = $config->{downloads_dir};
   my $registry_file = $config->{registry};
   my $public_folder = $config->{public_folder};
+  my $passphrase = $config->{passphrase};
+  $self->app->secrets([$passphrase]);
+
   my $static = $self->app->static();
   push @{$static->paths}, $public_folder;
 
