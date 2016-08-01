@@ -23,8 +23,8 @@ sub startup {
   my $passphrase = $config->{passphrase};
   $self->app->secrets([$passphrase]);
 
-  my $static = $self->app->static();
-  push @{$static->paths}, $public_folder;
+#  my $static = $self->app->static();
+#  push @{$static->paths}, $public_folder;
 
   $self->plugin('CGI' => {
     before => sub {
