@@ -20,7 +20,7 @@ $(document).ready(function(){
     $(this).autocomplete({
       source: function(request, response) {
         $.ajax({
-          url: "/ajax/autocomplete",
+          url: "/gene2phenotype/ajax/autocomplete",
 
           dataType: "json",
           data: {
