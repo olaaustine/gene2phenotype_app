@@ -3,7 +3,7 @@
 <div class="container">
   <div class="bg-danger">
     <h1>Redirect</h1>
-    <p>We have updated our website. Please go to our homepage and navigate from there to the page you were looking for. Please send an email to <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a> if you cannot find what you were looking for.</p>
+    <p>We have updated our website. Please go to our homepage and navigate from there to the page you were looking for. Please send an email to <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a> if you cannot find the page you were looking for.</p>
   </div>
 </div>
 %= include 'footer'
