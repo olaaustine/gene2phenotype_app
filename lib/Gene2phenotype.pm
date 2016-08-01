@@ -4,7 +4,6 @@ use Mojo::Home;
 use Apache::Htpasswd;
 #use File::Path qw(make_path remove_tree);
 use File::Path;
-
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::G2P::Utils::Downloads qw(download_data);
 
@@ -148,6 +147,39 @@ sub startup {
   $r->get('/gene2phenotype/disease/update/')->to('disease#update');
 
   $r->get('/gene2phenotype/search')->to('search#results');
+
+  $r->get('/ajax/autocomplete' => sub {
+    my $c = shift;
+    my $term = $c->param('term');
+    my $type = $c->param('query_type');
+
+    my $dbh = $c->app->defaults('dbh');
+
+    my $query = '';
+
+    if ($type eq 'query_phenotype_name') {
+      $query = 'select name AS value FROM phenotype where name like ?';
+    }
+    elsif ($type eq 'query_gene_name') {
+      $query = 'select gene_symbol AS value FROM genomic_feature where gene_symbol like ?';
+    }
+    elsif ($type eq 'query_disease_name') {
+      $query = 'select name AS value FROM disease where name like ?';
+    }
+    else { # query
+      $query = 'select search_term AS value FROM search where search_term like ?';
+    }
+
+    my $sth = $dbh->prepare($query);
+    $sth->execute($term . '%') or die $dbh->errstr;
+    my @query_output = ();
+    while ( my $row = $sth->fetchrow_hashref ) {
+      push @query_output, $row;
+    }
+    $c->render(json => \@query_output);  
+  });
+
+
   $r->get('/cgi-bin/#script_name/*path_info' => {path_info => ''}, sub {
     my $c = shift;
     my $script_name = $c->stash('script_name');
@@ -183,8 +215,12 @@ sub g2p_defaults {
       $value => $value,
     ];
   }
+  my $DBAdaptor = $registry->get_DBAdaptor('human', 'gene2phenotype');
+  my $dbh = $DBAdaptor->dbc->db_handle;
+
   $self->defaults(panel_imgs => \@panel_imgs);
   $self->defaults(registry => $registry);
+  $self->defaults(dbh => $dbh);
   $self->defaults(panel => 'ALL');
   $self->defaults(logged_in => 0);
   $self->defaults(alert_class => '');
