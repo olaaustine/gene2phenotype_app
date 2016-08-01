@@ -193,8 +193,8 @@ sub startup {
         push @query_output, {
           id => $term->dbID,
           text => $term->name,
-          children => (scalar @children > 0) ? 1 : 0,
-          state => {selected => (grep {$_ == $term->dbID} @phenotype_ids) ? 1 : 0},
+          children => (scalar @children > 0) ? \1 : \0,
+          state => {selected => (grep {$_ == $term->dbID} @phenotype_ids) ? \1 : \0},
         };
       }
     }
