@@ -11,9 +11,6 @@
     <li><a href="#organ_specificity">Organ specificity</a></li>
     <li><a href="#disease">Disease</a> </li>
     <li><a href="#gene">Gene</a></li>
-    <TMPL_IF NAME="logged_in">        
-      <li><a href="#user_activity">User activity</a></li>
-    </TMPL_IF>
   </ul> 
 
   <% if ($logged_in) { %>  
@@ -41,5 +38,8 @@
   %= include 'publication'
   %= include 'phenotype'
   %= include 'organ'
+  %= include 'disease'
+  %= include 'gene'
+
 </div>
 %= include 'footer'
