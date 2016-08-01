@@ -1,0 +1,68 @@
+%= include 'header'
+%= include 'search'
+<div class="container">
+  <h3>Gene</h3>
+  <div>
+  <dl>
+    <dt>OMIM MIM</dt>
+    <dd>
+      <% if ($gene->{mim}) {
+        my $link = "http://omim.org/entry/" . $gene->{mim}; %>
+        <%= link_to $link => begin %><%= $gene->{mim} %> <% end %>
+      <% } %>
+    </dd>
+    <dt>Ensembl stable ID</dt>
+    <dd>
+      <% if ($gene->{ensembl_stable_id}) {
+        my $link =  "http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=" . $gene->{ensembl_stable_id}; %>
+        <%= link_to $link => begin %><%= $gene->{ensembl_stable_id} %> <% end %>
+      <% } %>
+    </dd>
+    <dt>Synonyms</dt>
+    <dd><%= $gene->{synonyms} %></dd>
+  </dl>
+  </div>
+  <div class="clear"></div>
+  <div class="variations">
+    <% if ($variations) { %>
+      <p>The following variants are retrieved from Ensembl. We only select variants that have been annotated as pathogenic by ClinVar. For each of the variants we display the most severe consequence. If there are multiple transcripts producing the consequence, we choose the canonical transcript, otherwise we select the transcript randomly.</p>
+      %= tag div => (class => 'chart', data => $variations->{counts}) => begin
+        <svg></svg>
+      % end
+      <table id="ensembl_variants_table">
+        <thead>
+          <tr>
+            <th>Location</th>
+            <th>Variant name</th>
+            <th>Variant source</th>
+            <th>Alleles REF/ALT</th>
+            <th>Most severe consequence</th>
+            <th>Transcript ID</th>
+            <th>Amino acid change</th>
+            <th>PolyPhen prediction</th>
+            <th>SIFT prediction</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% foreach my $variation (@{$variations->{tmpl}}) { %>          
+            <tr>
+              <td><%= $variation->{location} %></td>
+              <td>
+                <% my $link = "http://www.ensembl.org/Homo_sapiens/Variation/Explore?v=" . $variation->{variant_name}; %>
+                <%= link_to $link => begin %><%= $variation->{variant_name} %> <% end %>
+              </td>
+              <td><%= $variation->{variant_source} %></td>
+              <td><%= $variation->{allele_string} %></td>
+              <td><%= $variation->{consequence} %></td>
+              <td><%= $variation->{transcript_stable_id} %></td>
+              <td><%= $variation->{pep_allele_string} %></td>
+              <td><%= $variation->{polyphen_prediction} %></td>
+              <td><%= $variation->{sift_prediction} %></td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    <% } %>
+  </div> <!--end variations-->
+</div>
+%= include 'footer'
