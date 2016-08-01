@@ -1,8 +1,5 @@
-%= include 'header'
-%= include 'search'
-
-<div class="container">
-  <h3>Gene</h3>
+<div>
+  <h3><a class="anchor" name="gene">Gene</a><a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a></h3>
   <div>
   <dl>
     <dt>OMIM MIM</dt>
@@ -66,4 +63,3 @@
     <% } %>
   </div> <!--end variations-->
 </div>
-%= include 'footer'
