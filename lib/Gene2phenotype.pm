@@ -148,6 +148,78 @@ sub startup {
 
   $r->get('/gene2phenotype/search')->to('search#results');
 
+  $r->get('/ajax/populate_onotology_tree' => sub {
+    my $c = shift;
+    my $type = 'search';
+    if ($c->param('type')) {
+      $type = $c->param('type');
+    }
+
+    my ($id, $GFD_id, $phenotype_name);
+
+    if ($type eq 'search') {
+      $phenotype_name = $c->param('str');
+    }
+
+    if ($type eq 'expand') {
+      $id = $c->param('id');
+      $GFD_id = $c->param('GFD_id');
+    }
+
+    my $registry = $c->app->defaults('registry');
+
+    my @phenotype_ids = ();
+
+    my $ontology = $registry->get_adaptor( 'Multi', 'Ontology', 'OntologyTerm' );
+    my $ontology_name = 'HPO';
+    my @terms = ();
+    my @query_output = ();
+
+    if ($type eq 'expand') {
+      my $GFD_adaptor = $registry->get_adaptor('homo_sapiens', 'gene2phenotype', 'genomicfeaturedisease');
+      my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
+      my $GFDPhenotypes = $GFD->get_all_GFDPhenotypes;
+      foreach my $GFDPhenotype (@$GFDPhenotypes) {
+        push @phenotype_ids, $GFDPhenotype->{phenotype_id};
+      }
+      if ("$id" eq '#') {
+        @terms = @{$ontology->fetch_all_roots($ontology_name)};
+      } else {
+        my $parent_term = $ontology->fetch_by_dbID($id);
+        @terms = @{$ontology->fetch_all_by_parent_term($parent_term)};
+      }
+      foreach my $term (@terms) {
+        my @children = @{$term->children};
+        push @query_output, {
+          id => $term->dbID,
+          text => $term->name,
+          children => (scalar @children > 0) ? 1 : 0,
+          state => {selected => (grep {$_ == $term->dbID} @phenotype_ids) ? 1 : 0},
+        };
+      }
+    }
+
+    if ($type eq 'search') {
+      my $terms = $ontology->fetch_all_by_name($phenotype_name);
+      foreach my $term (@$terms) {
+        my $is_root = $term->is_root;
+        if ($is_root) {
+          push @query_output, $term->dbID;
+        } else {
+          while (!$is_root) {
+            my @parents = @{$term->parents};
+            my $parent = $parents[0];
+            push @query_output, $term->dbID;
+            $term = $parents[0];
+            $is_root = $term->is_root;
+          }
+          push @query_output, $term->dbID;
+        }
+      }
+    }
+    $c->render(json => \@query_output);  
+  });
+
   $r->get('/ajax/autocomplete' => sub {
     my $c = shift;
     my $term = $c->param('term');
