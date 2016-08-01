@@ -9,6 +9,8 @@ sub results {
   my $search_term = $self->param('search_term');
   my $panel = $self->param('panel');
 
+  print STDERR "Search term $search_term\n";
+
   my $search_type = $model->identify_search_type($search_term);
 
   my $logged_in = $self->stash('logged_in');
