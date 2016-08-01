@@ -151,7 +151,7 @@ sub startup {
 
   $r->get('/gene2phenotype/search')->to('search#results');
 
-  $r->get('/ajax/populate_onotology_tree' => sub {
+  $r->get('/gene2phenotype/ajax/populate_onotology_tree' => sub {
     my $c = shift;
     my $type = 'search';
     if ($c->param('type')) {
@@ -223,7 +223,7 @@ sub startup {
     $c->render(json => \@query_output);  
   });
 
-  $r->get('/ajax/autocomplete' => sub {
+  $r->get('/gene2phenotype/ajax/autocomplete' => sub {
     my $c = shift;
     my $term = $c->param('term');
     my $type = $c->param('query_type');
