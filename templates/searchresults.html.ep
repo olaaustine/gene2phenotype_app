@@ -9,6 +9,7 @@
     <p>If you are expecting results please contact <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a>.</p>
   <% } %>
   <% if ($search_results->{gene_names}) { %>
+  <ul>
     <li>
       <div>
         <h4>Genes:</h4>
@@ -40,8 +41,10 @@
         </ul>
       </div>
     </li>
+  </ul>
   <% } %>
   <% if ($search_results->{disease_names}) { %>
+  <ul>
     <li>
       <div>
         <h4>Diseases:</h4>
@@ -73,13 +76,16 @@
         </ul>
       </div>
     </li>
+  </ul>
   <% } %>
   <% if ($logged_in) { %>
+  <ul>
   <li>
     <h4><strong>
     %= link_to 'Add New Gene Disease Entry' => '/gene2phenotype/gfd/create'
     </strong></h4>
   </li>
+  </ul>
   <% } %>
 </div>
 
