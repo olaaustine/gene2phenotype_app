@@ -74,6 +74,13 @@
       </div>
     </li>
   <% } %>
+  <% if ($logged_in) { %>
+  <li>
+    <h4><strong>
+    %= link_to 'Add New Gene Disease Entry' => '/gene2phenotype/gfd/create'
+    </strong></h4>
+  </li>
+  <% } %>
 </div>
 
 %= include 'footer'
