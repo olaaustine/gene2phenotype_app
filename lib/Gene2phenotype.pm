@@ -144,6 +144,8 @@ sub startup {
   $r->get('/gene2phenotype/gfd/attributes/:action')->to(controller => 'genomic_feature_disease_attributes');
   $r->get('/gene2phenotype/gfd/phenotype/:action')->to(controller => 'genomic_feature_disease_phenotype');
   $r->get('/gene2phenotype/gfd/publication/:action')->to(controller => 'genomic_feature_disease_publication');
+  $r->get('/gene2phenotype/gfd/create')->to('genomic_feature_disease#create');
+  $r->get('/gene2phenotype/gfd/add')->to('genomic_feature_disease#add');
 
   $r->get('/gene2phenotype/gene')->to('genomic_feature#show');
   $r->get('/gene2phenotype/disease')->to('disease#show');

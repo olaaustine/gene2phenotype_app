@@ -61,6 +61,15 @@ sub fetch_by_dbID {
   };
 }
 
+sub fetch_by_gene_symbol {
+  my $self = shift;
+  my $gene_symbol = shift;
+  my $registry = $self->app->defaults('registry');
+  my $genomic_feature_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeature');
+  my $gf = $genomic_feature_adaptor->fetch_by_gene_symbol($gene_symbol);
+  return $gf;
+}
+
 sub fetch_variants {
   my $self = shift;
   my $dbID = shift;

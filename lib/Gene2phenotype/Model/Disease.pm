@@ -16,6 +16,27 @@ sub fetch_by_dbID {
   };
 }
 
+sub fetch_by_name {
+  my $self = shift;
+  my $name = shift;
+  my $registry = $self->app->defaults('registry');
+  my $disease_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'disease');
+  my $disease = $disease_adaptor->fetch_by_name($name);
+  return $disease;
+}
+
+sub add {
+  my $self = shift;
+  my $name = shift;
+  my $registry = $self->app->defaults('registry');
+  my $disease_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'disease');
+
+  my $disease =  Bio::EnsEMBL::G2P::Disease->new(
+    -name => $name,
+    -adaptor => $disease_adaptor,
+  );
+  $disease = $disease_adaptor->store($disease);
+}
 
 sub already_in_db {
   my $self = shift;
@@ -32,7 +53,6 @@ sub already_in_db {
   }  
   return 0;
 }
-
 
 sub update {
   my $self = shift;

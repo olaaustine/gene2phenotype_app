@@ -26,8 +26,59 @@ sub show {
   $self->render(template => 'gfd');
 }
 
+sub create {
+  my $self = shift;
+  
+  if ($self->session('logged_in')) {
+    my $email = $self->session('email');
+
+    my $user_model = $self->model('user');
+    my $user = $user_model->fetch_by_email($email);
+    my $user_model = $self->model('user');
+    my @panels = split(',', $user->panel);
+    $self->stash(panels => \@panels);
+
+    my $gfd_model = $self->model('genomic_feature_disease');
+    my $GFD_category_list = $gfd_model->get_default_GFD_category_list;
+    $self->stash(GFD_category_list => $GFD_category_list);
+  }
+
+  $self->render(template => 'create_gfd');
+}
+
 sub add {
   my $self = shift;
+  my $panel = $self->param('panel');
+  my $gene_name = $self->param('gene_name');
+  my $disease_name = $self->param('disease_name');
+  my $category_attrib_id = $self->param('category_attrib_id');
+  my $email = $self->session('email');
+
+  my $model = $self->model('genomic_feature_disease');  
+  my $gf_model = $self->model('genomic_feature');
+  my $disease_model = $self->model('disease');
+
+  my $disease = $disease_model->fetch_by_name($disease_name);
+  if (!$disease) {
+    $disease = $disease_model->add($disease_name);
+  }
+
+  my $gf = $gf_model->fetch_by_gene_symbol($gene_name); 
+  if (!$gf) {
+    $self->feedback_message('GF_NOT_IN_DB');
+    return $self->redirect_to("/gene2phenotype/gfd/create");
+  }
+  
+  my $gfd = $model->fetch_by_panel_GenomicFeature_Disease($panel, $gf, $disease);
+
+  if ($gfd) {
+    my $GFD_id = $gfd->dbID;
+    return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+  } else {
+    $gfd = $model->add($panel, $gf, $disease, $category_attrib_id, $email);
+    my $GFD_id = $gfd->dbID;
+    return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+  }
 }
 
 sub delete {

@@ -1,7 +1,6 @@
 package Gene2phenotype::Model::GenomicFeatureDisease; 
 use Mojo::Base 'MojoX::Model';
 
-
 sub fetch_by_dbID {
   my $self = shift;
   my $dbID = shift;
@@ -50,6 +49,59 @@ sub fetch_by_dbID {
     add_MC_loop => $add_MC_loop,
   };
 
+}
+
+sub fetch_by_panel_GenomicFeature_Disease {
+  my $self = shift;
+  my $panel = shift;
+  my $gf = shift;
+  my $disease = shift;
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease');
+  my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
+  my $panel_id = $attribute_adaptor->attrib_id_for_value($panel); 
+  my $gfd = $GFD_adaptor->fetch_by_GenomicFeature_Disease_panel_id($gf, $disease, $panel_id);
+  return $gfd;
+}
+
+sub add {
+  my $self = shift;
+  my $panel = shift;
+  my $gf = shift;
+  my $disease = shift;
+  my $category_attrib_id = shift;
+  my $email = shift;
+
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease');
+  my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
+  my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
+
+  my $panel_id = $attribute_adaptor->attrib_id_for_value($panel); 
+
+  my $gfd =  Bio::EnsEMBL::G2P::GenomicFeatureDisease->new(
+    -panel_attrib => $panel_id,
+    -disease_id => $disease->dbID,
+    -genomic_feature_id => $gf->dbID,
+    -DDD_category_attrib => $category_attrib_id,
+    -adaptor => $GFD_adaptor,
+  );
+  my $user = $user_adaptor->fetch_by_email($email);
+  $gfd = $GFD_adaptor->store($gfd, $user);
+  return $gfd;
+}
+
+sub get_default_GFD_category_list {
+  my $self = shift;
+  my $registry = $self->app->defaults('registry');
+  my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
+  my $attribs = $attribute_adaptor->get_attribs_by_type_value('DDD_Category');
+  my @list = ();
+  foreach my $value (sort keys %$attribs) {
+    my $id = $attribs->{$value};
+    push @list, [$value => $id];
+  }
+  return \@list;
 }
 
 sub _get_GFD_category_list {
