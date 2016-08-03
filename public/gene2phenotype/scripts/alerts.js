@@ -82,5 +82,27 @@ $(document).ready(function(){
     return 1;
   });
 
+  $('#add_gfd_form').submit(function(event){
+    var gene_name = $('#add_gfd_form').find('input[name="gene_name"]').val();
+    var disease_name = $('#add_gfd_form').find('input[name="disease_name"]').val();
+    if (gene_name == '') {
+      event.preventDefault();
+      $(".alert").empty();
+      $(".alert").append("Please provide a gene name.");
+      $(".alert").removeClass("alert alert-danger").addClass("alert alert-danger");
+      return 0;
+    }
+    if (disease_name == '') {
+      event.preventDefault();
+      $(".alert").empty();
+      $(".alert").append("Please provide a disease name.");
+      $(".alert").removeClass("alert alert-danger").addClass("alert alert-danger");
+      return 0;
+    }
+    return 1;
+  });
+
+
+
 
 });
