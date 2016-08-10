@@ -38,6 +38,7 @@ our %MESSAGES = (
   UPDATED_PHENOTYPES_SUC => {msg => 'Successfully updated the list of phenotypes.', type => 'success'},
   DATA_NOT_CHANGED => {msg => 'Data has not changed.', type => 'info'},
   GF_NOT_IN_DB => {msg => 'The gene is not stored in our database. Please choose a gene symbol using the autocomplete search or contact g2p-help@ebi.ac.uk', type => 'danger'},
+  LOGIN_FOR_ACCOUNT_INFO => {msg => 'You need to login first to see your account details.', type => 'info'},
 );
 
 our @EXPORT_OK = (%MESSAGES); 

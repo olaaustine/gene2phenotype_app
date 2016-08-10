@@ -1,6 +1,6 @@
 package Gene2phenotype::Controller::Login;
-use Mojo::Base 'Mojolicious::Controller';
 use Digest::MD5 qw/md5_hex/;
+use base qw(Gene2phenotype::Controller::BaseController);
 
 sub on_user_login {
   my $self = shift;
@@ -68,18 +68,21 @@ sub validate_pwd_recovery {
 
 sub account_info {
   my $self = shift;
-  my $email = $self->session('email');
+  if ($self->session('logged_in')) {
+    my $email = $self->session('email');
+    my $registry = $self->app->defaults('registry');
+    my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
+    my $user = $user_adaptor->fetch_by_email($email);
 
-  my $registry = $self->app->defaults('registry');
-  my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
-  my $user = $user_adaptor->fetch_by_email($email);
+    my $username = $user->username; 
+    my $panel = $user->panel;
 
-  my $username = $user->username; 
-  my $panel = $user->panel;
-
-  $self->stash(email => $email, username => $username, panel => $panel);
-  $self->render(template => 'login/account_info');
-
+    $self->stash(email => $email, username => $username, panel => $panel);
+    $self->render(template => 'login/account_info');
+  } else {
+    $self->feedback_message('LOGIN_FOR_ACCOUNT_INFO');
+    return $self->redirect_to('/gene2phenotype');
+  }
 }
 
 1;
