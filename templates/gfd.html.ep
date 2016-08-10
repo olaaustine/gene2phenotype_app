@@ -13,7 +13,7 @@
     <li><a href="#gene">Gene</a></li>
   </ul> 
 
-  <% if ($logged_in) { %>  
+  <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>  
     <div class="form-group visibility">
       %= form_for '/gene2phenotype/gfd/authorised/update' => begin
         <select name="visibility">
