@@ -53,6 +53,21 @@
                           </div>
                           <div class="clear"></div>
                         </li>
+                      <% } else { %>
+                        <li>
+                        %= form_for '/gene2phenotype/gfd' => (id => $gfd->{dbID}) => begin
+                          %= hidden_field search_type => $gfd->{search_type}
+                          %= hidden_field dbID => $gfd->{dbID}
+                          <%= link_to '#' => ( onclick => "document.getElementById($gfd->{dbID}).submit();") => begin %>
+                            <strong>Panel:</strong>
+                            <em><%== $gfd->{GFD_panel} %></em>
+                            <strong>Gene:</strong>
+                            <em><%== $gfd->{gene_symbol} %></em>
+                            <strong>Disease:</strong>
+                            <em><%== $gfd->{disease_name} %></em>
+                          <% end %>
+                        % end
+                        </li>
                       <% } 
                     } else { %>
                       <li>
@@ -123,6 +138,21 @@
                             </div>
                           </div>
                           <div class="clear"></div>
+                        </li>
+                      <% } else { %>
+                        <li>
+                        %= form_for '/gene2phenotype/gfd' => (id => $gfd->{dbID}) => begin
+                          %= hidden_field search_type => $gfd->{search_type}
+                          %= hidden_field dbID => $gfd->{dbID}
+                          <%= link_to '#' => ( onclick => "document.getElementById($gfd->{dbID}).submit();") => begin %>
+                            <strong>Panel:</strong>
+                            <em><%== $gfd->{GFD_panel} %></em>
+                            <strong>Gene:</strong>
+                            <em><%== $gfd->{gene_symbol} %></em>
+                            <strong>Disease:</strong>
+                            <em><%== $gfd->{disease_name} %></em>
+                          <% end %>
+                        % end
                         </li>
                       <% } 
                     } else { %>
