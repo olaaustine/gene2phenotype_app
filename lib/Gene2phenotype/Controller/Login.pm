@@ -11,6 +11,10 @@ sub on_user_login {
     $self->session(logged_in => 1);
     $self->session(expiration => 3600);
     $self->session(email => $email);
+    my $model = $self->model('user');
+    my $user = $model->fetch_by_email($email);
+    my @panels = split(',', $user->panel);
+    $self->session(panels => \@panels);
     my $last_page = $self->session('last_url') || '/gene2phenotype';
     return $self->redirect_to($last_page);
   }
@@ -21,6 +25,7 @@ sub on_user_login {
 sub on_user_logout {
   my $self = shift;
   $self->session(logged_in => 0);
+  $self->session(panels => []);
   $self->session(expires => 1);
   my $last_page = $self->session('last_url') || '/gene2phenotype';
   return $self->redirect_to($last_page);

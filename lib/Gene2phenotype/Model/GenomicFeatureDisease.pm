@@ -91,6 +91,19 @@ sub add {
   return $gfd;
 }
 
+sub delete {
+  my $self = shift;
+  my $email = shift;
+  my $GFD_id = shift;
+
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease');
+  my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
+  my $user = $user_adaptor->fetch_by_email($email);
+  my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id); 
+  $GFD_adaptor->delete($GFD, $user);
+}
+
 sub get_default_GFD_category_list {
   my $self = shift;
   my $registry = $self->app->defaults('registry');

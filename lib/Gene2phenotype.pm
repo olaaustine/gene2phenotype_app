@@ -59,6 +59,7 @@ sub startup {
   $self->hook(before_dispatch => sub {
     my $c = shift;
     $c->stash(logged_in => $c->session('logged_in'));
+    $c->stash(panels => $c->session('panels'));
   });
 
 # redirect from old page:
@@ -146,6 +147,7 @@ sub startup {
   $r->get('/gene2phenotype/gfd/publication/:action')->to(controller => 'genomic_feature_disease_publication');
   $r->get('/gene2phenotype/gfd/create')->to('genomic_feature_disease#create');
   $r->get('/gene2phenotype/gfd/add')->to('genomic_feature_disease#add');
+  $r->get('/gene2phenotype/gfd/delete')->to('genomic_feature_disease#delete');
 
   $r->get('/gene2phenotype/gene')->to('genomic_feature#show');
   $r->get('/gene2phenotype/disease')->to('disease#show');
@@ -299,6 +301,7 @@ sub g2p_defaults {
   $self->defaults(registry => $registry);
   $self->defaults(dbh => $dbh);
   $self->defaults(panel => 'ALL');
+  $self->defaults(panels => ['ALL']);
   $self->defaults(logged_in => 0);
   $self->defaults(alert_class => '');
 }

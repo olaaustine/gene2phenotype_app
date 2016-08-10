@@ -83,7 +83,14 @@ sub add {
 
 sub delete {
   my $self = shift;
+  my $GFD_id = $self->param('dbID');
+  my $model = $self->model('genomic_feature_disease');  
+  my $email = $self->session('email');
 
+  $model->delete($email, $GFD_id);
+  my $last_url = $self->session('last_url');
+  $self->feedback_message('DELETED_GFD_SUC');
+  return $self->redirect_to($last_url);
 }
 
 sub update {
