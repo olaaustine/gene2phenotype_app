@@ -1,99 +1,119 @@
 <div>
   <h3><a class="anchor" name="phenotypes">Phenotypes</a><a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a></h3>
-  <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>
-    <div id="ontology">
-      <label>Search for phenotype in the Human Phenotype Ontology:</label>
-      <div id="search_phenotype">
-        <button type="submit" class="btn btn-primary btn-sm" id="search_phenotype_button" style="float: right">Search</button>
-        <div style="overflow: hidden; padding-right: .5em;">
-          <input type="search" id="query_phenotype_name" style='width:100%'/>
-        </div>
-      </div>
 
-      <div class="clear"></div>
 
-      <div id="add_phenotype_bg" class="">
-        <div id="add_phenotype_msg">
-          <p class="text-danger">Phenotypes have changed. If you want to store the changes please click the 'Update Phenotype Tree' button.</p>
-        </div>
-        <div id="add_phenotype_info_msg">
-          <p class="text-info bg-info">Searching Phenotypes in Tree...</p>
-        </div>
-        <div id="phenotype_tree">
-          <span id=<%= $gfd->{GFD_id} %> </span>
-        </div>
-      </div>
-      <div>
-        %= form_for '/gene2phenotype/gfd/phenotype/update' => (id => 'update_phenotype_tree' ) => begin
-          <div class="align_buttons_right">
-            %= hidden_field phenotype_ids => $gfd->{phenotype_ids_list}
-            %= hidden_field GFD_id => $gfd->{GFD_id}
-            <input id="button" type="submit" value="Update Phenotype Tree" class="btn btn-primary btn-sm"/>
+  <div id='phenotype_wrapper'>
+    <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>
+      <div id='phenotype_first'>
+        <div id="ontology">
+          <label>Search for phenotypes in the Human Phenotype Ontology tree. You can add phenotypes to your G2P entry by ticking the checkbox.</label>
+          <div id="search_phenotype">
+            <button type="submit" class="btn btn-primary btn-sm" id="search_phenotype_button" style="float: right">Search</button>
+            <div style="overflow: hidden; padding-right: .5em;">
+              <input type="search" id="query_phenotype_name" style='width:100%'/>
+            </div>
           </div>
-        %end
-      </div>
-      <div class="clear"></div>
-    </div>
 
-    <div class="clear"></div>
-  <% } %>
+          <div class="clear"></div>
 
-  <% foreach my $phenotype (@{$gfd->{phenotypes}}) { %>
-
-    <div class="phenotype_list">
-      <div class="align_left">
-        <% my $url = "http://www.human-phenotype-ontology.org/hpoweb/showterm?id=" . $phenotype->{stable_id}; %>
-        %= link_to $phenotype->{name} => $url
-      </div>
-      <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>
-        <div class="align_right">
-          <div class="align_inline">
-            %= form_for '/gene2phenotype/gfd/phenotype/delete' => begin
-              %= hidden_field GFD_phenotype_id => $phenotype->{GFD_phenotype_id}
-              %= hidden_field GFD_id => $gfd->{GFD_id}
-              <input id="button" type="submit" value="Delete Phenotype" class="btn btn-primary btn-sm confirm"/>
+          <div id="add_phenotype_bg" class="">
+            <div id="add_phenotype_msg">
+              <p class="text-danger">Phenotypes have changed. If you want to store the changes please click the 'Update Phenotype Tree' button.</p>
+            </div>
+            <div id="add_phenotype_info_msg">
+              <p class="text-info bg-info">Searching Phenotypes in Tree...</p>
+            </div>
+            <div id="phenotype_tree">
+              <span id=<%= $gfd->{GFD_id} %> </span>
+            </div>
+          </div>
+          <div>
+            %= form_for '/gene2phenotype/gfd/phenotype/update' => (id => 'update_phenotype_tree' ) => begin
+              <div class="align_buttons_right">
+                %= hidden_field phenotype_ids => $gfd->{phenotype_ids_list}
+                %= hidden_field GFD_id => $gfd->{GFD_id}
+                <input id="button" type="submit" value="Update Phenotype Tree" class="btn btn-primary btn-sm"/>
+              </div>
             %end
           </div>
+          <div class="clear"></div>
+        </div>
 
-          <div class="align_inline">
-            <div class="show_add_comment_phenotype">
-              <input type="button" name="show_add_comment" value="Add New Comment" class="btn btn-primary btn-sm button_show_add_comment_phenotype"/>
-            </div>
+        <div class="clear"></div>
+      </div>
+    <% } %>
+    <div id='phenotype_second'>
+
+      <div class="alert_container">
+        % if (my $alert_class = flash 'phenotype_alert_class') {
+          <div class="alert <%= $alert_class %>" role="alert">
+            % if (my $message = flash 'message') {
+              <p><%== $message %></p>
+            % }
           </div>
-        </div>
+        % } 
+      </div>
 
-        <div class="add_comment_phenotype">
-          %= form_for '/gene2phenotype/gfd/phenotype/add_comment' => begin
-            <div class="comment_text_area"><textarea class="form-control" name="GFD_phenotype_comment" rows="3"></textarea></div>
-            %= hidden_field GFD_phenotype_id => $phenotype->{GFD_phenotype_id}
-            %= hidden_field GFD_id => $gfd->{GFD_id}
-            <div class="align_buttons_right">
-              <input id="button" type="submit" value="Add" class="btn btn-primary btn-sm"/>
-              <input type="button" value="Discard" class="btn btn-primary btn-sm discard_add_comment_phenotype"/>
-            </div>
-          %end
-        </div>
-      <% } %>
+      <label>List of phenotypes that have been assigned to the G2P entry.</label>
 
-      <div class="clear"></div>
-      <div>
-        <% foreach my $comment (@{$phenotype->{comments}}) { %>
-          <label>Comments:</label>
-          <div class="comment">
-            <div class="align_left"><p><%= $comment->{comment_text} %> (<%= $comment->{user} %> <%= $comment->{date} %>)</p></div>
-            <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>
-              <div class="align_right">
-                %= form_for '/gene2phenotype/gfd/phenotype/delete_comment' => begin
-                  %= hidden_field GFD_phenotype_comment_id => $comment->{GFD_phenotype_comment_id}
+      <% foreach my $phenotype (@{$gfd->{phenotypes}}) { %>
+
+        <div class="phenotype_list">
+          <div class="align_left">
+            <% my $url = "http://www.human-phenotype-ontology.org/hpoweb/showterm?id=" . $phenotype->{stable_id}; %>
+            %= link_to $phenotype->{name} => $url
+          </div>
+          <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>
+            <div class="align_right">
+              <div class="align_inline">
+                %= form_for '/gene2phenotype/gfd/phenotype/delete' => begin
+                  %= hidden_field GFD_phenotype_id => $phenotype->{GFD_phenotype_id}
                   %= hidden_field GFD_id => $gfd->{GFD_id}
-                  <input id="button" type="submit" value="Delete Comment" class="btn btn-primary btn-sm confirm"/>
+                  <input id="button" type="submit" value="Delete Phenotype" class="btn btn-primary btn-sm confirm"/>
                 %end
               </div>
+
+              <div class="align_inline">
+                <div class="show_add_comment_phenotype">
+                  <input type="button" name="show_add_comment" value="Add New Comment" class="btn btn-primary btn-sm button_show_add_comment_phenotype"/>
+                </div>
+              </div>
+            </div>
+
+            <div class="add_comment_phenotype">
+              %= form_for '/gene2phenotype/gfd/phenotype/add_comment' => begin
+                <div class="comment_text_area"><textarea class="form-control" name="GFD_phenotype_comment" rows="3"></textarea></div>
+                %= hidden_field GFD_phenotype_id => $phenotype->{GFD_phenotype_id}
+                %= hidden_field GFD_id => $gfd->{GFD_id}
+                <div class="align_buttons_right">
+                  <input id="button" type="submit" value="Add" class="btn btn-primary btn-sm"/>
+                  <input type="button" value="Discard" class="btn btn-primary btn-sm discard_add_comment_phenotype"/>
+                </div>
+              %end
+            </div>
+          <% } %>
+
+          <div class="clear"></div>
+          <div>
+            <% foreach my $comment (@{$phenotype->{comments}}) { %>
+              <label>Comments:</label>
+              <div class="comment">
+                <div class="align_left"><p><%= $comment->{comment_text} %> (<%= $comment->{user} %> <%= $comment->{date} %>)</p></div>
+                <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>
+                  <div class="align_right">
+                    %= form_for '/gene2phenotype/gfd/phenotype/delete_comment' => begin
+                      %= hidden_field GFD_phenotype_comment_id => $comment->{GFD_phenotype_comment_id}
+                      %= hidden_field GFD_id => $gfd->{GFD_id}
+                      <input id="button" type="submit" value="Delete Comment" class="btn btn-primary btn-sm confirm"/>
+                    %end
+                  </div>
+                <% } %>
+              </div>
+              <div class="clear"></div>
             <% } %>
           </div>
-          <div class="clear"></div>
-        <% } %>
-      </div>
+        </div>
+      <% } %>
     </div>
-  <% } %>
+  </div>
 </div>
