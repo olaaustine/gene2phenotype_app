@@ -253,4 +253,23 @@ dd {
   display: none;
 }
 
+#phenotype_wrapper {
+    width: 100%;
+/*    border: 1px solid black; */
+    overflow: hidden; /* will contain if #first is longer than #second */
+}
+#phenotype_first {
+    width: 50%;
+    float:left; /* add this */
+/*    border: 1px solid red;*/
+}
+#phenotype_second {
+/*    border: 1px solid green; */
+  padding-left: 0.5em;  
+  overflow: hidden; /* if you don't want #second to wrap below #first */
+}
 
+.alert_container {
+  padding: 0;
+  margin: 0;
+}

@@ -3,6 +3,15 @@ $( document ).ready(function() {
   $.jstree.defaults.core.themes.dots = false;
   $.jstree.defaults.core.themes.icons = false;
   $.jstree.defaults.checkbox.three_state = false;
+
+  $("input[type='search']").on("click", function () {
+     $(this).select();
+  });
+
+  $("input[type='text']").on("click", function () {
+     $(this).select();
+  });
+
   var GFD_id = $('#phenotype_tree span').attr('id');
 
   // store list of phenotypes
@@ -52,57 +61,27 @@ $( document ).ready(function() {
     $('#add_phenotype_info_msg').hide();
   });
 
-
   $('#phenotype_tree').on('select_node.jstree', function(e, data) {
-    var ids_string = $("#update_phenotype_tree input[name=phenotype_ids]").val();
-    var list = [];
-    if (ids_string) {
-      list = ids_string.split(',');
-    }
+    // add selected phenotype to list of phenotypes   
     var new_id = data.node.id;
-    console.log(new_id);
-    if (!contains(list, new_id)) {
-      list.push(new_id);
-      $("#update_phenotype_tree input[name=phenotype_ids]").val(list);
-    }
-    ids_string = $("#update_phenotype_tree input[name=phenotype_ids]").val();
-    if (!(compareArrays(init_list, list))) {
-      // show update button
-      $("#update_phenotype_tree").css("display", "block"); 
-      $("#add_phenotype_bg").attr('class', 'bg-danger');
-      $("#add_phenotype_msg").css("display", "block"); 
-    } else {
-      $("#update_phenotype_tree").css("display", "none"); 
-      $("#add_phenotype_bg").attr('class', '');
-      $("#add_phenotype_msg").css("display", "none"); 
-    }
-
+    var request = $.ajax({
+      url: "/gene2phenotype/ajax/phenotype/add",
+      data: "phenotype_id=" + new_id + "&GFD_id=" + GFD_id,
+      success: function(data) {
+       $( "#phenotype_second" ).load("/gene2phenotype/gfd?GFD_id=" + GFD_id + " #phenotype_second"); 
+      }
+    }); 
   });
 
   $('#phenotype_tree').on('deselect_node.jstree', function(e, data){
-    var ids_string = $("#update_phenotype_tree input[name=phenotype_ids]").val();
-    var list = []; 
-    if (ids_string) {
-      list = ids_string.split(',');
-    }
-    var delete_id = data.node.id;
-    for (var i = list.length - 1; i >= 0; i--) {
-      if (list[i] === delete_id) {
-        list.splice(i, 1);
+    var new_id = data.node.id;
+    var request = $.ajax({
+      url: "/gene2phenotype/ajax/phenotype/delete_from_tree",
+      data: "phenotype_id=" + new_id + "&GFD_id=" + GFD_id,
+      success: function(data) {
+       $( "#phenotype_second" ).load("/gene2phenotype/gfd?GFD_id=" + GFD_id + " #phenotype_second"); 
       }
-    }
-    $("#update_phenotype_tree input[name=phenotype_ids]").val(list);
-
-    if (!(compareArrays(init_list, list))) {
-      $("#update_phenotype_tree").css("display", "block"); 
-      $("#add_phenotype_bg").attr('class', 'bg-danger');
-      $("#add_phenotype_msg").css("display", "block"); 
-    } else {
-      $("#update_phenotype_tree").css("display", "none"); 
-      $("#add_phenotype_bg").attr('class', '');
-      $("#add_phenotype_msg").css("display", "none"); 
-    }
-
+    }); 
   });
 
   function contains(a, obj) {
@@ -117,8 +96,6 @@ $( document ).ready(function() {
   function compareArrays(arr1, arr2) {
     return $(arr1).not(arr2).length === 0 && $(arr2).not(arr1).length === 0;
   }
-
-
 
 });
 
