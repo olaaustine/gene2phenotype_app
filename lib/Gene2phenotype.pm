@@ -258,6 +258,8 @@ sub startup {
     $c->render(json => \@query_output);  
   });
 
+  $r->get('/gene2phenotype/ajax/phenotype/add')->to('genomic_feature_disease_phenotype#add');
+  $r->get('/gene2phenotype/ajax/phenotype/delete_from_tree')->to('genomic_feature_disease_phenotype#delete_from_tree');
 
   $r->get('/cgi-bin/#script_name/*path_info' => {path_info => ''}, sub {
     my $c = shift;

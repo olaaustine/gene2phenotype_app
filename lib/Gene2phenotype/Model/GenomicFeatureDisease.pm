@@ -261,7 +261,7 @@ sub _get_phenotypes {
 
   my @phenotypes = ();
   my $GFD_phenotypes = $GFD->get_all_GFDPhenotypes;
-  foreach my $GFD_phenotype (@$GFD_phenotypes) {
+  foreach my $GFD_phenotype ( sort { $a->get_Phenotype()->name() cmp $b->get_Phenotype()->name() } @$GFD_phenotypes) {
     my $phenotype = $GFD_phenotype->get_Phenotype;
     my $stable_id = $phenotype->stable_id;
     my $name = $phenotype->name;

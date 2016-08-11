@@ -39,6 +39,8 @@ our %MESSAGES = (
   DATA_NOT_CHANGED => {msg => 'Data has not changed.', type => 'info'},
   GF_NOT_IN_DB => {msg => 'The gene is not stored in our database. Please choose a gene symbol using the autocomplete search or contact g2p-help@ebi.ac.uk', type => 'danger'},
   LOGIN_FOR_ACCOUNT_INFO => {msg => 'You need to login first to see your account details.', type => 'info'},
+  SUCC_ADDED_PHENOTYPE => {msg => 'Successfully added XXX to the list of phenotypes.', type => 'success'},
+  SUCC_DELETED_PHENOTYPE => {msg => 'Successfully deleted XXX from the list of phenotypes.', type => 'success'},
 );
 
 our @EXPORT_OK = (%MESSAGES); 
@@ -49,6 +51,17 @@ sub feedback_message {
   my $message = $MESSAGES{$feedback};
   $self->flash({'message' => $message->{msg}, 'alert_class' => 'alert-' . $message->{type}});
 }
+
+sub edit_phenotypes_message {
+  my $self = shift;
+  my $feedback = shift;
+  my $phenotype = shift;
+  my $message = $MESSAGES{$feedback};
+  my $message_txt = $message->{msg};
+  $message_txt =~ s/XXX/<em>$phenotype<\/em>/;
+  $self->flash({'message' => $message_txt, 'phenotype_alert_class' => 'alert-' . $message->{type}});
+}
+
 
 
 1;

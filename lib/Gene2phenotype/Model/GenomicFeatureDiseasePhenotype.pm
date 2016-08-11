@@ -17,6 +17,40 @@ sub delete {
   $GFDPhenotype_adaptor->delete($GFDPhenotype, $user); 
 }
 
+sub add_phenotype {
+  my $self = shift;
+  my $GFD_id = shift;
+  my $phenotype_id = shift;
+
+  my $registry = $self->app->defaults('registry');  
+  my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDisease');
+  my $GFDPhenotype_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseasePhenotype');
+
+  my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
+  my $GFDP = Bio::EnsEMBL::G2P::GenomicFeatureDiseasePhenotype->new(
+    -genomic_feature_disease_id => $GFD_id,
+    -phenotype_id => $phenotype_id,
+    -adaptor => $GFDPhenotype_adaptor,
+  );
+  $GFDPhenotype_adaptor->store($GFDP);
+
+}
+
+sub delete_phenotype {
+  my $self = shift;
+  my $GFD_id = shift;
+  my $phenotype_id = shift;
+  my $email = shift;
+
+  my $registry = $self->app->defaults('registry');  
+  my $GFDPhenotype_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseasePhenotype');
+  my $GFDP = $GFDPhenotype_adaptor->fetch_by_GFD_id_phenotype_id($GFD_id, $phenotype_id);
+
+  my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
+  my $user = $user_adaptor->fetch_by_email($email);
+
+  $GFDPhenotype_adaptor->delete($GFDP, $user);
+}
 
 sub update_phenotype_list {
   my $self = shift;
