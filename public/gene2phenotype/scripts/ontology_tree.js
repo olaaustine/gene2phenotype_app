@@ -62,7 +62,8 @@ $( document ).ready(function() {
   });
 
   $('#phenotype_tree').on('select_node.jstree', function(e, data) {
-    // add selected phenotype to list of phenotypes   
+    $('.edit_phenotype_list').remove();
+    $( "#" + data.node.a_attr.id ).append( "<div class='edit_phenotype_list bg-success text-success'>Added to phenotype list</div>" );
     var new_id = data.node.id;
     var request = $.ajax({
       url: "/gene2phenotype/ajax/phenotype/add",
@@ -74,6 +75,8 @@ $( document ).ready(function() {
   });
 
   $('#phenotype_tree').on('deselect_node.jstree', function(e, data){
+    $('.edit_phenotype_list').remove();
+    $( "#" + data.node.a_attr.id ).append( "<div class='edit_phenotype_list bg-success text-success'>Deleted from phenotype list</div>" );
     var new_id = data.node.id;
     var request = $.ajax({
       url: "/gene2phenotype/ajax/phenotype/delete_from_tree",
