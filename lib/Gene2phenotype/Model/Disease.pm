@@ -63,6 +63,7 @@ sub update {
   my $registry = $self->app->defaults('registry');
   my $disease_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'disease');
   my $disease = $disease_adaptor->fetch_by_dbID($disease_id);
+  $mim ||= undef;
   $disease->mim($mim);
   $disease->name($name);
   $disease = $disease_adaptor->update($disease);
