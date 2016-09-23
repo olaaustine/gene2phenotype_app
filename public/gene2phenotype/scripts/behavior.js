@@ -146,30 +146,28 @@ $(document).ready(function(){
   });
 
   $(".find").click(function(){
-    function localjsonpcallback(json) {
-    };
     var pmid = $(':input.pmid[type=text]').val();
     var europepmcAPI = 'http://www.ebi.ac.uk/europepmc/webservices/rest/search/query=ext_id:' + pmid + '&format=json&callback=?';
-
     $.ajax({
-      url: europepmcAPI,
-      dataType: "jsonp",
-      jsonpCallback: 'localjsonpcallback',
-      jsonp: 'callback',
-    }).done(function(data) {
-      var result = data.resultList.result[0];
-      var title = result.title;
-      // Europ. J. Pediat. 149: 574-576, 1990.
-      // journalTitle. journalVolume: pageInfo, pubYear.
-      var journalTitle = result.journalTitle;
-      var journalVolume = result.journalVolume;
-      var pageInfo = result.pageInfo;
-      var pubYear = result.pubYear;
-      var source = journalTitle + '. ' + journalVolume + ': ' + pageInfo + ', ' + pubYear + '.';
-
-      $(':input.title[type="text"]').val(title);
-      $(':input.source[type="text"]').val(source);
-
+      url: "/gene2phenotype/ajax/publication",
+      dataType: "json",
+      data: {
+        pmid : pmid,
+      },
+      success: function(data, type) {
+        var title = data.title;
+        var source = data.source;
+        if (title && source) {
+          $(':input.title[type="text"]').val(title);
+          $(':input.source[type="text"]').val(source);
+        } else {
+          $(".add_publication_feedback").append("No publication information could be found for your input PMID. Please contact g2p-help@ebi.ac.uk for help.");
+          $(".add_publication_feedback").removeClass("alert alert-danger").addClass("alert alert-danger");
+        }
+      },
+      error: function(data, type){
+        console.log( type);
+      }
     });
   });
 
