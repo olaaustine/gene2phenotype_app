@@ -1,11 +1,15 @@
 package Gene2phenotype;
 use Mojo::Base 'Mojolicious';
 use Mojo::Home;
+use HTTP::Tiny;
 use Apache::Htpasswd;
 #use File::Path qw(make_path remove_tree);
 use File::Path;
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::G2P::Utils::Downloads qw(download_data);
+
+use JSON;
+use Data::Dumper;
 
 # This method will run once at server start
 sub startup {
@@ -154,6 +158,48 @@ sub startup {
   $r->get('/gene2phenotype/disease/update/')->to('disease#update');
 
   $r->get('/gene2phenotype/search')->to('search#results');
+
+
+  $r->get('/gene2phenotype/ajax/publication' => sub {
+    my $c = shift;
+    my $pmid = $c->param('pmid');
+    my $http = HTTP::Tiny->new();
+    my $request = "http://www.ebi.ac.uk/europepmc/webservices/rest/search/query=ext_id:$pmid&format=json";
+    my $response = $http->get($request, {
+      headers => { 'Content-type' => 'application/json' }
+    });
+
+    my $hash = decode_json($response->{content});
+    my $result = $hash->{resultList}->{result}->[0];
+    if ($result) {
+    # Europ. J. Pediat. 149: 574-576, 1990.
+    # journalTitle. journalVolume: pageInfo, pubYear.
+    my $title = $result->{title};
+    my $journalTitle = $result->{journalTitle};
+    my $journalVolume = $result->{journalVolume};
+    my $pageInfo = $result->{pageInfo};
+    my $pubYear = $result->{pubYear};
+    my $source = "$journalTitle $journalVolume: $pageInfo, $pubYear";
+    $c->render(json => {title => $title, source => $source});  
+    } else {
+      $request = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=$pmid&retmode=json";
+      $response = $http->get($request, {
+        headers => { 'Content-type' => 'application/json' }
+      });
+
+      $hash = decode_json($response->{content});
+      $result = $hash->{result}->{$pmid};
+      my $title = $result->{title};
+      my $journalTitle = $result->{source};
+      my $journal_info = $result->{elocationid};
+      my $source = "$journalTitle $journal_info";
+      if ($title && $source) {
+        $c->render(json => {title => $title, source => $source});  
+      } else {
+        $c->render(json => {});
+      }
+    }
+  });
 
   $r->get('/gene2phenotype/ajax/populate_onotology_tree' => sub {
     my $c = shift;
