@@ -182,7 +182,7 @@ sub startup {
     my $source = "$journalTitle $journalVolume: $pageInfo, $pubYear";
     $c->render(json => {title => $title, source => $source});  
     } else {
-      $request = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=$pmid&retmode=json";
+      $request = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=$pmid&retmode=json";
       $response = $http->get($request, {
         headers => { 'Content-type' => 'application/json' }
       });
