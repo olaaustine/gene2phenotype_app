@@ -90,6 +90,10 @@ sub fetch_all_by_gene_symbol {
   my $gf_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeature'); 
  
   my $gene = $gf_adaptor->fetch_by_gene_symbol($search_term); 
+  if (!$gene) {
+    $gene = $gf_adaptor->fetch_by_synonym($search_term);
+  }
+
   my @gene_names = ();
   my $gene_symbol = $gene->gene_symbol;
   my $dbID = $gene->dbID;
