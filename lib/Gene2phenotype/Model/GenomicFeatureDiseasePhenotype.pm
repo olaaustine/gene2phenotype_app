@@ -1,6 +1,24 @@
 package Gene2phenotype::Model::GenomicFeatureDiseasePhenotype;
 use Mojo::Base 'MojoX::Model';
 
+sub fetch_by_dbID {
+  my $self = shift;
+  my $GFD_phenotype_id = shift;
+  my $registry = $self->app->defaults('registry');  
+  my $GFDPhenotype_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseasePhenotype');
+  my $GFDPhenotype = $GFDPhenotype_adaptor->fetch_by_dbID($GFD_phenotype_id);
+  return $GFDPhenotype;
+}
+
+sub fetch_by_GFD_id_phenotype_id {
+  my $self = shift;
+  my $GFD_id = shift;
+  my $phenotype_id = shift;
+  my $registry = $self->app->defaults('registry');  
+  my $GFDPhenotype_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseasePhenotype');
+  my $GFDPhenotype = $GFDPhenotype_adaptor->fetch_by_GFD_id_phenotype_id($GFD_id, $phenotype_id);
+  return $GFDPhenotype;
+}
 
 sub delete {
   my $self = shift;
