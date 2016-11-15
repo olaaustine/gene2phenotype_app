@@ -1,49 +1,21 @@
 <div>
   <h3><a class="anchor" name="phenotypes">Phenotypes</a><a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a></h3>
 
-
   <div id='phenotype_wrapper'>
     <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>
       <div id='phenotype_first'>
-        <div id="ontology">
-          <label>Search for phenotypes in the Human Phenotype Ontology tree. You can add phenotypes to your G2P entry by ticking the checkbox.</label>
-          <div id="search_phenotype">
-            <button type="submit" class="btn btn-primary btn-sm" id="search_phenotype_button" style="float: right">Search</button>
+        <label>Fast phenotype entry. First, search for a phenotype in the Human Phenotype Ontology tree. Then, hit the Add button to add the phenotype to your G2P entry.</label>
+        %= form_for '/gene2phenotype/gfd/phenotype/add' => begin
+            <button type="submit" class="btn btn-primary btn-sm" id="fast_add_phenotype_button" style="float: right">Add</button>
+            %= hidden_field GFD_id => $gfd->{GFD_id}
             <div style="overflow: hidden; padding-right: .5em;">
-              <input type="search" id="query_phenotype_name" style='width:100%'/>
+              <input type="search" id="query_phenotype_name" name="phenotype" style='width:100%'/>
             </div>
-          </div>
-
-          <div class="clear"></div>
-
-          <div id="add_phenotype_bg" class="">
-            <div id="add_phenotype_msg">
-              <p class="text-danger">Phenotypes have changed. If you want to store the changes please click the 'Update Phenotype Tree' button.</p>
-            </div>
-            <div id="add_phenotype_info_msg">
-              <p class="text-info bg-info">Searching Phenotypes in Tree...</p>
-            </div>
-            <div id="phenotype_tree">
-              <span id=<%= $gfd->{GFD_id} %> </span>
-            </div>
-          </div>
-          <div>
-            %= form_for '/gene2phenotype/gfd/phenotype/update' => (id => 'update_phenotype_tree' ) => begin
-              <div class="align_buttons_right">
-                %= hidden_field phenotype_ids => $gfd->{phenotype_ids_list}
-                %= hidden_field GFD_id => $gfd->{GFD_id}
-                <input id="button" type="submit" value="Update Phenotype Tree" class="btn btn-primary btn-sm"/>
-              </div>
-            %end
-          </div>
-          <div class="clear"></div>
-        </div>
-
+        %end
         <div class="clear"></div>
       </div>
     <% } %>
     <div id='phenotype_second'>
-
       <div class="alert_container">
         % if (my $alert_class = flash 'phenotype_alert_class') {
           <div class="alert <%= $alert_class %>" role="alert">
