@@ -41,6 +41,7 @@ our %MESSAGES = (
   LOGIN_FOR_ACCOUNT_INFO => {msg => 'You need to login first to see your account details.', type => 'info'},
   SUCC_ADDED_PHENOTYPE => {msg => 'Successfully added XXX to the list of phenotypes.', type => 'success'},
   SUCC_DELETED_PHENOTYPE => {msg => 'Successfully deleted XXX from the list of phenotypes.', type => 'success'},
+  PHENOTYPE_ALREADY_IN_LIST => {msg => 'Phenotype XXX is already in the list of phenotypes.', type => 'info' },
 );
 
 our @EXPORT_OK = (%MESSAGES); 
