@@ -9,13 +9,17 @@ sub add {
   my $model = $self->model('genomic_feature_disease_phenotype');
   my $phenotype_model = $self->model('phenotype');
   my $phenotype = $phenotype_model->fetch_by_name($phenotype_name); 
-  my $phenotype_id = $phenotype->dbID;
-  my $GFDP = $model->fetch_by_GFD_id_phenotype_id($GFD_id, $phenotype_id);
-  if ($GFDP) {
-    $self->edit_phenotypes_message('PHENOTYPE_ALREADY_IN_LIST', $phenotype_name);
+  if (!$phenotype) {
+    $self->edit_phenotypes_message('ERROR_PHENOTYPE_NOT_IN_DB', $phenotype_name);
   } else {
-    $model->add_phenotype($GFD_id, $phenotype_id, $email);
-    $self->edit_phenotypes_message('SUCC_ADDED_PHENOTYPE', $phenotype_name);
+    my $phenotype_id = $phenotype->dbID;
+    my $GFDP = $model->fetch_by_GFD_id_phenotype_id($GFD_id, $phenotype_id);
+    if ($GFDP) {
+      $self->edit_phenotypes_message('PHENOTYPE_ALREADY_IN_LIST', $phenotype_name);
+    } else {
+      $model->add_phenotype($GFD_id, $phenotype_id, $email);
+      $self->edit_phenotypes_message('SUCC_ADDED_PHENOTYPE', $phenotype_name);
+    }
   }
   return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
