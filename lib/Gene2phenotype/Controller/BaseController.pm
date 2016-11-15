@@ -40,6 +40,7 @@ our %MESSAGES = (
   GF_NOT_IN_DB => {msg => 'The gene is not stored in our database. Please choose a gene symbol using the autocomplete search or contact g2p-help@ebi.ac.uk', type => 'danger'},
   LOGIN_FOR_ACCOUNT_INFO => {msg => 'You need to login first to see your account details.', type => 'info'},
   SUCC_ADDED_PHENOTYPE => {msg => 'Successfully added XXX to the list of phenotypes.', type => 'success'},
+  ERROR_PHENOTYPE_NOT_IN_DB => {msg => 'The phenotype XXX is not part of HPO. Please contact g2p-help@ebi.ac.uk for help.', type => 'danger'},
   SUCC_DELETED_PHENOTYPE => {msg => 'Successfully deleted XXX from the list of phenotypes.', type => 'success'},
   PHENOTYPE_ALREADY_IN_LIST => {msg => 'Phenotype XXX is already in the list of phenotypes.', type => 'info' },
 );
