@@ -10,4 +10,13 @@ sub fetch_by_dbID {
   return $phenotype;
 }
 
+sub fetch_by_name {
+  my $self = shift;
+  my $name = shift;
+  my $registry = $self->app->defaults('registry');
+  my $phenotype_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'phenotype');
+  my $phenotype = $phenotype_adaptor->fetch_by_name($name);
+  return $phenotype;
+}
+
 1;
