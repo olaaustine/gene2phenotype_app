@@ -5,7 +5,7 @@
     <div class="show_db_content">
       <div class="display_attributes">
         <dl>
-          <dt>DDD category</dt>
+          <dt>Disease confidence</dt>
           <dd><%= $gfd->{GFD_category} %></dd>
         </dl>
       </div> <!--End display attributes-->
@@ -18,10 +18,10 @@
       <div class="clear"></div>
     </div>
     <div class="show_edit_content">
-      <h4>Edit DDD category:</h4>
+      <h4>Edit disease confidence:</h4>
       %= form_for '/gene2phenotype/gfd/category/update' => begin
         <div class="form-group">
-          <label>DDD category: </label>
+          <label>Disease confidence: </label>
           %= select_field category_attrib_id => $gfd->{GFD_category_list} 
         </div>
         <div class="align_buttons_right">
