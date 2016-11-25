@@ -1,5 +1,5 @@
 <div>
-  <h3><a class="anchor" name="gene">Gene</a><a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a></h3>
+  <h3><a class="anchor" name="gene"><%= $gene->{mim} %></a><a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a></h3>
   <div>
   <dl>
     <dt>OMIM MIM</dt>
