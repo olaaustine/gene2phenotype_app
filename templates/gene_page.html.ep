@@ -1,7 +1,7 @@
 %= include 'header'
 %= include 'search'
 <div class="container">
-  <h3>Gene</h3>
+  <h3><%= $gene->{gene_symbol} %></h3>
   <div>
   <dl>
     <dt>OMIM MIM</dt>
