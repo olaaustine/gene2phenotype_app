@@ -9,6 +9,10 @@ sub results {
   my $search_term = $self->param('search_term');
   my $panel = $self->param('panel');
 
+  if (!$search_term) {
+    return $self->redirect_to("/gene2phenotype/");
+  }
+
   my $search_type = $model->identify_search_type($search_term);
 
   my $logged_in = $self->stash('logged_in');
