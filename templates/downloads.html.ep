@@ -10,6 +10,11 @@
         DD gene-disease pairs and attributes (DDG2P.csv.gz) <img src="/gene2phenotype/images/export.png" alt="export">
       <% end %>
     </li>
+    <li>
+      <%= link_to '/gene2phenotype/downloads/CancerG2P.csv.gz' => begin %>
+        Cancer gene-disease pairs and attributes (CancerG2P.csv.gz) <img src="/gene2phenotype/images/export.png" alt="export">
+      <% end %>
+    </li>
   </ul>
 </div>
 %= include 'footer'
