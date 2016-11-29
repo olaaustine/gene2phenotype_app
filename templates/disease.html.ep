@@ -10,8 +10,7 @@
         <% } %>
       </dd>
     </dl>
-
-    <% if ($logged_in) { %>
+    <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>
       <div class="show_toggle_view_button">
         <input type="button" name="show_edit_content" value="Edit Disease Attributes" class="btn btn-primary btn-sm edit"/>
       </div>
