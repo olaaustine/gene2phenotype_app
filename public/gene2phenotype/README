@@ -8,7 +8,7 @@ consequence. The header fields are:
   - gene mim:               OMIM number for a gene entry
   - disease name:           Name provided by the curator
   - disease mim:            OMIM number for a disease entry
-  - DDD category:           One value from the list of possible categories: both DD and IF, confirmed DD gene, possible DD gene, probable DD gene
+  - disease confidence:     One value from the list of possible categories: both DD and IF, confirmed, possible, probable
   - allelic requirement:    comma-separated list of allelic requirement attributes. Possible values are: biallelic, digenic,
 digenic (biallelic), digenic (tetra-allelic), digenic (triallelic), hemizygous, imprinted, mitochondrial, monoallelic,
 monoallelic (autosome), monoallelic (autosome; obligate mosaic), monoallelic (X; hemizygous), monoallelic (X; heterozygous),
@@ -19,4 +19,4 @@ part of contiguous gene duplication, part of contiguous genomic interval deletio
   - phenotypes:             semicolon-separated list of HPO (http://www.human-phenotype-ontology.org/) IDs
   - organ specificity list: semicolon-separated list of organs
   - pmids:                  semicolon-separated list of PMIDs 
-  - panel:                  G2P panel: Cardiac, DD, Ear, Eye or Skin
+  - panel:                  G2P panel: Cancer, Cardiac, DD, Ear, Eye or Skin
