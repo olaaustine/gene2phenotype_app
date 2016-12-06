@@ -12,7 +12,7 @@
     <dt>Ensembl stable ID</dt>
     <dd>
       <% if ($gene->{ensembl_stable_id}) {
-        my $link =  "http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=" . $gene->{ensembl_stable_id}; %>
+        my $link =  "http://grch37.ensembl.org/Homo_sapiens/Gene/Summary?g=" . $gene->{ensembl_stable_id}; %>
         <%= link_to $link => begin %><%= $gene->{ensembl_stable_id} %> <% end %>
       <% } %>
     </dd>
@@ -46,7 +46,7 @@
             <tr>
               <td><%= $variation->{location} %></td>
               <td>
-                <% my $link = "http://www.ensembl.org/Homo_sapiens/Variation/Explore?v=" . $variation->{variant_name}; %>
+                <% my $link = "http://grch37.ensembl.org/Homo_sapiens/Variation/Explore?v=" . $variation->{variant_name}; %>
                 <%= link_to $link => begin %><%= $variation->{variant_name} %> <% end %>
               </td>
               <td><%= $variation->{variant_source} %></td>
