@@ -302,7 +302,7 @@ sub startup {
     }
 
     my $sth = $dbh->prepare($query);
-    $sth->execute($term . '%') or die $dbh->errstr;
+    $sth->execute('%' . $term . '%') or die $dbh->errstr;
     my @query_output = ();
     while ( my $row = $sth->fetchrow_hashref ) {
       push @query_output, $row;
