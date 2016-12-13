@@ -1,0 +1,32 @@
+%= include 'header'
+%= include 'search'
+<div class="container">
+  <h3>All G2P entries without publication information</h3>
+  <% foreach my $result (@$gfds_no_publication) { %>
+    <h3><%= $result->{panel}%></h3>
+    <table id="curator_table" class="table">
+      <thead>
+        <tr>
+          <th>Gene symbol</th>
+          <th>Disease name</th>
+          <th>Go to G2P entry</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% foreach my $gfd (@{$result->{gfds}}) { %>
+          <tr>
+            <td> <%= $gfd->{gene_symbol} %> </td>
+            <td> <%= $gfd->{disease_name} %> </td>
+            <td>
+              <% my $url = '/gene2phenotype/gfd/?search_type=gfd&dbID=' . $gfd->{GFD_id}; %>
+              %= link_to 'Go to G2P entry' => $url
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  <% } %>
+
+</div>
+
+%= include 'footer'
