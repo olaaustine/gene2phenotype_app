@@ -4,7 +4,7 @@
   <h3>All G2P entries without publication information</h3>
   <% foreach my $result (@$gfds_no_publication) { %>
     <h3><%= $result->{panel}%></h3>
-    <table id="curator_table" class="table">
+    <table id="curator_table_<%= $result->{panel}%>" class="table">
       <thead>
         <tr>
           <th>Gene symbol</th>
