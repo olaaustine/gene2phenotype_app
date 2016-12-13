@@ -6,6 +6,16 @@
       %= link_to README => 'README'
     </li>
     <li>
+      <%= link_to '/gene2phenotype/downloads/ALLG2P.csv.gz' => begin %>
+        All gene-disease pairs and attributes (ALLG2P.csv.gz) <img src="/gene2phenotype/images/export.png" alt="export">
+      <% end %>
+    </li>
+    <li>
+      <%= link_to '/gene2phenotype/downloads/CancerG2P.csv.gz' => begin %>
+        Cancer gene-disease pairs and attributes (CancerG2P.csv.gz) <img src="/gene2phenotype/images/export.png" alt="export">
+      <% end %>
+    </li>
+    <li>
       <%= link_to '/gene2phenotype/downloads/DDG2P.csv.gz' => begin %>
         DD gene-disease pairs and attributes (DDG2P.csv.gz) <img src="/gene2phenotype/images/export.png" alt="export">
       <% end %>
@@ -13,11 +23,6 @@
     <li>
       <%= link_to '/gene2phenotype/downloads/EarG2P.csv.gz' => begin %>
         Ear gene-disease pairs and attributes (EarG2P.csv.gz) <img src="/gene2phenotype/images/export.png" alt="export">
-      <% end %>
-    </li>
-    <li>
-      <%= link_to '/gene2phenotype/downloads/CancerG2P.csv.gz' => begin %>
-        Cancer gene-disease pairs and attributes (CancerG2P.csv.gz) <img src="/gene2phenotype/images/export.png" alt="export">
       <% end %>
     </li>
   </ul>
