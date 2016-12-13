@@ -51,6 +51,40 @@ sub fetch_by_dbID {
 
 }
 
+sub fetch_all_by_panel_restricted {
+  my $self = shift;
+  my $panel = shift;
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease');
+  my $gfds = $GFD_adaptor->fetch_all_by_panel_restricted($panel);
+  my @results = ();
+  foreach my $gfd (@$gfds) {
+    push @results, {
+      gene_symbol => $gfd->get_GenomicFeature->gene_symbol,
+      disease_name => $gfd->get_Disease->name,
+      GFD_id => $gfd->dbID,
+    }; 
+  }
+  return \@results;
+}
+
+sub fetch_all_by_panel_without_publication {
+  my $self = shift;
+  my $panel = shift;
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease');
+  my $gfds = $GFD_adaptor->fetch_all_by_panel_without_publications($panel);
+  my @results = ();
+  foreach my $gfd (@$gfds) {
+    push @results, {
+      gene_symbol => $gfd->get_GenomicFeature->gene_symbol,
+      disease_name => $gfd->get_Disease->name,
+      GFD_id => $gfd->dbID,
+    }; 
+  }
+  return \@results;
+}
+
 sub fetch_by_panel_GenomicFeature_Disease {
   my $self = shift;
   my $panel = shift;
