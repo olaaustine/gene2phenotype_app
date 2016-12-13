@@ -42,7 +42,7 @@ $(document).ready(function(){
   }); 
 
   $('#ensembl_variants_table').DataTable();
-
+  $('#curator_table').DataTable();
 
   $(".align_right").mouseenter(function(){
     $(this).prev().css('background-color', '#D4D8D1');
