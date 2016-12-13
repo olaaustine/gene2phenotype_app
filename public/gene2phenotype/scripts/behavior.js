@@ -42,7 +42,13 @@ $(document).ready(function(){
   }); 
 
   $('#ensembl_variants_table').DataTable();
-  $('#curator_table').DataTable();
+
+  var index;
+  var panels = ["DD", "Cancer", "Ear"];
+  for (index = 0; index < panels.length; ++index) {
+    $('#curator_table_' + panels[index]).DataTable();
+  }
+
 
   $(".align_right").mouseenter(function(){
     $(this).prev().css('background-color', '#D4D8D1');
