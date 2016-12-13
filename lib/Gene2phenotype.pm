@@ -323,14 +323,19 @@ sub startup {
   $r->get('/gene2phenotype/downloads/#file_name' => sub {
     my $c = shift;
     my $file_name = $c->stash('file_name');
+    my $is_logged_in = $c->session('logged_in');
+    my $user_panels = $c->session('panels');
     $file_name =~ s/\.gz//;
     my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime(time);
     my $stamp = join('_', ($mday, $mon, $hour, $min, $sec));
     my $tmp_dir = "$downloads_dir/$stamp";
     mkpath($tmp_dir);
-    download_data($tmp_dir, $file_name, $registry_file);
+    download_data($tmp_dir, $file_name, $registry_file, $is_logged_in, $user_panels);
     $c->render_file('filepath' => "$tmp_dir/$file_name.gz", 'filename' => "$file_name.gz", 'format' => 'zip', 'cleanup' => 1);
   });
+
+  $r->get('/gene2phenotype/curator/no_publication')->to('curator#no_publication');
+  $r->get('/gene2phenotype/curator/restricted_entries')->to('curator#restricted');
 
 }
 
