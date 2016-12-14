@@ -1,0 +1,36 @@
+<div>
+  <div class="clear"></div>
+
+  <% if ($duplicate) { %>  
+
+  <h3><a class="anchor" name="duplicate_entry">Duplicate entry</a><a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a></h3>
+
+  %= form_for '/gene2phenotype/gfd/duplicate/' => begin
+    <div>
+      <label>Duplicate into panel:</lable>
+      %= select_field panel => $duplicate_to
+    </div>
+    <label>Copy data:</label> 
+    <div class="form-group">
+        %= check_box duplicate_data_id => 'gene_disease_attribs'
+        Gene-disease attributes
+        %= tag 'br'
+        %= check_box duplicate_data_id => 'publications'
+        Publications
+        %= tag 'br'
+        %= check_box duplicate_data_id => 'phenotypes'
+        Phenotypes
+        %= tag 'br'
+        %= check_box duplicate_data_id => 'organ_specificity'
+        Organ specificity
+        %= tag 'br'
+    </div>
+    <div class="align_buttons_right">
+       %= hidden_field GFD_id => $gfd->{GFD_id}
+      <input id="button" type="submit" value="Duplicate" class="btn btn-primary btn-sm"/>
+    </div>
+  %end
+
+  <% } %>
+
+</div>
