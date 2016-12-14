@@ -25,6 +25,11 @@
         Ear gene-disease pairs and attributes (EarG2P.csv.gz) <img src="/gene2phenotype/images/export.png" alt="export">
       <% end %>
     </li>
+    <li>
+      <%= link_to '/gene2phenotype/downloads/PrenatalG2P.csv.gz' => begin %>
+        Prenatal gene-disease pairs and attributes (PrenatalG2P.csv.gz) <img src="/gene2phenotype/images/export.png" alt="export">
+      <% end %>
+    </li>
   </ul>
 </div>
 %= include 'footer'
