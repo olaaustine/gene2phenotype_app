@@ -51,6 +51,98 @@ sub fetch_by_dbID {
 
 }
 
+sub duplicate {
+  my $self = shift;
+  my $GFD_id = shift;
+  my $panel = shift;
+  my $data = shift;
+  my $email = shift;
+
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease');
+  my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
+
+  my $user = $user_adaptor->fetch_by_email($email);
+
+  my $from_gfd = $GFD_adaptor->fetch_by_dbID($GFD_id);
+ 
+  my $gf = $from_gfd->get_GenomicFeature;
+  my $disease = $from_gfd->get_Disease;
+
+  my $already_in_to_panel = $GFD_adaptor->fetch_by_GenomicFeature_Disease_panel($gf, $disease, $panel);
+ 
+  if ($already_in_to_panel) {
+    return [$already_in_to_panel, 'ENTRY_HAS_NOT_BEEN_DUPLICATED'];
+  }
+  
+  # create new entry
+  my $gfd_to_panel =  Bio::EnsEMBL::G2P::GenomicFeatureDisease->new(
+    -panel => $panel,
+    -disease_id => $disease->dbID,
+    -genomic_feature_id => $gf->dbID,
+    -DDD_category => $from_gfd->DDD_category,
+    -adaptor => $GFD_adaptor,
+  );
+  my $user = $user_adaptor->fetch_by_email($email);
+  $gfd_to_panel = $GFD_adaptor->store($gfd_to_panel, $user);
+  
+  foreach my $data_type (@$data) {
+    if ($data_type eq 'gene_disease_attribs') {
+      my $gfdaa = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseaseAction');
+
+      # get all gene_disease_attribs 
+      my $from_gfd_actions = $from_gfd->get_all_GenomicFeatureDiseaseActions;
+
+      foreach my $from_gfd_action (@$from_gfd_actions) {
+        my $new_GFD_action = Bio::EnsEMBL::G2P::GenomicFeatureDiseaseAction->new(
+          -genomic_feature_disease_id => $gfd_to_panel->dbID,
+          -allelic_requirement_attrib => $from_gfd_action->allelic_requirement_attrib,
+          -mutation_consequence_attrib => $from_gfd_action->mutation_consequence_attrib,
+          -user_id => undef,
+        );
+        $new_GFD_action = $gfdaa->store($new_GFD_action, $user);
+      }
+    } elsif ($data_type eq 'publications') {
+      my $gfd_publication_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseasePublication');
+      my $from_gfd_publications = $from_gfd->get_all_GFDPublications;
+      foreach my $from_gfd_publication (@$from_gfd_publications) {
+        my $new_GFDPublication = Bio::EnsEMBL::G2P::GenomicFeatureDiseasePublication->new(
+          -genomic_feature_disease_id => $gfd_to_panel->dbID,
+          -publication_id => $from_gfd_publication->get_Publication->dbID,
+          -adaptor => $gfd_publication_adaptor,
+        );
+        $gfd_publication_adaptor->store($new_GFDPublication);
+      }
+    } elsif ($data_type eq 'phenotypes') {
+      my $gfd_phenotype_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseasePhenotype');
+      my $from_gfd_phenotypes = $from_gfd->get_all_GFDPhenotypes;
+      foreach my $from_gfd_phenotype (@$from_gfd_phenotypes ) {
+        my $new_GFDPhenotype = Bio::EnsEMBL::G2P::GenomicFeatureDiseasePhenotype->new(
+          -genomic_feature_disease_id => $gfd_to_panel->dbID,
+          -phenotype_id => $from_gfd_phenotype->get_Phenotype->dbID,
+          -adaptor => $gfd_phenotype_adaptor,
+        );
+        $gfd_phenotype_adaptor->store($new_GFDPhenotype);
+      }
+    } elsif ($data_type eq 'organ_specificity') {
+      my $gfd_organ_adaptor =  $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseaseOrgan');
+      my $from_gfd_organs = $from_gfd->get_all_GFDOrgans;
+      foreach my $from_gfd_organ (@$from_gfd_organs) {
+       my $new_GFDOrgan = Bio::EnsEMBL::G2P::GenomicFeatureDiseaseOrgan->new(
+          -genomic_feature_disease_id => $gfd_to_panel->dbID,
+          -organ_id => $from_gfd_organ->get_Organ->dbID,
+          -adaptor => $gfd_organ_adaptor,
+        );
+        $gfd_organ_adaptor->store($new_GFDOrgan);
+      }
+    } else {
+      
+    }
+  } 
+
+  return [$gfd_to_panel, 'DUPLICATED_ENTRY_SUC']; 
+}
+
 sub fetch_all_by_panel_restricted {
   my $self = shift;
   my $panel = shift;
