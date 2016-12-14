@@ -5,6 +5,9 @@
   <h3 class="title"><a class="anchor" name="top">Panel: <%= $gfd->{panel} %> Gene: <em><%= $gfd->{gene_symbol} %></em> Disease: <em><%= $gfd->{disease_name} %></em></a></h3>
   <div class="clear"></div>
   <ul id="legend">
+    <% if ($duplicate) { %>
+      <li><a href="#duplicate_entry">Duplicate entry</a></li>
+    <% } %>
     <li><a href="#GD_attribs">Gene-Disease Attributes</a></li>
     <li><a href="#publications">Publications</a></li>
     <li><a href="#phenotypes">Phenotypes</a></li>
@@ -34,6 +37,7 @@
     </div>
   <% } %>
 
+  %= include 'duplicate_entry'
   %= include 'gfd_attributes'
   %= include 'publication'
   %= include 'phenotype'
