@@ -152,6 +152,7 @@ sub startup {
   $r->get('/gene2phenotype/gfd/create')->to('genomic_feature_disease#create');
   $r->get('/gene2phenotype/gfd/add')->to('genomic_feature_disease#add');
   $r->get('/gene2phenotype/gfd/delete')->to('genomic_feature_disease#delete');
+  $r->get('/gene2phenotype/gfd/duplicate')->to('genomic_feature_disease#duplicate');
 
   $r->get('/gene2phenotype/gene')->to('genomic_feature#show');
   $r->get('/gene2phenotype/disease')->to('disease#show');
