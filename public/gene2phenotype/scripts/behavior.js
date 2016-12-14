@@ -44,7 +44,7 @@ $(document).ready(function(){
   $('#ensembl_variants_table').DataTable();
 
   var index;
-  var panels = ["DD", "Cancer", "Ear"];
+  var panels = ["DD", "Cancer", "Ear", "Prenatal"];
   for (index = 0; index < panels.length; ++index) {
     $('#curator_table_' + panels[index]).DataTable();
   }
