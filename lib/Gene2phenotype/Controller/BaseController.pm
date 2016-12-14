@@ -43,6 +43,8 @@ our %MESSAGES = (
   ERROR_PHENOTYPE_NOT_IN_DB => {msg => 'The phenotype XXX is not part of HPO. Please contact g2p-help@ebi.ac.uk for help.', type => 'danger'},
   SUCC_DELETED_PHENOTYPE => {msg => 'Successfully deleted XXX from the list of phenotypes.', type => 'success'},
   PHENOTYPE_ALREADY_IN_LIST => {msg => 'Phenotype XXX is already in the list of phenotypes.', type => 'info' },
+  DUPLICATED_ENTRY_SUC => {msg => 'Successfully duplicated entry.', type => 'success'},
+  ENTRY_HAS_NOT_BEEN_DUPLICATED => {msg => 'The entry has not been duplicated.', type => 'info'},
 );
 
 our @EXPORT_OK = (%MESSAGES); 
