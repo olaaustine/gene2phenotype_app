@@ -13,6 +13,25 @@ sub show {
   my $gfd = $model->fetch_by_dbID($dbID); 
   $self->stash(gfd => $gfd);
 
+  # current panel
+  if ($self->session('logged_in')) {
+    my $current_panel = $gfd->{panel};
+    my @panels = @{$self->session('panels')};
+    my @duplicate_to_panels = ();
+    foreach my $panel (@panels) {
+      if ($panel ne $current_panel) {
+        push @duplicate_to_panels, $panel;
+      }
+    } 
+    if (@duplicate_to_panels) {
+      $self->stash(duplicate => 1);
+      $self->stash(duplicate_to => \@duplicate_to_panels);
+    }
+  } else {
+    $self->stash(duplicate => 0);
+    $self->stash(duplicate_to => []);
+  } 
+
   my $disease_id = $gfd->{disease_id};
   my $disease_attribs = $disease_model->fetch_by_dbID($disease_id);
   $self->stash(disease => $disease_attribs);
@@ -24,6 +43,22 @@ sub show {
 
   $self->session(last_url => "/gene2phenotype/gfd?GFD_id=$dbID");
   $self->render(template => 'gfd');
+}
+
+sub duplicate {
+  my $self = shift;        
+  my $panel = $self->param('panel');
+  my $data = $self->every_param('duplicate_data_id');
+  my $GFD_id = $self->param('GFD_id');
+  my $model = $self->model('genomic_feature_disease');  
+  my $email = $self->session('email');
+
+  my $result = $model->duplicate($GFD_id, $panel, $data, $email);
+  my $feedback = $result->[1];
+  my $gfd = $result->[0];
+  $GFD_id = $gfd->dbID;
+  $self->feedback_message($feedback);
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
 
 sub create {
