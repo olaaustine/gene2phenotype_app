@@ -83,7 +83,6 @@ sub duplicate {
     -DDD_category => $from_gfd->DDD_category,
     -adaptor => $GFD_adaptor,
   );
-  my $user = $user_adaptor->fetch_by_email($email);
   $gfd_to_panel = $GFD_adaptor->store($gfd_to_panel, $user);
   
   foreach my $data_type (@$data) {
