@@ -71,7 +71,7 @@ sub fetch_by_gene_symbol {
   return $gf;
 }
 
-sub fetch_variants_old {
+sub fetch_variants {
   my $self = shift;
   my $dbID = shift;
   my $registry = $self->app->defaults('registry');
@@ -140,7 +140,7 @@ sub _get_canonical_transcript_id {
   return $transcript_id; 
 }
 
-sub fetch_variants {
+sub fetch_variants_rest {
   my $self = shift;
   my $dbID = shift;
   my $registry = $self->app->defaults('registry');
