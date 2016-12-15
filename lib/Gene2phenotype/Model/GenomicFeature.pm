@@ -1,7 +1,8 @@
 package Gene2phenotype::Model::GenomicFeature;
 use Mojo::Base 'MojoX::Model';
 use JSON;
-
+use HTTP::Tiny;
+use Data::Dumper;
 my $consequence_colors = {
   'intergenic_variant'                 => '#636363',
   'intron_variant'                     => '#02599c',
@@ -70,7 +71,7 @@ sub fetch_by_gene_symbol {
   return $gf;
 }
 
-sub fetch_variants {
+sub fetch_variants_old {
   my $self = shift;
   my $dbID = shift;
   my $registry = $self->app->defaults('registry');
@@ -120,6 +121,7 @@ sub fetch_variants {
       sift_prediction => $sift_prediction, 
     };
   }
+
   my @array = ();
   while (my ($consequence, $count) = each %$counts) {
     push @array, {'label' => $consequence, 'value' => $count, 'color' => $consequence_colors->{$consequence} || '#d0d6fe'};
@@ -127,5 +129,150 @@ sub fetch_variants {
   my $encoded_counts = encode_json(\@array);
   return { 'tmpl' => \@variations_tmpl, 'counts' => $encoded_counts };
 }
+
+sub _get_canonical_transcript_id {
+  my $ensembl_gene_id = shift;
+  my $ext = "/lookup/id/$ensembl_gene_id?expand=1";
+  my $data = _fetch_data($ext);
+  my @transcripts = @{$data->{'Transcript'}};
+  my ($canonical_transcript) = grep {$_->{'is_canonical'}} @transcripts;
+  my $transcript_id = $canonical_transcript->{'id'};
+  return $transcript_id; 
+}
+
+sub fetch_variants {
+  my $self = shift;
+  my $dbID = shift;
+  my $registry = $self->app->defaults('registry');
+  my $genomic_feature_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeature');
+  my $gf = $genomic_feature_adaptor->fetch_by_dbID($dbID);
+  my $gene_stable_id = $gf->ensembl_stable_id;
+
+  my $canonical_transcript_id = _get_canonical_transcript_id($gene_stable_id); 
+
+  my $ext = "/overlap/id/$canonical_transcript_id?feature=variation&variant_set=ClinVar";
+  my $data = _fetch_data($ext);
+
+  my @variants_for_VEP = ();
+
+  my @variations_tmpl = ();
+  my $counts = {};
+  foreach my $variant (@$data) {
+    my @clinical_significance = @{$variant->{clinical_significance}};
+    if (grep {$_ eq 'pathogenic'} @clinical_significance) {
+      my $id = $variant->{id};
+      push @variants_for_VEP, $id;
+    }
+  }
+
+  my @variant_sets = ();
+  my @new_set = ();
+  my $count = 0;
+  foreach my $variant (@variants_for_VEP) {
+    if ($count < 500) {
+      push @new_set, $variant;
+      $count++;
+    } else {
+      my @copy_set = @new_set;
+      push @variant_sets, \@copy_set;
+      @new_set = ();
+      $count = 0;
+      push @new_set, $variant;
+    }
+  }
+  push @variant_sets, \@new_set;
+
+  if (@variants_for_VEP) { 
+    foreach my $subset (@variant_sets) {
+      my $content = encode_json({ids => $subset});
+      my $VEP_results = _fetch_data_post('/vep/human/id', $content);
+      foreach my $VEP_result (@$VEP_results) {
+        my $most_severe_consequence = $VEP_result->{'most_severe_consequence'}; 
+        my @allele_string = split('/', $VEP_result->{allele_string});
+        my $ref_allele = $allele_string[0]; 
+        my $variant_name = $VEP_result->{id};
+        my $seq_region_name = $VEP_result->{seq_region_name};
+        my $start = $VEP_result->{start};
+        my $end = $VEP_result->{end};
+        foreach my $transcript_consequence (@{$VEP_result->{transcript_consequences}}) {
+          my @consequence_terms = @{$transcript_consequence->{consequence_terms}};
+          my $transcript_id = $transcript_consequence->{transcript_id};
+          if ((grep {$_ eq $most_severe_consequence} @consequence_terms ) && ($transcript_id eq $canonical_transcript_id)) {
+            my $variant_allele = $transcript_consequence->{variant_allele} || '-';
+            my $polyphen_prediction = $transcript_consequence->{polyphen_prediction} || '-';
+            my $sift_prediction = $transcript_consequence->{sift_prediction} || '-';
+            my $amino_acid_change = $transcript_consequence->{amino_acids} || '-';
+            $counts->{$most_severe_consequence}++;
+
+            push @variations_tmpl, {
+              location => "$seq_region_name:$start-$end",
+              variant_name => $variant_name,
+              variant_source => 'dbSNP',
+              allele_string => "$ref_allele/$variant_allele",
+              consequence => $most_severe_consequence,
+              transcript_stable_id => $transcript_id,
+              pep_allele_string => $amino_acid_change,
+              polyphen_prediction => $polyphen_prediction,
+              sift_prediction => $sift_prediction, 
+            };
+          }
+        }
+      }
+
+      $count = 0;
+    }
+  }
+  my @array = ();
+  while (my ($consequence, $count) = each %$counts) {
+    push @array, {'label' => $consequence, 'value' => $count, 'color' => $consequence_colors->{$consequence} || '#d0d6fe'};
+  }
+  my $encoded_counts = encode_json(\@array);
+  return { 'tmpl' => \@variations_tmpl, 'counts' => $encoded_counts };
+
+}
+
+sub _fetch_data {
+  my $ext = shift;
+  my $http = HTTP::Tiny->new();
+
+  my $server = 'http://grch37.rest.ensembl.org';
+  my $response = $http->get($server.$ext, {
+    headers => { 'Content-type' => 'application/json' }
+  });
+
+  my $hash = decode_json($response->{content});
+#  local $Data::Dumper::Terse = 1;
+#  local $Data::Dumper::Indent = 1;
+#  print STDERR Dumper $hash;
+#  print STDERR "\n";
+
+  return $hash;
+}
+
+sub _fetch_data_post {
+  
+my $http = HTTP::Tiny->new();
+  my $ext = shift;
+  my $content = shift; 
+  my $server = 'http://grch37.rest.ensembl.org';
+  my $response = $http->request('POST', $server.$ext, {
+    headers => { 
+      'Content-type' => 'application/json',
+      'Accept' => 'application/json'
+    },
+    content => $content
+  });
+
+  my $hash = decode_json($response->{content});
+#  local $Data::Dumper::Terse = 1;
+#  local $Data::Dumper::Indent = 1;
+#  print STDERR Dumper $hash;
+#  print STDERR "\n";
+
+  return $hash;
+
+}
+
+
 
 1;
