@@ -208,6 +208,33 @@ sub startup {
     }
   });
 
+  $r->get('/gene2phenotype/ajax/gene_location' => sub {
+    my $c = shift;
+    my $gene_symbol = $c->param('gene_symbol');    
+    my $http = HTTP::Tiny->new();
+    my $request = "https://rest.ensembl.org/lookup/symbol/homo_sapiens/$gene_symbol?expand=1";
+    my $response = $http->get($request, {
+      headers => { 'Content-type' => 'application/json' }
+    });
+    if (!$response->{success}) {
+      $c->render(json => {});
+      return;  
+    }
+    my $hash = decode_json($response->{content});
+    my $assembly_name = $hash->{assembly_name};
+    my $seq_region_name = $hash->{seq_region_name};
+    my $start = $hash->{start};
+    my $end = $hash->{end};
+    my $strand = $hash->{strand};
+    if ($strand == 1) {
+      $strand = 'forward strand';
+    } else {
+      $strand = 'reverse strand';
+    }
+    my $location = "$assembly_name $seq_region_name $start-$end $strand";
+    $c->render(json => {gene_location => $location});  
+  }); 
+
   $r->get('/gene2phenotype/ajax/populate_onotology_tree' => sub {
     my $c = shift;
     my $type = 'search';
