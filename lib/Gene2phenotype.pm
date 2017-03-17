@@ -212,7 +212,7 @@ sub startup {
     my $c = shift;
     my $gene_symbol = $c->param('gene_symbol');    
     my $http = HTTP::Tiny->new();
-    my $request = "https://rest.ensembl.org/lookup/symbol/homo_sapiens/$gene_symbol?expand=1";
+    my $request = "http://rest.ensembl.org/lookup/symbol/homo_sapiens/$gene_symbol?expand=1";
     my $response = $http->get($request, {
       headers => { 'Content-type' => 'application/json' }
     });
