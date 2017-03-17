@@ -1,4 +1,23 @@
 $(document).ready(function(){
+
+  if ($('#gene_symbol').length > 0) {  
+    var gene_symbol = $('#gene_symbol').text();
+    $.ajax({
+      url: "/gene2phenotype/ajax/gene_location",
+      dataType: "json",
+      data: {
+        gene_symbol : gene_symbol,
+      },
+      success: function(data, type) {
+        var gene_location = data.gene_location;
+        $("#gene_location").append(gene_location);
+      },
+      error: function(data, type){
+        console.log( type);
+      }
+    });
+  }
+
   $("#edit_pwd_link").click(function(){
     $("#update_pwd").show();
     $(this).hide();
