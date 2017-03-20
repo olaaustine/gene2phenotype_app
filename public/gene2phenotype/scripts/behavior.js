@@ -2,6 +2,7 @@ $(document).ready(function(){
 
   if ($('#gene_symbol').length > 0) {  
     var gene_symbol = $('#gene_symbol').text();
+    console.log(gene_symbol);
     $.ajax({
       url: "/gene2phenotype/ajax/gene_location",
       dataType: "json",
@@ -10,9 +11,9 @@ $(document).ready(function(){
         gene_symbol : gene_symbol,
       },
       success: function(data, textStatus, jqXHR) {
+        console.log(textStatus);
         var gene_location = data.gene_location;
         $("#gene_location").append(gene_location);
-        console.log(textStatus);
       },
       error: function(jqXHR, textStatus, errorThrown){
         console.log(jqXHR);
