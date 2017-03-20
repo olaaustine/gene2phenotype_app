@@ -5,15 +5,19 @@ $(document).ready(function(){
     $.ajax({
       url: "/gene2phenotype/ajax/gene_location",
       dataType: "json",
+      type: "get",
       data: {
         gene_symbol : gene_symbol,
       },
-      success: function(data, type) {
+      success: function(data, textStatus, jqXHR) {
         var gene_location = data.gene_location;
         $("#gene_location").append(gene_location);
+        console.log(textStatus);
       },
-      error: function(data, type){
-        console.log( type);
+      error: function(jqXHR, textStatus, errorThrown){
+        console.log(jqXHR);
+        console.log(textStatus);
+        console.log(errorThrown);
       }
     });
   }
@@ -176,10 +180,13 @@ $(document).ready(function(){
     $.ajax({
       url: "/gene2phenotype/ajax/publication",
       dataType: "json",
+      type: "get",
       data: {
         pmid : pmid,
       },
-      success: function(data, type) {
+      success: function(data, textStatus, jqXHR) {
+        console.log(textStatus);
+        console.log(jqXHR);
         var title = data.title;
         var source = data.source;
         if (title && source) {
@@ -190,8 +197,10 @@ $(document).ready(function(){
           $(".add_publication_feedback").removeClass("alert alert-danger").addClass("alert alert-danger");
         }
       },
-      error: function(data, type){
-        console.log( type);
+      error: function(jqXHR, textStatus, errorThrown){
+        console.log(jqXHR);
+        console.log(textStatus);
+        console.log(errorThrown);
       }
     });
   });
