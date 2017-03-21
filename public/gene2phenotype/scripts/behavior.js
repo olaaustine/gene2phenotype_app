@@ -1,40 +1,40 @@
 $(document).ready(function(){
 
-  $.getJSON('https://rest.ensembl.org/lookup/symbol/homo_sapiens/PAFAH1B1?content-type=application/json')
-            .done(function(data) {
-                console.log(data);
-            });
-
-  $.getJSON('http://rest.ensembl.org/lookup/symbol/homo_sapiens/PAFAH1B1?content-type=application/json')
-            .done(function(data) {
-                console.log(data);
-            });
-
-
-
-
   if ($('#gene_symbol').length > 0) {  
     var gene_symbol = $('#gene_symbol').text();
     console.log(gene_symbol);
-    $.ajax({
-      url: "/gene2phenotype/ajax/gene_location",
-      dataType: "json",
-      type: "get",
-      data: {
-        gene_symbol : gene_symbol,
-      },
-      success: function(data, textStatus, jqXHR) {
-        console.log(textStatus);
-        var gene_location = data.gene_location;
-        $("#gene_location").append(gene_location);
-      },
-      error: function(jqXHR, textStatus, errorThrown){
-        console.log(jqXHR);
-        console.log(textStatus);
-        console.log(errorThrown);
-      }
+    $.getJSON('http://rest.ensembl.org/lookup/symbol/homo_sapiens/' + gene_symbol + '?content-type=application/json')
+      .done(function(data) {
+        if (!data.error) {
+          var assembly_name = data.assembly_name; 
+          var chrom = data.seq_region_name;
+          var start = data.start;
+          var end = data.end;
+          var strand = data.strand;
+          var gene_location = assembly_name + ' ' + chrom + ' ' + start + '-' + end + ' (' + strand + ')';
+          $("#gene_location").append(gene_location);
+        }
     });
   }
+//    $.ajax({
+//      url: "/gene2phenotype/ajax/gene_location",
+//      dataType: "json",
+//      type: "get",
+//      data: {
+//        gene_symbol : gene_symbol,
+//      },
+//      success: function(data, textStatus, jqXHR) {
+//        console.log(textStatus);
+//        var gene_location = data.gene_location;
+//        $("#gene_location").append(gene_location);
+//      },
+//      error: function(jqXHR, textStatus, errorThrown){
+//        console.log(jqXHR);
+//        console.log(textStatus);
+//        console.log(errorThrown);
+//      }
+//    });
+//  }
 
   $("#edit_pwd_link").click(function(){
     $("#update_pwd").show();
