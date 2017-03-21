@@ -4,10 +4,29 @@ use Mojo::Base 'MojoX::Model';
 sub fetch_by_dbID {
   my $self = shift;
   my $dbID = shift;
+  my $logged_in = shift;
 
   my $registry = $self->app->defaults('registry');
   my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease');
   my $GFD = $GFD_adaptor->fetch_by_dbID($dbID);
+
+  my $GFDL_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturediseaselog');
+  my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
+
+  my @logs = ();
+  if ($logged_in) {
+    my $GFD_logs = $GFDL_adaptor->fetch_all_by_GenomicFeatureDisease($GFD);  
+    foreach my $log (@$GFD_logs) {
+      my $created = $log->created;
+      my $action = $log->action;
+      my $user_id = $log->user_id;  
+      my $user = $user_adaptor->fetch_by_dbID($user_id);
+      my $user_name = $user->username;
+      my $disease_confidence = $log->disease_confidence;
+      push @logs, {created => $created, user => $user_name, disease_confidence => $disease_confidence, action => $action};
+    }
+  }
+
   my $panel = $GFD->panel;
   my $authorised = $GFD->is_visible;
   my $gene_symbol = $GFD->get_GenomicFeature->gene_symbol;
@@ -18,7 +37,7 @@ sub fetch_by_dbID {
 
   my $GFD_category = $self->_get_GFD_category($GFD);
   my $GFD_category_list = $self->_get_GFD_category_list($GFD);
-  my $attributes = $self->_get_GFD_action_attributes($GFD);
+  my $attributes = $self->_get_GFD_action_attributes($GFD, $logged_in);
   my $publications = $self->_get_publications($GFD);
   my $phenotypes = $self->_get_phenotypes($GFD);
   my $phenotype_ids_list = $self->get_phenotype_ids_list($GFD);
@@ -47,6 +66,7 @@ sub fetch_by_dbID {
     edit_organs => $edit_organs,
     add_AR_loop => $add_AR_loop,
     add_MC_loop => $add_MC_loop,
+    logs => \@logs,
   };
 
 }
@@ -324,10 +344,29 @@ sub _get_GFD_action_attributes_list {
 sub _get_GFD_action_attributes {
   my $self = shift;
   my $GFD = shift;
+  my $logged_in = shift;
+  my $registry = $self->app->defaults('registry');
+  my $GFDAL_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicFeatureDiseaseActionLog');
+  my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
+
 
   my $GFD_actions = $GFD->get_all_GenomicFeatureDiseaseActions();
   my @actions = ();
   foreach my $gfda (@$GFD_actions) {
+    my @logs = ();
+    if ($logged_in) {
+      my $gfda_logs = $GFDAL_adaptor->fetch_all_by_GenomicFeatureDiseaseAction($gfda);
+      foreach my $log (@$gfda_logs) {
+        my $created = $log->created;
+        my $user_id = $log->user_id;
+        my $user = $user_adaptor->fetch_by_dbID($user_id);
+        my $user_name = $user->username;
+        my $action = $log->action;
+        my $allelic_requirement = $log->allelic_requirement || 'Not assigned';
+        my $mutation_consequence = $log->mutation_consequence || 'Not assigned';
+        push @logs, {created => $created, user => $user_name, ar => $allelic_requirement, mc => $mutation_consequence, action => $action};
+      }
+    }
     my $allelic_requirement = $gfda->allelic_requirement || 'Not assigned';
     my $mutation_consequence_summary = $gfda->mutation_consequence || 'Not assigned';
     my $edit_GFD_action = $self->_get_GFD_action_attributes_list('edit', $gfda);
@@ -337,6 +376,7 @@ sub _get_GFD_action_attributes {
       AR_loop => $edit_GFD_action->{AR},
       MC_loop => $edit_GFD_action->{MC},
       GFD_action_id => $gfda->dbID,
+      logs => \@logs,
     };
   }
 
