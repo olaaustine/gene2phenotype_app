@@ -1,9 +1,15 @@
 $(document).ready(function(){
 
+  $.getJSON('https://rest.ensembl.org/lookup/symbol/homo_sapiens/PAFAH1B1?content-type=application/json')
+            .done(function(data) {
+                console.log(data);
+            });
+
   $.getJSON('http://rest.ensembl.org/lookup/symbol/homo_sapiens/PAFAH1B1?content-type=application/json')
             .done(function(data) {
                 console.log(data);
             });
+
 
 
 
