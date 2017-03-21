@@ -31,6 +31,25 @@
         </div>
       % end
     </div> <!--End show edit content-->
+
+    <% if (@{$gfd->{logs}}) { %>
+      <table class="table table-striped">
+        <tr>
+          <th>Created</th>
+          <th>User</th>
+          <th>Disease confidence</th>
+          <th>Action</th>
+        </tr>
+        <% foreach my $log (@{$gfd->{logs}}) { %>
+          <tr>
+            <td><%= $log->{created} %></td>
+            <td><%= $log->{user} %></td>
+            <td><%= $log->{disease_confidence} %></td>
+            <td><%= $log->{action} %></td>
+          </tr>
+        <% } %>
+      </table>  
+    <% } %>
   </div> <!--End DDD category-->
 
   <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>
@@ -117,5 +136,25 @@
         </div>
       %end
     </div> <!--End show edit content-->
+    <% if (@{$GFD_action->{logs}}) { %>
+      <table class="table table-striped">
+        <tr>
+          <th>Created</th>
+          <th>User</th>
+          <th>Allelic requirement</th>
+          <th>Mutation consequence</th>
+          <th>Action</th>
+        </tr>
+        <% foreach my $log (@{$GFD_action->{logs}}) { %>
+          <tr>
+            <td><%= $log->{created} %></td>
+            <td><%= $log->{user} %></td>
+            <td><%= $log->{ar} %></td>
+            <td><%= $log->{mc} %></td>
+            <td><%= $log->{action} %></td>
+          </tr>
+        <% } %>
+      </table>  
+    <% } %>
   <% } %>
 </div> <!--End-->
