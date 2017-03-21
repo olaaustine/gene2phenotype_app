@@ -1,5 +1,12 @@
 $(document).ready(function(){
 
+  $.getJSON('http://rest.ensembl.org/lookup/symbol/homo_sapiens/PAFAH1B1?content-type=application/json')
+            .done(function(data) {
+                console.log(data);
+            });
+
+
+
   if ($('#gene_symbol').length > 0) {  
     var gene_symbol = $('#gene_symbol').text();
     console.log(gene_symbol);
