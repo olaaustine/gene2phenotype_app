@@ -3,7 +3,7 @@ $(document).ready(function(){
   if ($('#gene_symbol').length > 0) {  
     var gene_symbol = $('#gene_symbol').text();
     console.log(gene_symbol);
-    $.getJSON('http://rest.ensembl.org/lookup/symbol/homo_sapiens/' + gene_symbol + '?content-type=application/json')
+    $.getJSON('https://rest.ensembl.org/lookup/symbol/homo_sapiens/' + gene_symbol + '?content-type=application/json')
       .done(function(data) {
         if (!data.error) {
           var assembly_name = data.assembly_name; 
