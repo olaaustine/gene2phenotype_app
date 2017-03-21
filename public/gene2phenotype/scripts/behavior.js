@@ -2,7 +2,6 @@ $(document).ready(function(){
 
   if ($('#gene_symbol').length > 0) {  
     var gene_symbol = $('#gene_symbol').text();
-    console.log(gene_symbol);
     $.getJSON('https://rest.ensembl.org/lookup/symbol/homo_sapiens/' + gene_symbol + '?content-type=application/json')
       .done(function(data) {
         if (!data.error) {
@@ -199,8 +198,6 @@ $(document).ready(function(){
         pmid : pmid,
       },
       success: function(data, textStatus, jqXHR) {
-        console.log(textStatus);
-        console.log(jqXHR);
         var title = data.title;
         var source = data.source;
         if (title && source) {
