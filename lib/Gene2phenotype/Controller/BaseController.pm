@@ -17,7 +17,7 @@ our %MESSAGES = (
   EMAIL_UNKNOWN => { msg => 'The email address is not known. Please contact g2p-help@ebi.ac.uk.', type => 'danger',},
   SESSION_IDS_DONT_MATCH => { msg => 'Session ids don\'t match. Please contact g2p-help@ebi.ac.uk.', type => 'danger',},
   ERROR_ADD_GENE_DISEASE_PAIR => { msg => 'You must provide a gene name and a disease name.', type => 'danger',},  
-  LOGIN_FAILED => { msg => 'Login failed. You entered a wrong password. Try again or reset your password.', type => 'danger',},
+  LOGIN_FAILED => { msg => 'Login failed. You entered a wrong password or email address. Try again, reset your password or contact g2p-help@ebi.ac.uk.', type => 'danger',},
   DISEASE_NAME_IN_DB => { msg => 'Disease name is already in database.', type => 'info',},
   UPDATED_DISEASE_ATTRIBS_SUC => { msg => 'Successfully updated disease attributes.', type => 'success',},
   UPDATED_VISIBILITY_STATUS_SUC => { msg => 'Successfully updated visibility status.', type => 'success',},
@@ -65,7 +65,5 @@ sub edit_phenotypes_message {
   $message_txt =~ s/XXX/<em>$phenotype<\/em>/;
   $self->flash({'message' => $message_txt, 'phenotype_alert_class' => 'alert-' . $message->{type}});
 }
-
-
 
 1;

@@ -18,8 +18,8 @@ sub on_user_login {
     my $last_page = $self->session('last_url') || '/gene2phenotype';
     return $self->redirect_to($last_page);
   }
-
-  return $self->render(text => 'Wrong username/password', status => 403);
+  $self->feedback_message('LOGIN_FAILED');
+  return $self->redirect_to('/gene2phenotype/login');
 }
 
 sub on_user_logout {

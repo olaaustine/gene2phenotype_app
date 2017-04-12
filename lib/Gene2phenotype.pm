@@ -64,7 +64,39 @@ sub startup {
     my $c = shift;
     $c->stash(logged_in => $c->session('logged_in'));
     $c->stash(panels => $c->session('panels'));
+    my $registry = $c->app->defaults('registry');
+    my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
+    my $panel_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'panel');
+    my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
+
+    my @panels = map { $_->name } @{$panel_adaptor->fetch_all_visible_Panels};
+    my @authorised_panels = ();
+    my $logged_in = $c->session('logged_in');
+    if ($logged_in) {
+      my $email = $c->session('email');
+      my $user = $user_adaptor->fetch_by_email($email);
+      @authorised_panels = split(',', $user->panel);
+      foreach my $panel (@authorised_panels) {
+        if (!grep{$_ eq $panel} @panels) {
+          push @panels, $panel;
+        }
+      }
+    }
+    if (scalar @panels > 1) {
+      push @panels, 'ALL';
+    }
+
+    my @panel_imgs = ();
+    my $attribs = $attribute_adaptor->get_attribs_by_type_value('g2p_panel');
+    foreach my $value (sort keys %$attribs) {
+      if (grep {$value eq $_} @panels) {
+        push @panel_imgs, [$value => $value,];
+      }
+    }
+    $c->stash(panel_imgs => \@panel_imgs);
+    $c->stash(authorised_panels => \@panels);
   });
+
 
 # redirect from old page:
   $r->get('/gene2phenotype/redirect')->to(template => 'redirect');
@@ -373,18 +405,10 @@ sub g2p_defaults {
   my $registry = 'Bio::EnsEMBL::Registry';
 
   $registry->load_all($registry_file);
-  my @panel_imgs = ();
-  my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
-  my $attribs = $attribute_adaptor->get_attribs_by_type_value('g2p_panel');
-  foreach my $value (sort keys %$attribs) {
-    push @panel_imgs,[
-      $value => $value,
-    ];
-  }
   my $DBAdaptor = $registry->get_DBAdaptor('human', 'gene2phenotype');
   my $dbh = $DBAdaptor->dbc->db_handle;
 
-  $self->defaults(panel_imgs => \@panel_imgs);
+  $self->defaults(panel_imgs => []);
   $self->defaults(registry => $registry);
   $self->defaults(dbh => $dbh);
   $self->defaults(panel => 'ALL');
