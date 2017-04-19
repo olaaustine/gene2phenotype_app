@@ -24,10 +24,10 @@ sub update {
 
   if ($name ne $prev_name || $mim ne $prev_mim) {
     if ($model->already_in_db($disease_id, $name)) {
-      $model->update($disease_id, $mim, $name); 
+      $disease_id = $model->update($disease_id, $mim, $name); 
       $self->feedback_message('DISEASE_NAME_IN_DB');
     } else {
-      $model->update($disease_id, $mim, $name); 
+      $disease_id = $model->update($disease_id, $mim, $name); 
       $self->feedback_message('UPDATED_DISEASE_ATTRIBS_SUC');
     }
   } else {
