@@ -512,6 +512,34 @@ sub update_GFD_category {
   $GFD_adaptor->update($GFD, $user); 
 }
 
+sub update_disease {
+  my $self = shift;
+  my $email = shift;
+  my $GFD_id = shift;
+  my $disease_id = shift;
+  my $disease_name = shift;
+  my $disease_mim = shift;
+  
+  my $registry = $self->app->defaults('registry');
+  my $disease_adaptor =  $registry->get_adaptor('human', 'gene2phenotype', 'Disease');
+  my $disease = $disease_adaptor->fetch_by_dbID($disease_id);
+  if ($disease->name ne $disease_name || ($disease->mim && $disease->mim ne $disease_mim)) {
+
+    my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDisease');
+    my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
+    my $user = $user_adaptor->fetch_by_email($email);
+    $disease =  Bio::EnsEMBL::G2P::Disease->new(
+      -name => $disease_name,
+      -mim => $disease_mim,
+      -adaptor => $disease_adaptor,
+    );
+    $disease = $disease_adaptor->store($disease);
+    my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
+    $GFD->disease_id($disease->dbID);
+    $GFD_adaptor->update($GFD, $user); 
+  }
+}
+
 sub update_organ_list {
   my $self = shift;
   my $email = shift;
