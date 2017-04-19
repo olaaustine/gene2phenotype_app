@@ -110,6 +110,14 @@ sub startup {
   $r->get('/gene2phenotype/disclaimer')->to(template => 'disclaimer');
   $r->get('/gene2phenotype/documentation')->to(template => 'documentation');
   $r->get('/gene2phenotype/help')->to(template => 'help');
+  $r->get('/gene2phenotype/documentation/enter_new_gene_disease_pair' => sub {
+    my $c = shift;
+    if ($c->session('logged_in')) {
+      $c->render(template => 'enter_new_gene_disease_pair');
+    } else {
+      $c->redirect_to('/gene2phenotype');
+    }
+  });
 
   $r->get('/gene2phenotype/account')->to('login#account_info');
   $r->post('/gene2phenotype/account/update' => sub {
@@ -178,6 +186,7 @@ sub startup {
   $r->get('/gene2phenotype/gfd/authorised/update')->to('genomic_feature_disease#update_visibility');
   $r->get('/gene2phenotype/gfd/category/update')->to('genomic_feature_disease#update');
   $r->get('/gene2phenotype/gfd/organ/update')->to('genomic_feature_disease#update_organ_list');
+  $r->get('/gene2phenotype/gfd/disease/update')->to('genomic_feature_disease#update_disease');
   $r->get('/gene2phenotype/gfd/attributes/:action')->to(controller => 'genomic_feature_disease_attributes');
   $r->get('/gene2phenotype/gfd/phenotype/:action')->to(controller => 'genomic_feature_disease_phenotype');
   $r->get('/gene2phenotype/gfd/publication/:action')->to(controller => 'genomic_feature_disease_publication');
@@ -385,12 +394,17 @@ sub startup {
     my $file_name = $c->stash('file_name');
     my $is_logged_in = $c->session('logged_in');
     my $user_panels = $c->session('panels');
-    $file_name =~ s/\.gz//;
+    my $panel_name = $file_name;
+    $panel_name =~ s/G2P\.csv\.gz//;
+    $file_name =~ s/\.csv\.gz//;
     my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime(time);
+    $year += 1900;
     my $stamp = join('_', ($mday, $mon, $hour, $min, $sec));
+    my $file_time_stamp = join('_', $mday, $mon, $year);
+    $file_name .= "_$file_time_stamp.csv";
     my $tmp_dir = "$downloads_dir/$stamp";
     mkpath($tmp_dir);
-    download_data($tmp_dir, $file_name, $registry_file, $is_logged_in, $user_panels);
+    download_data($tmp_dir, $file_name, $registry_file, $is_logged_in, $user_panels, $panel_name);
     $c->render_file('filepath' => "$tmp_dir/$file_name.gz", 'filename' => "$file_name.gz", 'format' => 'zip', 'cleanup' => 1);
   });
 
