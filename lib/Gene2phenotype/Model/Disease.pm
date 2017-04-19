@@ -63,17 +63,16 @@ sub update {
   my $registry = $self->app->defaults('registry');
   my $disease_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'disease');
   my $disease = $disease_adaptor->fetch_by_dbID($disease_id);
-  $mim ||= undef;
-  $disease->mim($mim);
-  $disease->name($name);
-  $disease = $disease_adaptor->update($disease);
-  $mim = $disease->mim;
-  $name = $disease->name;
-  return {
-    disease_id => $disease_id,
-    name => $name,
-    mim => $mim,
-  };
+  if ($disease->name ne $name || ($disease->mim && $disease->mim ne $mim)) {
+
+    $disease =  Bio::EnsEMBL::G2P::Disease->new(
+      -name => $name,
+      -mim => $mim,
+      -adaptor => $disease_adaptor,
+    );
+    $disease = $disease_adaptor->store($disease);
+  }
+  return $disease->dbID;
 }
 
 1;
