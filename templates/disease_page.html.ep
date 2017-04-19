@@ -36,7 +36,7 @@
           %= hidden_field disease_id => $disease->{disease_id}
           %= hidden_field prev_mim => $disease->{mim}
           %= hidden_field prev_name => $disease->{name}
-          <input id="button" type="submit" class="btn btn-primary btn-sm"/>
+          <input id="button" type="submit" value="Save" class="btn btn-primary btn-sm"/>
           <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
         </div>
       %end
