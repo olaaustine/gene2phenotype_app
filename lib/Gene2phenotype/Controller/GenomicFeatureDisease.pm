@@ -153,6 +153,20 @@ sub update_organ_list {
   return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
 
+sub update_disease {
+  my $self = shift;
+  my $GFD_id = $self->param('GFD_id');
+  my $disease_id = $self->param('disease_id');
+  my $name = $self->param('name');
+  my $mim = $self->param('mim');
+  my $model = $self->model('genomic_feature_disease');  
+  my $email = $self->session('email');
+  $model->update_disease($email, $GFD_id, $disease_id, $name, $mim);
+  $self->session(last_url => "/gene2phenotype/gfd?GFD_id=$GFD_id");
+  $self->feedback_message('UPDATED_DISEASE_ATTRIBS_SUC');
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+}
+
 sub update_visibility {
   my $self = shift;
   my $GFD_id = $self->param('GFD_id');
