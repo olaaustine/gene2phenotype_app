@@ -42,7 +42,7 @@ sub fetch_by_dbID {
   my $phenotypes = $self->_get_phenotypes($GFD);
   my $phenotype_ids_list = $self->get_phenotype_ids_list($GFD);
   my $organs = $self->_get_organs($GFD); 
-  my $edit_organs = $self->_get_edit_organs($GFD, $organs); 
+  my $edit_organs = $self->_get_edit_organs($GFD, $organs, $panel); 
 
   my $add_GFD_action = $self->_get_GFD_action_attributes_list('add');
   my $add_AR_loop = $add_GFD_action->{AR};
@@ -469,11 +469,14 @@ sub _get_edit_organs {
   my $self = shift;
   my $GFD = shift;  
   my $organ_list = shift;
+  my $panel_name = shift;
  
   my $registry = $self->app->defaults('registry');
   my $organ_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'Organ');
+  my $panel_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'panel');
+  my $panel = $panel_adaptor->fetch_by_name($panel_name);
 
-  my %all_organs = map {$_->name => $_->dbID} @{$organ_adaptor->fetch_all};
+  my %all_organs = map {$_->name => $_->dbID} @{$organ_adaptor->fetch_all_by_panel_id($panel->dbID)};
   my @organs = (); 
   foreach my $value (sort keys %all_organs) {
     my $id = $all_organs{$value};
