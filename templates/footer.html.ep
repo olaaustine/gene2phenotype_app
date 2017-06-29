@@ -3,8 +3,14 @@
     <div class="container">
       <div class="container">
         <ul class="bs-docs-footer-links text-muted">
+          <li>Copyright © EMBL-EBI 2017</li>
+          <li>&middot;</li>
           <li>
-            %= link_to Help  => '/gene2phenotype/help'
+            %= link_to Contact  => '/gene2phenotype/help'
+          </li>
+          <li>&middot;</li>
+          <li>
+            %= link_to Cookies => 'https://www.ebi.ac.uk/about/terms-of-use'
           </li>
           <li>&middot;</li>
           <li>
@@ -13,6 +19,14 @@
           <li>&middot;</li>
           <li>
             %= link_to Documentation => '/gene2phenotype/documentation'
+          </li>
+          <li>&middot;</li>
+          <li>
+            %= link_to Privacy => 'https://www.ebi.ac.uk/about/terms-of-use'
+          </li>
+          <li>&middot;</li>
+          <li>
+            %= link_to 'Terms of use' => 'https://www.ebi.ac.uk/about/terms-of-use'
           </li>
         </ul>
       </div>
