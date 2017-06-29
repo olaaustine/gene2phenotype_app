@@ -1,7 +1,7 @@
 %= include 'header'
 %= include 'search'
 <div class="container">
- <h4>Help</h4>
+ <h4>Contact and help</h4>
   <p>You can direct any questions to <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a></p>
 </div>
 %= include 'footer'
