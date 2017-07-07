@@ -86,8 +86,28 @@ $(document).ready(function(){
   }
 
 
+  $(".show_toggle_view_button").mouseleave(function(){
+    $(this).closest('.show_db_content').find('.section_header').css('background-color', 'white');
+    $(this).closest('.show_db_content').find('.display_attributes').css('background-color', 'white');
+    $(this).closest('.add_GDM').find('.section_header').css('background-color', 'white');
+  });
+
+  $(".show_toggle_view_button").mouseenter(function(){
+    $(this).closest('.show_db_content').find('.section_header').css('background-color', '#bbdefb');
+    $(this).closest('.show_db_content').find('.display_attributes').css('background-color', '#bbdefb');
+    $(this).closest('.add_GDM').find('.section_header').css('background-color', '#bbdefb');
+  });
+
+  $(".show_add_publication").mouseenter(function(){
+    $(this).closest('.show_db_content').find('.section_header').css('background-color', '#bbdefb');
+  });
+
+  $(".show_add_publication").mouseleave(function(){
+    $(this).closest('.show_db_content').find('.section_header').css('background-color', 'white');
+  });
+
   $(".align_right").mouseenter(function(){
-    $(this).prev().css('background-color', '#D4D8D1');
+    $(this).prev().css('background-color', '#bbdefb');
   }); 
 
   $(".align_right").mouseleave(function(){
@@ -180,6 +200,12 @@ $(document).ready(function(){
 
   $(".discard_add_publication").click(function(){
     $button = $(this);
+    $(':input.title[type="text"]').val('');
+    $(':input.source[type="text"]').val('');
+    $(':input.pmid[type=text]').val('');
+    $(".add_publication_feedback").removeClass("alert alert-warning");
+    $(".add_publication_feedback").empty();
+    $(".next_step_add_publication").addClass("hide_fields");
     $this_content = $button.closest(".add_publication");
     $prev_content = $this_content.prev();
     $this_content.hide(function(){
@@ -189,31 +215,41 @@ $(document).ready(function(){
 
   $(".find").click(function(){
     var pmid = $(':input.pmid[type=text]').val();
-    var europepmcAPI = 'http://www.ebi.ac.uk/europepmc/webservices/rest/search/query=ext_id:' + pmid + '&format=json&callback=?';
-    $.ajax({
-      url: "/gene2phenotype/ajax/publication",
-      dataType: "json",
-      type: "get",
-      data: {
-        pmid : pmid,
-      },
-      success: function(data, textStatus, jqXHR) {
-        var title = data.title;
-        var source = data.source;
-        if (title && source) {
-          $(':input.title[type="text"]').val(title);
-          $(':input.source[type="text"]').val(source);
-        } else {
-          $(".add_publication_feedback").append("No publication information could be found for your input PMID. Please contact g2p-help@ebi.ac.uk for help.");
-          $(".add_publication_feedback").removeClass("alert alert-danger").addClass("alert alert-danger");
+    $(".add_publication_feedback").empty();
+    $(".add_publication_feedback").removeClass("alert alert-danger");
+
+    if (! (!isNaN(parseFloat(pmid)) && isFinite(pmid))) {
+      $(".add_publication_feedback").empty();
+      $(".add_publication_feedback").append("You entered an invalid PMID.");
+      $(".add_publication_feedback").removeClass("alert alert-danger").addClass("alert alert-danger");
+    } else {
+      $(".next_step_add_publication").removeClass("hide_fields");
+      var europepmcAPI = 'http://www.ebi.ac.uk/europepmc/webservices/rest/search/query=ext_id:' + pmid + '&format=json&callback=?';
+      $.ajax({
+        url: "/gene2phenotype/ajax/publication",
+        dataType: "json",
+        type: "get",
+        data: {
+          pmid : pmid,
+        },
+        success: function(data, textStatus, jqXHR) {
+          var title = data.title;
+          var source = data.source;
+          if (title && source) {
+            $(':input.title[type="text"]').val(title);
+            $(':input.source[type="text"]').val(source);
+          } else {
+            $(".add_publication_feedback").append("No publication information could be found for your input PMID. You can enter the publication information yourself or contact g2p-help@ebi.ac.uk for help.");
+            $(".add_publication_feedback").removeClass("alert alert-warning").addClass("alert alert-warning");
+          }
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+          console.log(jqXHR);
+          console.log(textStatus);
+          console.log(errorThrown);
         }
-      },
-      error: function(jqXHR, textStatus, errorThrown){
-        console.log(jqXHR);
-        console.log(textStatus);
-        console.log(errorThrown);
-      }
-    });
+      });
+    }
   });
 
   $('#add_publication').submit(function(event){
