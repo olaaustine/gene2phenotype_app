@@ -4,18 +4,21 @@
 
   <h3 class="title"><a class="anchor" name="top">Panel: <%= $gfd->{panel} %> Gene: <em><%= $gfd->{gene_symbol} %></em> Disease: <em><%= $gfd->{disease_name} %></em></a></h3>
   <div class="clear"></div>
+  <h4>Page navigation</h4>
   <ul id="legend">
     <% if ($duplicate) { %>
       <li><a href="#duplicate_entry">Duplicate entry</a></li>
     <% } %>
     <li><a href="#gene">Gene</a></li>
+    <li><a href="#disease">Disease</a> </li>
+    <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>  
+      <li><a href="#comments">Comments</a> </li>
+    <% } %>
     <li><a href="#GD_attribs">Gene-Disease Attributes</a></li>
     <li><a href="#publications">Publications</a></li>
     <li><a href="#phenotypes">Phenotypes</a></li>
     <li><a href="#organ_specificity">Organ specificity</a></li>
-    <li><a href="#disease">Disease</a> </li>
     <li><a href="#variants">Variants</a> </li>
-
   </ul> 
 
   <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>  
@@ -41,11 +44,14 @@
 
   %= include 'duplicate_entry'
   %= include 'gene'
+  %= include 'disease'
+  <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>
+    %= include 'comments'
+  <% } %>
   %= include 'gfd_attributes'
   %= include 'publication'
   %= include 'phenotype'
   %= include 'organ'
-  %= include 'disease'
   %= include 'variants'
 
 </div>
