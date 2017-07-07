@@ -1,3 +1,11 @@
+.hide_fields {
+  display:none;
+}
+
+.log_table {
+  margin-top: 1em;
+}
+
 .comment_text_area {
   margin-bottom: 1em;
 }
@@ -62,7 +70,7 @@ dl {
 
 dt {
   float: left;
-  background: #D4D8D1;
+  background: #bbdefb;
   clear: left;
 }
 
@@ -81,9 +89,9 @@ dd {
 }
 
 .show_edit_content {
-  background: #D4D8D1;
+  background: #bbdefb;
   border-top-style: solid;
-  border-color: #737373;
+  border-color: #1565c0;
   display: none;
   margin-bottom: 8em;
 }
