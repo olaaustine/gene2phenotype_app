@@ -190,6 +190,7 @@ sub startup {
   $r->get('/gene2phenotype/gfd/attributes/:action')->to(controller => 'genomic_feature_disease_attributes');
   $r->get('/gene2phenotype/gfd/phenotype/:action')->to(controller => 'genomic_feature_disease_phenotype');
   $r->get('/gene2phenotype/gfd/publication/:action')->to(controller => 'genomic_feature_disease_publication');
+  $r->get('/gene2phenotype/gfd/comment/:action')->to(controller => 'genomic_feature_disease_comment');
   $r->get('/gene2phenotype/gfd/create')->to('genomic_feature_disease#create');
   $r->get('/gene2phenotype/gfd/add')->to('genomic_feature_disease#add');
   $r->get('/gene2phenotype/gfd/delete')->to('genomic_feature_disease#delete');
@@ -206,7 +207,7 @@ sub startup {
     my $c = shift;
     my $pmid = $c->param('pmid');
     my $http = HTTP::Tiny->new();
-    my $request = "http://www.ebi.ac.uk/europepmc/webservices/rest/search/query=ext_id:$pmid&format=json";
+    my $request = "http://www.ebi.ac.uk/europepmc/webservices/rest/search/query=ext_id:$pmid%20src:med&format=json";
     my $response = $http->get($request, {
       headers => { 'Content-type' => 'application/json' }
     });
@@ -225,6 +226,7 @@ sub startup {
       my $pageInfo = $result->{pageInfo};
       my $pubYear = $result->{pubYear};
       my $source = "$journalTitle $journalVolume: $pageInfo, $pubYear";
+
       $c->render(json => {title => $title, source => $source});  
     } else {
       $request = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=$pmid&retmode=json";
