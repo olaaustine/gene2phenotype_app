@@ -1,5 +1,6 @@
 <div>
   <div class="clear"></div>
+
   <h3><a class="anchor" name="GD_attribs">Gene-Disease Attributes</a><a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a></h3>
   <div id="DDD_category">
     <div class="show_db_content">
@@ -33,6 +34,7 @@
     </div> <!--End show edit content-->
 
     <% if (@{$gfd->{logs}}) { %>
+      <div class="log_table">
       <table class="table table-striped">
         <tr>
           <th>Created</th>
@@ -49,11 +51,13 @@
           </tr>
         <% } %>
       </table>  
+      </div>
     <% } %>
   </div> <!--End DDD category-->
 
   <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>
     <div class="add_GDM">
+    <h4 class="section_header">Gene-Disease Mechanism</h4>
     <div class="show_db_content">
       <div class="show_toggle_view_button">
         <input type="button" name="show_edit_content" value="Add New Gene-Disease Mechanism" class="btn btn-primary btn-sm edit"/>
@@ -137,6 +141,7 @@
       %end
     </div> <!--End show edit content-->
     <% if (@{$GFD_action->{logs}}) { %>
+      <div class="log_table">
       <table class="table table-striped">
         <tr>
           <th>Created</th>
@@ -155,6 +160,7 @@
           </tr>
         <% } %>
       </table>  
+      </div>
     <% } %>
   <% } %>
 </div> <!--End-->
