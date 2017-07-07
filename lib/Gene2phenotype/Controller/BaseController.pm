@@ -32,6 +32,7 @@ our %MESSAGES = (
   DELETED_GFDPHENOTYPE_SUC => { msg => 'Successfully deleted a phenotype entry.', type => 'success'},
   DELETED_GFDPUBLICATION_SUC => { msg => 'Successfully deleted publication entry.', type => 'success'},
   ADDED_COMMENT_SUC => { msg => 'Successfully added a new comment.', type => 'success'},
+  EMPTY_COMMENT => { msg => 'Comment is empty and has not been added.', type => 'info'},
   DELETED_GFD_ACTION_SUC => { msg => 'Successfully deleted a genomic feature disease action.', type => 'success'},
   DELETED_GFD_SUC => { msg => 'Successfully deleted gene disease pair', type => 'success'},
   DELETED_COMMENT_SUC => { msg => 'Successfully deleted the comment.', type => 'success'},
