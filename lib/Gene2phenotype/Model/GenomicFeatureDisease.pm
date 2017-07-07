@@ -35,6 +35,8 @@ sub fetch_by_dbID {
   my $disease_name = $GFD->get_Disease->name; 
   my $disease_id = $GFD->get_Disease->dbID;
 
+  my $GFD_comments = $self->_get_GFD_comments($GFD);
+
   my $GFD_category = $self->_get_GFD_category($GFD);
   my $GFD_category_list = $self->_get_GFD_category_list($GFD);
   my $attributes = $self->_get_GFD_action_attributes($GFD, $logged_in);
@@ -59,6 +61,7 @@ sub fetch_by_dbID {
     GFD_category => $GFD_category,
     GFD_category_list => $GFD_category_list,
     GFD_actions => $attributes,
+    GFD_comments => $GFD_comments,
     publications => $publications,
     phenotypes => $phenotypes,
     phenotype_ids_list => $phenotype_ids_list,
@@ -418,6 +421,23 @@ sub _get_publications {
     };
   }
   return \@publications;
+}
+
+sub _get_GFD_comments {
+  my $self = shift;
+  my $GFD = shift;
+  my @comments = ();
+  my $GFD_comments = $GFD->get_all_GFDComments;  
+  foreach my $comment (@$GFD_comments) {
+    push @comments, {
+      user => $comment->get_User()->username,
+      date => $comment->created,
+      comment_text => $comment->comment_text,
+      GFD_comment_id => $comment->dbID,
+      GFD_id => $GFD->dbID,
+    };
+  }
+  return \@comments;
 }
 
 sub _get_phenotypes {
