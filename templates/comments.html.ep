@@ -1,0 +1,40 @@
+<div>
+  <div class="show_db_content">
+    <h3 class="section_header"><a class="anchor" name="comments">Comments</a><a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a></h3>
+    <div class="show_toggle_view_button">
+      <input type="button" name="show_edit_content" value="Add New Comment" class="btn btn-primary btn-sm edit"/>
+    </div>
+    <div class="clear"></div>
+  </div>
+  <div class="show_edit_content">
+    <h4>Add comment:</h4>
+    %= form_for '/gene2phenotype/gfd/comment/add' => begin
+      <div class="form-group comment_text_area"><textarea class="form-control" name="GFD_comment" rows="3"></textarea></div>
+      <div class="align_buttons_right">
+        %= hidden_field GFD_id => $gfd->{GFD_id}
+        <input id="button" type="submit" value="Add" class="btn btn-primary btn-sm"/>
+        <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
+      </div>
+    %end
+  </div> <!--End show edit content-->
+
+  <% foreach my $comment (@{$gfd->{GFD_comments}}) { %>
+    <div class="comment">
+      <div class="align_left"><p><%= $comment->{comment_text} %> (<%= $comment->{user} %> <%= $comment->{date} %>)</p></div>
+      <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>
+        <div class="align_right">
+         %= form_for '/gene2phenotype/gfd/comment/delete' => begin
+          %= hidden_field GFD_comment_id => $comment->{GFD_comment_id}
+          %= hidden_field GFD_id => $gfd->{GFD_id}
+          <input id="button" type="submit" value="Delete Comment" class="btn btn-primary btn-sm confirm"/>
+          %end
+        </div>
+      <% } %>
+    </div>
+    <div class="clear"></div>
+  <% } %>
+
+
+
+
+</div>
