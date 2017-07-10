@@ -401,6 +401,7 @@ sub startup {
     $file_name =~ s/\.csv\.gz//;
     my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime(time);
     $year += 1900;
+    $mon++;
     my $stamp = join('_', ($mday, $mon, $hour, $min, $sec));
     my $file_time_stamp = join('_', $mday, $mon, $year);
     $file_name .= "_$file_time_stamp.csv";
