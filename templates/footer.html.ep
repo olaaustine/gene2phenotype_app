@@ -10,7 +10,7 @@
           </li>
           <li>&middot;</li>
           <li>
-            %= link_to Cookies => 'https://www.ebi.ac.uk/about/terms-of-use'
+            %= link_to Cookies => 'https://www.ebi.ac.uk/about/terms-of-use#privacy'
           </li>
           <li>&middot;</li>
           <li>
@@ -22,11 +22,11 @@
           </li>
           <li>&middot;</li>
           <li>
-            %= link_to Privacy => 'https://www.ebi.ac.uk/about/terms-of-use'
+            %= link_to Privacy => 'https://www.ebi.ac.uk/about/terms-of-use#privacy'
           </li>
           <li>&middot;</li>
           <li>
-            %= link_to 'Terms of use' => 'https://www.ebi.ac.uk/about/terms-of-use'
+            %= link_to 'Terms of use' => 'https://www.ebi.ac.uk/about/terms-of-use#general'
           </li>
         </ul>
       </div>
