@@ -34,6 +34,7 @@ sub fetch_by_dbID {
 
   my $disease_name = $GFD->get_Disease->name; 
   my $disease_id = $GFD->get_Disease->dbID;
+  my $disease_ontology_accessions = $self->_get_disease_ontology_accessions($GFD); 
 
   my $GFD_comments = $self->_get_GFD_comments($GFD);
 
@@ -56,6 +57,7 @@ sub fetch_by_dbID {
     gene_id => $gene_id,
     disease_name => $disease_name,
     disease_id => $disease_id,
+    ontology_accessions => $disease_ontology_accessions,
     authorised => $authorised,
     GFD_id => $dbID,
     GFD_category => $GFD_category,
@@ -384,6 +386,38 @@ sub _get_GFD_action_attributes {
   }
 
   return \@actions;
+}
+sub _get_disease_ontology_accessions {
+  my $self = shift;
+  my $GFD = shift;
+  my $registry = $self->app->defaults('registry');
+  my $ontology_term_adaptor = $registry->get_adaptor('Multi', 'Ontology', 'OntologyTerm');
+
+  my $disease = $GFD->get_Disease;
+  my $accessions = $disease->ontology_accessions;
+  my @ontology_accessions_tmpl = ();
+
+  foreach my $accession (@$accessions) {
+    my $term = $ontology_term_adaptor->fetch_by_accession($accession);
+    if ($term) {
+      my $term_name = $term->name;
+      my $term_source = $term->ontology;     
+      push @ontology_accessions_tmpl, {
+        accession => $accession,
+        name => $term_name,
+        source => $term_source,      
+      };
+    } else {
+      push @ontology_accessions_tmpl, {
+        accession => $accession,
+      };
+    }
+  }
+
+  @ontology_accessions_tmpl = sort {$a->{name} cmp $b->{name}} @ontology_accessions_tmpl; 
+
+
+  return \@ontology_accessions_tmpl;
 }
 
 sub _get_publications {
