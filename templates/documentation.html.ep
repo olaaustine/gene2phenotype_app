@@ -1,11 +1,14 @@
 %= include 'header'
 %= include 'search'
 <div class="container">
- <h4>Documentation</h4>
+  <h4>Documentation</h4>
   <h5>API and Software</h5>
   <p>Our source code is available from GitHub:</p>
   <p><a href="https://github.com/at7/ensembl-gene2phenotype">gene2phenotype API</a> for interactions between the database and website</p>
   <p><a href="https://github.com/at7/gene2phenotype_app">gene2phenotype application code</a></p>
   <p>You can direct any questions to <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a></p>
+  <h5>Data</h5>
+  <p>Phenotypes are annotated with vocabulary from <a href="https://academic.oup.com/nar/article/45/D1/D865/2574174/The-Human-Phenotype-Ontology-in-2017">The Human Phenotype Ontology</a></p>  
+
 </div>
 %= include 'footer'
