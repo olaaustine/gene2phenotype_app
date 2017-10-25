@@ -10,7 +10,7 @@ $(document).ready(function(){
           var start = data.start;
           var end = data.end;
           var strand = data.strand;
-          var gene_location = assembly_name + ' ' + chrom + ' ' + start + '-' + end + ' (' + strand + ')';
+          var gene_location = assembly_name + ':' + chrom + ':' + start + '-' + end + ' (' + strand + ')';
           $("#gene_location").append(gene_location);
         }
     });
