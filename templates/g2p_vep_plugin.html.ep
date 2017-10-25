@@ -1,0 +1,105 @@
+%= include 'header'
+%= include 'search'
+<div class="container">
+  <h4>G2P VEP plugin</h4>
+  <p>The G2P VEP plugin identifies likely disease causing genes based on the knowledge encoded in the G2P database and runs as part of the Variant Effect Predictor (VEP).</p>
+  <h5>Variant Effect Predictor</h5>
+  <p>The VEP computes the consequence of a variant and can further annotate the variant with values form a selection of different data types which can be specified when running the script. In most cases the consequence is computed with respect to the transcript that overlaps the variant. If the input file contains variant data for a set of individuals the VEP generates one line of output for each pair of variant allele and overlapping transcript per individual.</p>
+  <h5>How the plugin works:</h5>
+  <p>The G2P VEP plugin can add further annotation to the line of output based on the individual's genotypes and the knowledge contained in the G2P database. The G2P VEP plugin uses a set of filters for identifying potentially causal variants. If the plugin counts a sufficient number of causal variants (variant hits) for a G2P gene it will report the gene as likely disease causing and all variants that passed the filters. The number of sufficient causal variants is derived from the allelic requirement of the gene which is stored in the G2P database.</p>  
+  <h5>Filtering rules:</h5>
+  <p>Consider the variant as potentially causal if the variant passes all filtering steps.</p>
+  <ol>
+    <li>The variant <mark>overlaps</mark> a G2P gene</li>
+    <li>The variant <mark>consequence</mark> is in the list of severe consequences. The default list contains the following terms: splice_donor_variant, splice_acceptor_variant, stop_gained, frameshift_variant,stop_lost,initiator_codon_variant, inframe_insertion, inframe_deletion, missense_variant, coding_sequence_variant, start_lost, transcript_ablation, transcript_amplification, protein_altering_variant</li>
+    <li>All allele <mark>frequencies</mark> from co-located variants in reference populations (1000 Genomes project, ESP, gnomAD) need to be below a given threshold. The default frequency values for an allele in a bi-allelic gene is 0.005 and for an allele in a mono-allelic gene is 0.0001.</li>
+  </ol>
+  <p>The Sufficient number of variant hits is determined by the gene's allelic requirement.</p>
+  <ul>
+    <li>For a bi-allelic gene we need to count either at least 2 heterozygous (HET) variants or 1 homozygous (HOM) variant which pass all fitering rules and are located in the same transcript.</li>
+    <li>For a mono-allelic gene we need to count either 1 HET variant or 1 HOM variant which passes all filtering rules.</li>
+  </ul>
+
+  <h5>Software</h5>
+  <h5>Installing and running the VEP and G2P VEP plugin</h5>
+  <p>For installation and runnig the VEP script please refer to the <a href="https://github.com/Ensembl/ensembl-vep">VEP git repository</a> and <a href="http://www.ensembl.org/info/docs/tools/vep/script/vep_options.html">VEP documentation pages</a>. Plugins are installed and configured during the VEP installation. The <a href="https://github.com/Ensembl/VEP_plugins/blob/dev/G2P.pm">G2P VEP plugin</a> is loacted in the VEP plugins repository.</p>
+ 
+  <h5>To run the G2P VEP plugin add the following argument to the VEP command:</h5>
+  <pre>./vep -i input.vcf --plugin G2P,file='DDG2P_11_7_2017.csv',log_dir='g2p_log_dir',txt_report='report.txt',html_report='report.html'</pre>
+  <p>The options that can be added to the plugin command are listed and explained in the <a href="https://github.com/Ensembl/VEP_plugins/blob/dev/G2P.pm">G2P VEP plugin module</a>.</p>
+
+  <h5>Allele frequencies from reference populations</h5>
+
+  <p>The G2P plugin filters input variants on allele frequencies. The allele frequencies are retrieved from major genotyping projects like the 1000 Genomes project, ESP and gnomAD. The VEP provides a cache which contains allele frequencies in order to speed up the variant annotation. VEP's cache currently contains only frequency data for alleles that have been submitted to dbSNP.</p>
+
+  <p>The gnomAD's full data set has not been submitted to dbSNP and incorporated into Ensembl for release/90. As a consequence, the frequency for some gnomAD alleles may be missing from VEP's cache data.</p>
+
+  <p>It is possible to retrieve allele frequencies for input variants that are not yet in dbSNP from VCF files. In order to enable the funtionality add af_from_vcf=1 to the vep command: <pre>./vep -i input.vcf --plugin G2P,file='DDG2P_11_7_2017.csv,af_from_vcf=1'</pre></p>
+
+  <table class="table table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th>reference population short name</th>
+        <th>description</th>
+        <th>source</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>minor_allele_freq</td><td>global allele frequency (AF) from 1000 Genomes Phase 3 data</td><td>VEP cache</td></tr>
+      <tr><td>AA</td><td>Exome Sequencing Project 6500:African_American</td><td>VEP cache</td></tr>
+      <tr><td>AFR</td><td>1000GENOMES:phase_3:AFR</td><td>VEP cache</td></tr>
+      <tr><td>AMR</td><td>1000GENOMES:phase_3:AMR</td><td>VEP cache</td></tr>
+      <tr><td>EA</td><td>Exome Sequencing Project 6500:European_American</td><td>VEP cache</td></tr>
+      <tr><td>EAS</td><td>1000GENOMES:phase_3:EAS</td><td>VEP cache</td></tr>
+      <tr><td>EUR</td><td>1000GENOMES:phase_3:EUR</td><td>VEP cache</td></tr>
+      <tr><td>SAS</td><td>1000GENOMES:phase_3:SAS</td><td>VEP cache</td></tr>
+      <tr><td>gnomAD</td><td>Genome Aggregation Database:Total</td><td>VEP cache</td></tr>
+      <tr><td>gnomAD_AFR</td><td>Genome Aggregation Database exomes:African/African American</td><td>VEP cache</td></tr>
+      <tr><td>gnomAD_AMR</td><td>Genome Aggregation Database exomes:Latino</td><td>VEP cache</td></tr>
+      <tr><td>gnomAD_ASJ</td><td>Genome Aggregation Database exomes:Ashkenazi Jewish</td><td>VEP cache</td></tr>
+      <tr><td>gnomAD_EAS</td><td>Genome Aggregation Database exomes:East Asian</td><td>VEP cache</td></tr>
+      <tr><td>gnomAD_FIN</td><td>Genome Aggregation Database exomes:Finnish</td><td>VEP cache</td></tr>
+      <tr><td>gnomAD_NFE</td><td>Genome Aggregation Database exomes:Non-Finnish European</td><td>VEP cache</td></tr>
+      <tr><td>gnomAD_OTH</td><td>Genome Aggregation Database exomes:Other (population not assigned)</td><td>VEP cache</td></tr>
+      <tr><td>gnomAD_SAS</td><td>Genome Aggregation Database exomes:South Asian</td><td>VEP cache</td></tr>
+      <tr><td>TOPMed</td><td>Trans-Omics for Precision Medicine (TOPMed) Program</td><td>VCF file</td></tr>
+      <tr><td>ALSPAC</td><td>UK10K:ALSPAC cohort</td><td>VCF file</td></tr>
+      <tr><td>TWINSUK</td><td>UK10K:TWINSUK cohort</td><td>VCF file</td></tr>
+      <tr><td>gnomADe:AFR</td><td>Genome Aggregation Database exomes v170228</td><td>VCF file</td></tr>
+      <tr><td>gnomADe:ALL</td><td>Genome Aggregation Database exomes v170228</td><td>VCF file</td></tr>
+      <tr><td>gnomADe:AMR</td><td>Genome Aggregation Database exomes v170228</td><td>VCF file</td></tr>
+      <tr><td>gnomADe:ASJ</td><td>Genome Aggregation Database exomes v170228</td><td>VCF file</td></tr>
+      <tr><td>gnomADe:EAS</td><td>Genome Aggregation Database exomes v170228</td><td>VCF file</td></tr>
+      <tr><td>gnomADe:FIN</td><td>Genome Aggregation Database exomes v170228</td><td>VCF file</td></tr>
+      <tr><td>gnomADe:NFE</td><td>Genome Aggregation Database exomes v170228</td><td>VCF file</td></tr>
+      <tr><td>gnomADe:OTH</td><td>Genome Aggregation Database exomes v170228</td><td>VCF file</td></tr>
+      <tr><td>gnomADe:SAS</td><td>Genome Aggregation Database exomes v170228</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:AFR</td><td>Genome Aggregation Database genomes v170228:African/African American</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:ALL</td><td>Genome Aggregation Database genomes v170228:All gnomAD genomes individuals</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:AMR</td><td>Genome Aggregation Database genomes v170228:Latino</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:ASJ</td><td>Genome Aggregation Database genomes v170228:Ashkenazi Jewish</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:EAS</td><td>Genome Aggregation Database genomes v170228:East Asian</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:FIN</td><td>Genome Aggregation Database genomes v170228:Finnish</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:NFE</td><td>Genome Aggregation Database genomes v170228:Non-Finnish European</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:OTH</td><td>Genome Aggregation Database genomes v170228:Other (population not assigned)</td><td>VCF file</td></tr>
+    </tbody>
+  </table> 
+
+
+  <h5>Example input and output files</h5>
+  <ul>
+    <li>run_vep_g2p_plugin</li>
+    <li>input_vcf</li>
+    <li>report.html</li>
+    <li>report.txt</li>
+  </ul>
+
+  <h5>Remarks</h5>
+  <ul>
+    <li>The VEP can look up existing annotations from locally installed cache files in order to increase the speed of computation. The VEP installation process will guide you through the cache file selection and installation process. Converting your cache files with tabix will increase the speed of retrieving existing co-located variants even more. You need to run the convert_cache.pl script which is located in the ensembl-vep repository. <pre>perl convert_cache.pl -species [species] -version [vep_version]</pre></li>
+    <li><a href="http://www.ensembl.org/info/docs/tools/vep/script/vep_other.html#faster">More ways to make sure that your VEP installation is running as fast as possible.</a></li>
+  </ul>
+
+
+</div>
+%= include 'footer'
