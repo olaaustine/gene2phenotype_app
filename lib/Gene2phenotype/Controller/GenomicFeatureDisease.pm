@@ -9,9 +9,14 @@ sub show {
 
   my $dbID = $self->param('dbID') || $self->param('GFD_id');
 
+  if (!$dbID) {
+    return $self->render(template => 'not_found');
+  }
   # check if GFD is authorised
   my $logged_in = $self->session('logged_in'); 
+
   my $gfd = $model->fetch_by_dbID($dbID, $logged_in); 
+
   $self->stash(gfd => $gfd);
 
   # current panel
