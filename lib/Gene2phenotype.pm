@@ -225,7 +225,26 @@ sub startup {
       my $journalVolume = $result->{journalVolume};
       my $pageInfo = $result->{pageInfo};
       my $pubYear = $result->{pubYear};
-      my $source = "$journalTitle $journalVolume: $pageInfo, $pubYear";
+      my @source_components = ();
+      push @source_components, $journalTitle if ($journalTitle);
+      if ($journalVolume) {
+        if ($pageInfo || $pubYear) {
+          push @source_components, "$journalVolume:";
+        } else {
+          push @source_components, "$journalVolume";
+        }
+      }
+      if ($pageInfo) {
+        if ($pubYear) {
+          push @source_components, "$pageInfo,";
+        } else {
+          push @source_components, "$pageInfo";
+        }
+      }
+      if ($pubYear) {
+        push @source_components, "$pubYear";
+      }
+      my $source = join(' ', @source_components);
 
       $c->render(json => {title => $title, source => $source});  
     } else {
