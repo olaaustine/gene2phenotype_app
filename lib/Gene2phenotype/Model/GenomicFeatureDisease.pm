@@ -425,9 +425,48 @@ sub _get_publications {
   my $GFD = shift;
   my @publications = ();
 
+  my $registry = $self->app->defaults('registry');
+  my $text_mining_variation_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'textminingvariation');
   my $GFD_publications = $GFD->get_all_GFDPublications;
   foreach my $GFD_publication (sort {$a->get_Publication->title cmp $b->get_Publication->title} @$GFD_publications) {
     my $publication = $GFD_publication->get_Publication;
+    my $text_mining_variations = $text_mining_variation_adaptor->fetch_all_by_Publication($publication);
+    my @text_mining_variations_tmpl = ();
+    foreach my $variation (@$text_mining_variations) {
+      my $assembly = $variation->assembly;
+      my $seq_region_name = $variation->seq_region;
+      my $seq_region_start = $variation->seq_region_start;
+      my $seq_region_end = $variation->seq_region_end;
+
+      my $coords = "$seq_region_start-$seq_region_end";
+      if ($seq_region_start == $seq_region_end) {
+        $coords = $seq_region_start;
+      }
+
+      my $text_mining_hgvs = $variation->text_mining_hgvs;
+      my $ensembl_hgvs = $variation->ensembl_hgvs;
+
+      my $allele_string = $variation->allele_string;
+      my $consequence = $variation->consequence;
+      my $colocated_variants = $variation->colocated_variants || '-';
+      my $transcript_stable_id = $variation->feature_stable_id;
+      my $biotype = $variation->biotype;
+      my $polyphen_prediction = $variation->polyphen_prediction || '-';
+      my $sift_prediction = $variation->sift_prediction || '-';
+      push @text_mining_variations_tmpl, {
+        location => "$assembly:$seq_region_name:$coords",
+        text_mining_hgvs => $text_mining_hgvs,
+        ensembl_hgvs => $ensembl_hgvs,
+        allele_string => $allele_string,
+        consequence => $consequence,
+        transcript_stable_id => $transcript_stable_id,
+        biotype => $biotype,
+        polyphen_prediction => $polyphen_prediction,
+        sift_prediction => $sift_prediction,
+        colocated_variants => $colocated_variants,
+      };
+    }
+
     my $comments = $GFD_publication->get_all_GFDPublicationComments;
     my @comments_tmpl = ();
     foreach my $comment (@$comments) {
@@ -447,6 +486,7 @@ sub _get_publications {
     $title .= " ($source)" if ($source);
 
     push @publications, {
+      text_mining_results => \@text_mining_variations_tmpl, 
       comments => \@comments_tmpl,
       title => $title,
       pmid => $pmid,
