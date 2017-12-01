@@ -1,5 +1,64 @@
 $(document).ready(function(){
 
+  function compare(a,b) {
+    return parseInt(a.span.begin) - parseInt(b.span.begin);
+  }
+
+  $( ".hide_pubtator_annotations" ).on( "click", function() {
+    var div = $(this).parent().parent().find('.tm');
+    var div_remove = div.find('.tm2');
+    div_remove.remove();
+    div.hide();
+    var show_button = $(this).prev();
+    show_button.show();
+    var hide_button = $(this);
+    hide_button.hide();
+  });
+
+  $( ".show_pubtator_annotations" ).on( "click", function() {
+    var pmid = $(this).parent().parent().find('.tm_pmid').text();
+    var div = $(this).parent().parent().find('.tm');
+    var hide_button = $(this).next();
+    var url = 'https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/RESTful/tmTool.cgi/Gene,Disease,Mutation/' + pmid + '/PubAnnotation?content-type=application/json';
+    $.getJSON(url)
+      .done(function(data) {
+        if (!data.error) {
+          var text = data.text; 
+          var text_length = text.length;
+          var denotations = data.denotations;
+          denotations.sort(compare);
+          var arrayLength = denotations.length;
+          var start = 0;
+          var annotated_abstract = '<br>';
+          for (var i = 0; i < arrayLength; i++) {
+            var denotation_start = denotations[i].span.begin;
+            var denotation_end = denotations[i].span.end;
+            var annotation = denotations[i].obj.split(':', 2);
+            var annotation_type = annotation[0];
+            var annotation_desc = annotation[1];
+            var annotation_highlight = 'tm_' + annotation_type;
+            var end = denotation_start - 1;
+            if (end != -1) {
+              var subtext = text.substring(start, end + 1);
+              annotated_abstract = annotated_abstract + subtext;
+            }
+            var subtext = text.substring(denotation_start, denotation_end + 1);
+            var html_annotation = "<div class='" + annotation_highlight + "'>" + subtext + "</div>";
+            annotated_abstract = annotated_abstract + html_annotation;
+            start = denotation_end + 1;            
+          }
+          if (start < text_length) {
+            var subtext = text.substring(start, text_length + 1);
+            annotated_abstract = annotated_abstract + subtext;
+          }
+          div.show();
+          div.append("<div class='tm2'>" + annotated_abstract + "</div>");
+          hide_button.show();
+        }
+    });
+    $(this).hide();
+  });
+
   if ($('#gene_symbol').length > 0) {  
     var gene_symbol = $('#gene_symbol').text();
     $.getJSON('https://rest.ensembl.org/lookup/symbol/homo_sapiens/' + gene_symbol + '?content-type=application/json')
@@ -78,6 +137,7 @@ $(document).ready(function(){
   }); 
 
   $('#ensembl_variants_table').DataTable();
+  $('.tm_variants_table').DataTable();
 
   var index;
   var panels = ["DD", "Cancer", "Ear", "Prenatal"];
