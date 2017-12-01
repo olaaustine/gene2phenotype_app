@@ -287,3 +287,41 @@ dd {
   padding-left: 0.5em;
 }
 
+.tm_Disease {
+  display: inline;
+  background-color: rgb(255,153,0);
+}
+
+.tm_Mutation {
+  display: inline;
+  background-color: rgb(0,208,255);
+}
+
+.tm_Gene {
+  display: inline;
+  background-color: rgb(255,71,170);
+}
+
+.tm_pmid {
+  display: none;
+}
+
+.tm {
+  display: none;
+}
+
+.pubtator_img {
+  width: 10%;
+}
+
+#tm_annotations {
+  margin-bottom: 1em;
+}
+
+
+.hide_pubtator_annotations {
+  display: none;
+}
+
+
+
