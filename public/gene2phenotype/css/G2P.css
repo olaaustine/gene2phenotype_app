@@ -12,7 +12,11 @@
 
 .publication {
   margin-top: 1em;
-  margin-bottom: 3em;
+  margin-bottom: 1em;
+}
+
+.publication p a {
+  font-size: 16px;
 }
 
 #DDD_category {
@@ -20,7 +24,7 @@
 }
 
 #new_publication {
-  margin-bottom: 5em;
+  margin-bottom: 2em;
 }
 
 .new_gene_disease {
@@ -30,6 +34,11 @@
 .display_attributes {
   float: left;
   width: auto;
+}
+
+.align_buttons_left {
+  float:left;
+  margin-right:5px;
 }
 
 .align_buttons_right, .show_toggle_view_button {
@@ -98,7 +107,7 @@ dd {
 
 .add_comment {
   display: none;
-  padding-top: 3em;
+  margin: 2em;
 }
 
 .show_add_comment {
@@ -318,10 +327,27 @@ dd {
   margin-bottom: 1em;
 }
 
-
-.hide_pubtator_annotations {
+.hide {
   display: none;
 }
 
+.publication_action {
+  margin-top: 0;
+  padding-top: 0;
+  padding-bottom: 2.5em;
+}
+
+.tm_pubtator {
+  margin-bottom: 1em;
+}
+
+.tm_annotations {
+  margin: 2em;
+}
+
+.tm_legend {
+  margin-right: 1em;
+  padding: 0.2em;
+}
 
 
