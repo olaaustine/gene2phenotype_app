@@ -21,21 +21,27 @@ $(document).ready(function(){
     var div = tm_div.find('.tm_pubtator');
     var hide_button = $(this).parent().find('.hide_pubtator_annotations');
     var url = 'https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/RESTful/tmTool.cgi/Gene,Disease,Mutation/' + pmid + '/PubAnnotation?content-type=application/json';
+    console.log(url);
     $.getJSON(url)
       .done(function(data) {
         if (!data.error) {
           var text = data.text; 
+//          text = text.replace(/\"/g, '');
           var text_length = text.length;
           var denotations = data.denotations;
           denotations.sort(compare);
+          console.log(denotations);
           var arrayLength = denotations.length;
           var start = 0;
           var annotated_abstract = '<br>';
+          var annotation_types = {};
+           
           for (var i = 0; i < arrayLength; i++) {
             var denotation_start = denotations[i].span.begin;
             var denotation_end = denotations[i].span.end;
             var annotation = denotations[i].obj.split(':', 2);
             var annotation_type = annotation[0];
+            annotation_types[annotation_type] = 1;
             var annotation_desc = annotation[1];
             var annotation_highlight = 'tm_' + annotation_type;
             var end = denotation_start - 1;
@@ -53,7 +59,14 @@ $(document).ready(function(){
             annotated_abstract = annotated_abstract + subtext;
           }
           tm_div.show();
-          div.append("<div class='tm2'>" + annotated_abstract + "</div>");
+          var legend = '';
+          for (var i in annotation_types) {
+            legend = legend + "<span class='tm_" + i + " tm_legend'>" + i + "</span>"; 
+          }  
+          div.append("<div class='tm2'>" + annotated_abstract + '<br>' + legend + "</div>");
+
+
+
           hide_button.removeClass('hide');
         }
     });
