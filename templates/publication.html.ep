@@ -56,18 +56,43 @@
       <% } else {%>
         <p><%= $publication->{title} %></p>
       <% } %>
+
     </div> <!--div class publication-->
+
+    <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>
     <div class='publication_action'>
 
+     <%  if (scalar @{$publication->{comments}} > 0) { %>
+      <h4>Comments:</h4>
+     <% } %>
+      <% foreach my $comment (@{$publication->{comments}}) { %>
+        <div class="comment">
+          <div class="align_left"><p><%= $comment->{comment_text} %> (<%= $comment->{user} %> <%= $comment->{date} %>)</p></div>
+          <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>
+            <div class="align_right">
+              %= form_for '/gene2phenotype/gfd/publication/delete_comment' => begin
+                %= hidden_field GFD_publication_comment_id => $comment->{GFD_publication_comment_id}
+                %= hidden_field GFD_id => $gfd->{GFD_id}
+                <input id="button" type="submit" value="Delete Comment" class="btn btn-primary btn-sm confirm"/>
+              %end
+            </div>
+          <% } %>
+        </div>
+        <div class="clear"></div>
+      <% } %>
       %= form_for '/gene2phenotype/gfd/publication/delete' => begin
         %= hidden_field GFD_publication_id => $publication->{GFD_publication_id}
         %= hidden_field GFD_id => $gfd->{GFD_id}
-        <input id="button" type="submit" value="Delete Publication" class="btn btn-primary btn-sm align_buttons_left confirm"/>
+        <input type="button" type="submit" value="Delete Publication" class="btn btn-primary btn-sm confirm align_buttons_left"/>
       %end
 
-      <input type="button" name="show_add_comment" value="Add New Comment" class="btn btn-primary btn-sm align_buttons_left"/>
+      <input type="button" name="show_add_comment" value="Add New Comment" class="btn btn-primary btn-sm align_buttons_left show_add_comment"/>
+      <input type="button" name="show_pubtator_annotations" value="Show PubTator Text Mining Results" class="btn btn-primary btn-sm show_pubtator_annotations align_buttons_left"/>
+
+      <div class="clear"></div>
 
       <div class='add_comment'>
+        <h4>Add comment:</h4>
         %= form_for '/gene2phenotype/gfd/publication/add_comment' => begin
           <div class="comment_text_area"><textarea class="form-control" name="GFD_publication_comment" rows="3"></textarea></div>
           %= hidden_field GFD_publication_id => $publication->{GFD_publication_id}
@@ -77,9 +102,6 @@
         %end
       </div> <!--div class add comment-->
 
-      <input type="button" name="show_pubtator_annotations" value="Show PubTator Text Mining Results" class="btn btn-primary btn-sm show_pubtator_annotations"/>
-
-      <div class="clear"></div>
 
       <div class="tm_annotations">
         <div class="tm_pmid"><%= $publication->{pmid} %></div>
@@ -87,8 +109,8 @@
           <div class="tm_pubtator">
             <span>
               <% my $link = "https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/PubTator/curator_identifier.cgi?pmid=" . $publication->{pmid} . "&searchtype=PubMed_Search&query=" . $publication->{pmid} . "&page=1&Species_display=1&Gene_display=1&Chemical_display=1&Disease_display=1&Mutation_display=1&tax="; %>
-              <%= link_to $link => begin %>
-                %= image '/gene2phenotype/images/pubtator_logo.png', alt => 'Foo', class => 'pubtator_img'
+              <%= link_to $link => (target => '_blank') =>  begin %>
+                %= image '/gene2phenotype/images/pubtator_logo.png', title => 'View annotations in Pubtator', class => 'pubtator_img'
               <% end %>
             </span>
           </div>
@@ -131,13 +153,8 @@
           </div> <!--div tmp vep-->
         </div> <!--div class tm-->
       </div> <!--div tm_annotations-->
-      <input type="button" name="hide_pubtator_annotations" value="Hide PubTator Text Mining Results" class="btn btn-primary btn-sm hide hide_pubtator_annotations"/>
-
-
-
-    </div>
-    
-
-
+      <input type="button" name="hide_pubtator_annotations" value="Hide PubTator Text Mining Results" class="btn btn-primary btn-sm hide hide_pubtator_annotations align_buttons_left"/>
+    </div> <!--div publication action-->
+    <% } %>
   <% } %>
 </div>
