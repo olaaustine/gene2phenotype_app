@@ -21,16 +21,13 @@ $(document).ready(function(){
     var div = tm_div.find('.tm_pubtator');
     var hide_button = $(this).parent().find('.hide_pubtator_annotations');
     var url = 'https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/RESTful/tmTool.cgi/Gene,Disease,Mutation/' + pmid + '/PubAnnotation?content-type=application/json';
-    console.log(url);
     $.getJSON(url)
       .done(function(data) {
         if (!data.error) {
           var text = data.text; 
-//          text = text.replace(/\"/g, '');
           var text_length = text.length;
           var denotations = data.denotations;
           denotations.sort(compare);
-          console.log(denotations);
           var arrayLength = denotations.length;
           var start = 0;
           var annotated_abstract = '<br>';
@@ -64,9 +61,6 @@ $(document).ready(function(){
             legend = legend + "<span class='tm_" + i + " tm_legend'>" + i + "</span>"; 
           }  
           div.append("<div class='tm2'>" + annotated_abstract + '<br>' + legend + "</div>");
-
-
-
           hide_button.removeClass('hide');
         }
     });
