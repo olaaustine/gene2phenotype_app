@@ -448,7 +448,17 @@ sub _get_publications {
 
       my $allele_string = $variation->allele_string;
       my $consequence = $variation->consequence;
-      my $colocated_variants = $variation->colocated_variants || '-';
+      my @colocated_variants = ('-');
+      if ($variation->colocated_variants) {
+        @colocated_variants = ();
+        foreach my $v (split(',', $variation->colocated_variants)) {
+          if ($assembly eq 'GRCh38') {
+            push @colocated_variants,  "<a href=\"http://ensembl.org/Homo_sapiens/Variation/Explore?v=$v\" target=\"_blank\" >$v</a>";
+          } else {
+            push @colocated_variants,  "<a href=\"http://$assembly.ensembl.org/Homo_sapiens/Variation/Explore?v=$v\" target=\"_blank\" >$v</a>";
+          } 
+        }
+      }
       my $transcript_stable_id = $variation->feature_stable_id;
       my $biotype = $variation->biotype;
       my $polyphen_prediction = $variation->polyphen_prediction || '-';
@@ -463,7 +473,7 @@ sub _get_publications {
         biotype => $biotype,
         polyphen_prediction => $polyphen_prediction,
         sift_prediction => $sift_prediction,
-        colocated_variants => $colocated_variants,
+        colocated_variants => \@colocated_variants,
       };
     }
 
