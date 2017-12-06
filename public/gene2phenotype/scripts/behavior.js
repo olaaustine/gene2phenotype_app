@@ -5,20 +5,21 @@ $(document).ready(function(){
   }
 
   $( ".hide_pubtator_annotations" ).on( "click", function() {
-    var div = $(this).parent().parent().find('.tm');
-    var div_remove = div.find('.tm2');
+    var div_remove = $(this).parent().find('.tm2');
     div_remove.remove();
-    div.hide();
-    var show_button = $(this).prev();
+    var div_hide = $(this).parent().find('.tm');
+    div_hide.hide();
+    var show_button = $(this).parent().find('.show_pubtator_annotations');
     show_button.show();
     var hide_button = $(this);
-    hide_button.hide();
+    hide_button.addClass('hide');
   });
 
   $( ".show_pubtator_annotations" ).on( "click", function() {
-    var pmid = $(this).parent().parent().find('.tm_pmid').text();
-    var div = $(this).parent().parent().find('.tm');
-    var hide_button = $(this).next();
+    var pmid = $(this).parent().find('.tm_pmid').text();
+    var tm_div = $(this).parent().find('.tm');
+    var div = tm_div.find('.tm_pubtator');
+    var hide_button = $(this).parent().find('.hide_pubtator_annotations');
     var url = 'https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/RESTful/tmTool.cgi/Gene,Disease,Mutation/' + pmid + '/PubAnnotation?content-type=application/json';
     $.getJSON(url)
       .done(function(data) {
@@ -42,18 +43,18 @@ $(document).ready(function(){
               var subtext = text.substring(start, end + 1);
               annotated_abstract = annotated_abstract + subtext;
             }
-            var subtext = text.substring(denotation_start, denotation_end + 1);
+            var subtext = text.substring(denotation_start, denotation_end);
             var html_annotation = "<div class='" + annotation_highlight + "'>" + subtext + "</div>";
             annotated_abstract = annotated_abstract + html_annotation;
-            start = denotation_end + 1;            
+            start = denotation_end;            
           }
           if (start < text_length) {
             var subtext = text.substring(start, text_length + 1);
             annotated_abstract = annotated_abstract + subtext;
           }
-          div.show();
+          tm_div.show();
           div.append("<div class='tm2'>" + annotated_abstract + "</div>");
-          hide_button.show();
+          hide_button.removeClass('hide');
         }
     });
     $(this).hide();
@@ -174,6 +175,16 @@ $(document).ready(function(){
     $(this).prev().css('background-color', 'white');
   }); 
 
+  $(".align_buttons_left").mouseenter(function(){
+    var dev = $(this).closest('.publication_action');
+    dev.prev().css('background-color', '#bbdefb');
+  }); 
+
+  $(".align_buttons_left").mouseleave(function(){
+    var dev = $(this).closest('.publication_action');
+    dev.prev().css('background-color', 'white');
+  }); 
+
   $(".header_gene_disease").click(function(){
     $header = $(this);
     $content = $header.next();
@@ -226,6 +237,11 @@ $(document).ready(function(){
     $this_content.hide(function(){
       $prev_content.find('.show_toggle_view_button').show();
     });
+  });
+
+
+  $('.show_add_comment').click(function(){
+    $show_content = $(this).parent().find('.add_comment').show();
   });
 
   $(".show").click(function(){
