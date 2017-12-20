@@ -427,6 +427,10 @@ sub _get_publications {
 
   my $registry = $self->app->defaults('registry');
   my $text_mining_variation_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'textminingvariation');
+  my $text_mining_disease_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'textminingdisease');
+  my $phenotype_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'phenotype');
+  my $GFD_phenotype_adaptor =  $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseasePhenotype');
+
   my $GFD_publications = $GFD->get_all_GFDPublications;
   foreach my $GFD_publication (sort {$a->get_Publication->title cmp $b->get_Publication->title} @$GFD_publications) {
     my $publication = $GFD_publication->get_Publication;
@@ -477,6 +481,40 @@ sub _get_publications {
       };
     }
 
+    my @text_mining_diseases = sort { $a->annotated_text cmp $b->annotated_text } @{$text_mining_disease_adaptor->fetch_all_by_Publication($publication)};
+    my @text_mining_diseases_tmpl = ();
+    my @GFD_phenotype_ids = map {$_->phenotype_id} @{$GFD_phenotype_adaptor->fetch_all_by_GenomicFeatureDisease($GFD)};
+
+    foreach my $disease (@text_mining_diseases) {
+      my $tm_disease_id = $disease->text_mining_disease_id;
+      my $mesh_stable_id = $disease->mesh_stable_id;
+      $mesh_stable_id =~ s/MESH://;
+      my $mesh_name = $disease->mesh_name || 'No MESH name';
+      my @phenotype_ids = @{$disease->get_all_phenotype_ids};
+      my $annotated_text = $disease->annotated_text;
+      my $source = $disease->source;
+      my $tm_row = {
+        mesh_stable_id => $mesh_stable_id,
+        mesh_name => $mesh_name,
+        annotated_text => $annotated_text,  
+      };
+
+      if (@phenotype_ids) {
+        foreach my $phenotype_id (@phenotype_ids) {
+          my $phenotype = $phenotype_adaptor->fetch_by_dbID($phenotype_id);
+          my $hpo_term = $phenotype->name;
+          my @is_GFD_phenotype = grep {$_ eq $phenotype_id} @GFD_phenotype_ids;
+          $tm_row->{has_hpo_term} = 1;
+          $tm_row->{phenotype_id} = $phenotype_id;
+          $tm_row->{hpo_term} = $hpo_term;
+          $tm_row->{is_GFD_phenotype} = (@is_GFD_phenotype) ? 1 : 0;
+        }
+      } else {
+        $tm_row->{has_hpo_term} = 0;
+      }
+      push @text_mining_diseases_tmpl, $tm_row;
+    }
+
     my $comments = $GFD_publication->get_all_GFDPublicationComments;
     my @comments_tmpl = ();
     foreach my $comment (@$comments) {
@@ -497,6 +535,7 @@ sub _get_publications {
 
     push @publications, {
       text_mining_results => \@text_mining_variations_tmpl, 
+      text_mining_disease_results => \@text_mining_diseases_tmpl, 
       comments => \@comments_tmpl,
       title => $title,
       pmid => $pmid,
