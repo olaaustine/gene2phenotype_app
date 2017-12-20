@@ -151,6 +151,57 @@
               </div>
             <% } %>
           </div> <!--div tmp vep-->
+          <div class="tm_disease">
+            <% if (@{$publication->{text_mining_disease_results}}) { %>
+              <h4>Disease/phenotype annotations:</h4>
+              <div class="table-responsive">
+              <table class='table'>
+              <thead>
+              <tr>
+              <th>Annotated text</th>
+              <th>MeSH term</th>
+              <th>HPO term</th>
+              <th>Search and add HPO term</th>
+              </tr>
+              </thead>
+              <tbody>
+              <% foreach my $disease (@{$publication->{text_mining_disease_results}}) { %>
+              <%  if ($disease->{is_GFD_phenotype}) { %>
+                <tr class="success">
+              <% } else { %>            
+                <tr>
+              <% } %>
+              <td><%= $disease->{annotated_text} %></td>
+              <td>
+                <% my $url = "https://meshb-prev.nlm.nih.gov/record/ui?ui=" . $disease->{mesh_stable_id}; %>
+                %= link_to $disease->{mesh_name} => $url
+              </td>
+              <td>
+                <%  if ($disease->{has_hpo_term}) { %>
+                  <% my $url = "http://www.human-phenotype-ontology.org/hpoweb/showterm?id=" . $disease->{phenotype_id}; %>
+                  %= link_to $disease->{hpo_term} => $url
+                <% } %>
+              </td>
+              <td>
+                <%  if (!$disease->{is_GFD_phenotype}) { %>
+                  %= form_for '/gene2phenotype/gfd/phenotype/add' => begin
+                      <button type="submit" class="btn btn-primary btn-sm" id="fast_add_phenotype_button" style="float: right">Add</button>
+                      %= hidden_field GFD_id => $gfd->{GFD_id}
+                      <div style="overflow: hidden; padding-right: .5em;">
+                        <input type="search" id="query_phenotype_name" name="phenotype" style='width:100%'/>
+                      </div>
+                  %end
+                <% } else {  %>
+                  Already in phenotype list
+                <% } %>
+              </td>
+              </tr>
+              <% } %>
+              </tbody>
+              </table>
+              </div>
+            <% } %>
+          </div> <!--div tmp disease-->
         </div> <!--div class tm-->
       </div> <!--div tm_annotations-->
       <input type="button" name="hide_pubtator_annotations" value="Hide PubTator Text Mining Results" class="btn btn-primary btn-sm hide hide_pubtator_annotations align_buttons_left"/>
