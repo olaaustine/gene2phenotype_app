@@ -1,4 +1,10 @@
 $(document).ready(function(){
+  $( ".accordion" ).accordion({
+heightStyle: "content",
+collapsible: true,
+active: false,
+
+  });
 
   function compare(a,b) {
     return parseInt(a.span.begin) - parseInt(b.span.begin);
