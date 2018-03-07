@@ -8,14 +8,14 @@
     <dd>
       <% if ($gene->{mim}) {
         my $link = "http://omim.org/entry/" . $gene->{mim}; %>
-        <%= link_to $link => begin %><%= $gene->{mim} %> <% end %>
+        <%= link_to $link => (target => '_blank') => begin %><%= $gene->{mim} %> <% end %>
       <% } %>
     </dd>
     <dt>Ensembl stable ID</dt>
     <dd>
       <% if ($gene->{ensembl_stable_id}) {
         my $link =  "http://grch37.ensembl.org/Homo_sapiens/Gene/Summary?g=" . $gene->{ensembl_stable_id}; %>
-        <%= link_to $link => begin %><%= $gene->{ensembl_stable_id} %> <% end %>
+        <%= link_to $link => (target => '_blank') => begin %><%= $gene->{ensembl_stable_id} %> <% end %>
       <% } %>
     </dd>
     <dt>Synonyms</dt>
@@ -30,7 +30,7 @@
   </div>
   <p>
     <% my $link = "https://decipher.sanger.ac.uk/gene/" . $gene->{gene_symbol} . "#variants/" . $gene->{gene_symbol} . "/patient-overlap/snvs"; %>
-    <%= link_to $link => begin %>Look up <%= $gene->{gene_symbol} %> in Decipher <% end %>
+    <%= link_to $link => (target => '_blank') => begin %>Look up <%= $gene->{gene_symbol} %> in Decipher <% end %>
   </p>
 
   <div class="clear"></div>

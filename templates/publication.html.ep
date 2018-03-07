@@ -50,7 +50,7 @@
       <% if ($publication->{pmid}) { %>
         <p>
           <% my $url = 'http://europepmc.org/search?query=ext_id:' . $publication->{pmid}; %>
-          <%= link_to $url => begin %> <%= $publication->{title} %>  <% end %>
+          <%= link_to $url => (target => '_blank') => begin %> <%= $publication->{title} %>  <% end %>
         </p>
       <% } else {%>
         <p><%= $publication->{title} %></p>
