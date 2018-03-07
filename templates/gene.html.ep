@@ -32,6 +32,9 @@
     <% my $link = "https://decipher.sanger.ac.uk/gene/" . $gene->{gene_symbol} . "#variants/" . $gene->{gene_symbol} . "/patient-overlap/snvs"; %>
     <%= link_to $link => (target => '_blank') => begin %>Look up <%= $gene->{gene_symbol} %> in Decipher <% end %>
   </p>
-
+  <p>
+    <% my $link = "https://panelapp.genomicsengland.co.uk/panels/genes/" . $gene->{gene_symbol}; %>
+    <%= link_to $link => (target => '_blank') => begin %>Look up <%= $gene->{gene_symbol} %> in PanelApp <% end %>
+  </p>
   <div class="clear"></div>
 </div>
