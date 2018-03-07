@@ -4,7 +4,7 @@
   <h3>G2P VEP plugin</h3>
   <p>The G2P VEP plugin identifies likely disease causing genes based on the knowledge encoded in the G2P database and runs as part of the Variant Effect Predictor (VEP).</p>
   <h4>Variant Effect Predictor</h4>
-  <p>The VEP computes the consequence of a variant and can further annotate the variant with values form a selection of different data types which can be specified when running the script. In most cases the consequence is computed with respect to the transcript that overlaps the variant. If the input file contains variant data for a set of individuals the VEP generates one line of output for each pair of variant allele and overlapping transcript per individual.</p>
+  <p>The VEP computes the consequence of a variant and can further annotate the variant with values from a selection of different data types which can be specified when running the script. In most cases the consequence is computed with respect to the transcript that overlaps the variant. If the input file contains variant data for a set of individuals the VEP generates one line of output for each pair of variant allele and overlapping transcript per individual.</p>
   <h4>How the plugin works:</h4>
   <p>The G2P VEP plugin can add further annotation to the line of output based on the individual's genotypes and the knowledge contained in the G2P database. The G2P VEP plugin uses a set of filters for identifying potentially causal variants. If the plugin counts a sufficient number of causal variants (variant hits) for a G2P gene it will report the gene as likely disease causing and all variants that passed the filters. The number of sufficient causal variants is derived from the allelic requirement of the gene which is stored in the G2P database.</p>  
   <h4>Filtering rules:</h4>
@@ -16,13 +16,13 @@
   </ol>
   <p>The Sufficient number of variant hits is determined by the gene's allelic requirement.</p>
   <ul>
-    <li>For a bi-allelic gene we need to count either at least 2 heterozygous (HET) variants or 1 homozygous (HOM) variant which pass all fitering rules and are located in the same transcript.</li>
+    <li>For a bi-allelic gene we need to count either at least 2 heterozygous (HET) variants or 1 homozygous (HOM) variant which pass all filtering rules and are located in the same transcript.</li>
     <li>For a mono-allelic gene we need to count either 1 HET variant or 1 HOM variant which passes all filtering rules.</li>
   </ul>
 
   <h3>Software</h3>
   <h4>Installing and running the VEP and G2P VEP plugin</h4>
-  <p>For installation and runnig the VEP script please refer to the <a href="https://github.com/Ensembl/ensembl-vep">VEP git repository</a> and <a href="http://www.ensembl.org/info/docs/tools/vep/script/vep_options.html">VEP documentation pages</a>. Plugins are installed and configured during the VEP installation. The <a href="https://github.com/Ensembl/VEP_plugins/blob/dev/G2P.pm">G2P VEP plugin</a> is loacted in the VEP plugins repository.</p>
+  <p>For installation and running the VEP script please refer to the <a href="https://github.com/Ensembl/ensembl-vep">VEP git repository</a> and <a href="http://www.ensembl.org/info/docs/tools/vep/script/vep_options.html">VEP documentation pages</a>. Plugins are installed and configured during the VEP installation. The <a href="https://github.com/Ensembl/VEP_plugins/blob/dev/G2P.pm">G2P VEP plugin</a> is located in the VEP plugins repository.</p>
  
   <h4>To run the G2P VEP plugin add the following argument to the VEP command:</h4>
   <pre>./vep -i input.vcf --plugin G2P,file='DDG2P_11_7_2017.csv',log_dir='g2p_log_dir',txt_report='report.txt',html_report='report.html'</pre>
@@ -34,7 +34,7 @@
 
   <p>The gnomAD's full data set has not been submitted to dbSNP and incorporated into Ensembl for release/90. As a consequence, the frequency for some gnomAD alleles may be missing from VEP's cache data.</p>
 
-  <p>It is possible to retrieve allele frequencies for input variants that are not yet in dbSNP from VCF files. In order to enable the funtionality add af_from_vcf=1 to the vep command: <pre>./vep -i input.vcf --plugin G2P,file='DDG2P_11_7_2017.csv,af_from_vcf=1'</pre></p>
+  <p>It is possible to retrieve allele frequencies for input variants that are not yet in dbSNP from VCF files. In order to enable the functionality add af_from_vcf=1 to the vep command: <pre>./vep -i input.vcf --plugin G2P,file='DDG2P_11_7_2017.csv,af_from_vcf=1'</pre></p>
 
   <div class="accordion">
   <h3>Available population allele frequency data</h3>
