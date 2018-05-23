@@ -1,7 +1,6 @@
 %= include 'header'
 %= include 'search'
 <div class="container">
-
   <h3 class="title"><a class="anchor" name="top">Panel: <%= $gfd->{panel} %> Gene: <em><%= $gfd->{gene_symbol} %></em> Disease: <em><%= $gfd->{disease_name} %></em></a></h3>
   <div class="clear"></div>
   <h4>Page navigation</h4>
@@ -52,7 +51,6 @@
   %= include 'publication'
   %= include 'phenotype'
   %= include 'organ'
-  %= include 'variants'
 
 </div>
 %= include 'footer'
