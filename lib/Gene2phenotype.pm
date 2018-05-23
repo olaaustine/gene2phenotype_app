@@ -106,7 +106,7 @@ sub startup {
     return $c->redirect_to('/gene2phenotype/redirect');
   });
 
-  $r->get('/gene2phenotype')->to(template => 'home');
+  $r->get('/gene2phenotype')->to('home#show');
   $r->get('/gene2phenotype/disclaimer')->to(template => 'disclaimer');
   $r->get('/gene2phenotype/documentation')->to(template => 'documentation');
   $r->get('/gene2phenotype/help')->to(template => 'help');
