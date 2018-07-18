@@ -3,25 +3,49 @@ use base qw(Gene2phenotype::Controller::BaseController);
 
 sub add {
   my $self = shift;
-  my $phenotype_name = $self->param('phenotype'); 
+  my $phenotype_names = $self->every_param('phenotype'); 
   my $GFD_id = $self->param('GFD_id'); 
   my $email = $self->session('email');
   my $model = $self->model('genomic_feature_disease_phenotype');
   my $phenotype_model = $self->model('phenotype');
-  my $phenotype = $phenotype_model->fetch_by_name($phenotype_name); 
-  if (!$phenotype) {
-    $self->edit_phenotypes_message('ERROR_PHENOTYPE_NOT_IN_DB', $phenotype_name);
-  } else {
-    my $phenotype_id = $phenotype->dbID;
-    my $GFDP = $model->fetch_by_GFD_id_phenotype_id($GFD_id, $phenotype_id);
-    if ($GFDP) {
-      $self->edit_phenotypes_message('PHENOTYPE_ALREADY_IN_LIST', $phenotype_name);
+  my @added = ();
+  my @already_in_db = ();
+  my @unknown_phenotype = ();
+  foreach my $phenotype_name (@$phenotype_names) {
+    next if (length($phenotype_name) == 0);
+    my $phenotype = $phenotype_model->fetch_by_name($phenotype_name); 
+    if (!$phenotype) {
+      push @unknown_phenotypes, $phenotype_name;
     } else {
-      $model->add_phenotype($GFD_id, $phenotype_id, $email);
-      $self->edit_phenotypes_message('SUCC_ADDED_PHENOTYPE', $phenotype_name);
+      my $phenotype_id = $phenotype->dbID;
+      my $GFDP = $model->fetch_by_GFD_id_phenotype_id($GFD_id, $phenotype_id);
+      if ($GFDP) {
+        push @already_in_db, $phenotype_name;    
+      } else {
+        $model->add_phenotype($GFD_id, $phenotype_id, $email);
+        push @added, $phenotype_name;
+      }
     }
   }
-  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+   
+  my $info = 'PHENOTYPE_INFO';
+  my @values = ();
+  if (@added) {
+    $info .= '_ADDED';
+    push @values, join(', ', @added);
+  }
+  if (@already_in_db) {
+    $info .= '_IN_DB';
+    push @values, join(', ', @already_in_db);
+  }
+  if (@unknown_phenotypes) {
+    $info .= '_ERROR';
+    push @values, join(', ', @unknown_phenotypes);
+  }
+
+  $self->add_phenotypes_message($info, \@values);
+
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id#phenotypes");
 }
 
 sub delete_from_tree {
@@ -47,7 +71,7 @@ sub update {
   my $model = $self->model('genomic_feature_disease_phenotype');
   $model->update_phenotype_list($GFD_id, $email, $phenotype_ids);
   $self->feedback_message('UPDATED_PHENOTYPES_SUC');
-  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id#phenotypes");
 }
 
 sub delete {
@@ -60,7 +84,7 @@ sub delete {
   my $phenotype_name = $GFDP->get_Phenotype->name;
   $model->delete($GFD_phenotype_id, $email);
   $self->edit_phenotypes_message('SUCC_DELETED_PHENOTYPE', $phenotype_name);
-  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id#phenotypes");
 }
 
 sub add_comment {
@@ -72,7 +96,7 @@ sub add_comment {
   my $model = $self->model('genomic_feature_disease_phenotype');
   $model->add_comment($GFD_phenotype_id, $GFD_phenotype_comment, $email);
   $self->feedback_message('ADDED_COMMENT_SUC');
-  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id#phenotypes");
 }
 
 sub delete_comment {
@@ -83,7 +107,7 @@ sub delete_comment {
   my $model = $self->model('genomic_feature_disease_phenotype');
   $model->delete_comment($GFD_phenotype_comment_id, $email);
   $self->feedback_message('DELETED_COMMENT_SUC');
-  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id#phenotypes");
 }
 
 
