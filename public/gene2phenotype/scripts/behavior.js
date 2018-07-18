@@ -10,6 +10,26 @@ active: false,
     return parseInt(a.span.begin) - parseInt(b.span.begin);
   }
 
+function debounce(func, wait, immediate) {
+	var timeout;
+	return function() {
+		var context = this, args = arguments;
+		var later = function() {
+			timeout = null;
+			if (!immediate) func.apply(context, args);
+		};
+		var callNow = immediate && !timeout;
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait);
+		if (callNow) func.apply(context, args);
+	};
+};
+//https://gist.github.com/mishudark/2766831
+function __highlight(s, t) {
+  var matcher = new RegExp("("+$.ui.autocomplete.escapeRegex(t)+")", "ig" );
+  return s.replace(matcher, "<strong>$1</strong>");
+}
+
   $( ".hide_pubtator_annotations" ).on( "click", function() {
     var div_remove = $(this).parent().find('.tm2');
     div_remove.remove();
@@ -128,34 +148,47 @@ active: false,
   $("#query_phenotype_name, #query, #query_gene_name, #query_disease_name" ).click(function(){
     var id = $(this).attr('id');
     $(this).autocomplete({
+      delay: 0,
       source: function(request, response) {
         $.ajax({
           url: "/gene2phenotype/ajax/autocomplete",
-
           dataType: "json",
           data: {
             term : request.term,
             query_type : id,
           },
           success: function(data, type) {
-            items = data;
-            response(items);
+            response($.map(data, function(item) {
+                  return {
+                     label: __highlight(item.value, request.term),
+                     value: item.value
+                  };
+              }));
           },
           error: function(data, type){
             console.log( type);
           }
         });
       },
-      minLength: 2,
-      select: function(event, ui) {}
-    });
+      minLength: 4,
+      highlight: true,
+      search: function(e,ui){
+//        console.log($(this).data("ui-autocomplete").menu.bindings.length);
+        $(this).data("ui-autocomplete").menu.bindings = $();
+      },
+    }).data("ui-autocomplete")._renderItem = function( ul, item ) {
+      return $( "<li></li>" )
+        .data( "item.autocomplete", item )
+        .append( $( "<a></a>" ).html(item.label) )
+        .appendTo( ul );
+      };
   }); 
 
   $('#ensembl_variants_table').DataTable();
   $('.tm_variants_table').DataTable();
 
   var index;
-  var panels = ["DD", "Cancer", "Ear", "Prenatal"];
+  var panels = ["DD", "Cancer", "Ear", "Prenatal", "Eye", "Skin"];
   for (index = 0; index < panels.length; ++index) {
     $('#curator_table_' + panels[index]).DataTable();
   }
@@ -435,3 +468,5 @@ active: false,
   });
 
 });
+
+
