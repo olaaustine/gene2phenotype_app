@@ -44,6 +44,13 @@ our %MESSAGES = (
   ERROR_PHENOTYPE_NOT_IN_DB => {msg => 'The phenotype XXX is not part of HPO. Please contact g2p-help@ebi.ac.uk for help.', type => 'danger'},
   SUCC_DELETED_PHENOTYPE => {msg => 'Successfully deleted XXX from the list of phenotypes.', type => 'success'},
   PHENOTYPE_ALREADY_IN_LIST => {msg => 'Phenotype XXX is already in the list of phenotypes.', type => 'info' },
+  PHENOTYPE_INFO_ADDED_IN_DB_ERROR => {msg => 'Successfully added: XXX. Already in the list of phenotypes: XXX. Not part of HPO: XXX.', type => 'info' },
+  PHENOTYPE_INFO_ADDED => {msg => 'Successfully added: XXX.', type => 'info' },
+  PHENOTYPE_INFO_IN_DB => {msg => 'Already in the list of phenotypes: XXX.', type => 'info' },
+  PHENOTYPE_INFO_ERROR => {msg => 'Not part of HPO: XXX.', type => 'info' },
+  PHENOTYPE_INFO_ADDED_IN_DB => {msg => 'Successfully added: XXX. Already in the list of phenotypes: XXX.', type => 'info' },
+  PHENOTYPE_INFO_ADDED_ERROR => {msg => 'Successfully added: XXX. Not part of HPO: XXX.', type => 'info' },
+  PHENOTYPE_INFO_IN_DB_ERROR => {msg => 'Already in the list of phenotypes: XXX. Not part of HPO: XXX.', type => 'info' },
   DUPLICATED_ENTRY_SUC => {msg => 'Successfully duplicated entry.', type => 'success'},
   ENTRY_HAS_NOT_BEEN_DUPLICATED => {msg => 'The entry has not been duplicated.', type => 'info'},
 );
@@ -55,6 +62,19 @@ sub feedback_message {
   my $feedback = shift;
   my $message = $MESSAGES{$feedback};
   $self->flash({'message' => $message->{msg}, 'alert_class' => 'alert-' . $message->{type}});
+}
+
+sub add_phenotypes_message {
+  my $self = shift;
+  my $feedback = shift;
+  my $values = shift;
+  my $message = $MESSAGES{$feedback};
+  my $message_txt = $message->{msg};
+  while (@$values) {
+    my $phenotype = shift @$values;
+    $message_txt =~ s/XXX/<em>$phenotype<\/em>/;
+  }
+  $self->flash({'message' => $message_txt, 'phenotype_alert_class' => 'alert-' . $message->{type}});
 }
 
 sub edit_phenotypes_message {
