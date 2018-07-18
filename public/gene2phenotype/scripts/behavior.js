@@ -30,9 +30,10 @@ active: false,
     $.getJSON(url)
       .done(function(data) {
         if (!data.error) {
-          var text = data.text; 
+          var text = data[0].text; 
+          text = text.replace(/\\/g, '');
           var text_length = text.length;
-          var denotations = data.denotations;
+          var denotations = data[0].denotations;
           denotations.sort(compare);
           var arrayLength = denotations.length;
           var start = 0;
