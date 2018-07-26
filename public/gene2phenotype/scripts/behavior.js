@@ -188,7 +188,7 @@ function __highlight(s, t) {
   $('.tm_variants_table').DataTable();
 
   var index;
-  var panels = ["DD", "Cancer", "Ear", "Prenatal", "Eye", "Skin"];
+  var panels = ["DD", "Cancer", "Ear", "Prenatal", "Eye", "Skin", "NeonatalRespiratory"];
   for (index = 0; index < panels.length; ++index) {
     $('#curator_table_' + panels[index]).DataTable();
   }
