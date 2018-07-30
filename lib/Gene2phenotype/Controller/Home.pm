@@ -7,7 +7,9 @@ sub show {
   my $logged_in = $self->stash('logged_in');
   my $authorised_panels = $self->stash('authorised_panels');
   my $updates = $model->fetch_updates($logged_in, $authorised_panels);
+  my $statistics = $model->fetch_statistics($logged_in, $authorised_panels);
   $self->stash(updates => $updates);  
+  $self->stash(statistics => $statistics);  
   $self->render(template => 'home');
 }
 
