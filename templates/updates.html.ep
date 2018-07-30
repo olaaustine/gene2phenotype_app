@@ -1,24 +1,26 @@
 <div class="container">
   <h3>Latest updates</h3>
 
+  %= tag div => (id => 'barchart_material',  data => $statistics) => begin
+  % end
+
   <% foreach my $update (@$updates) { %>
     <h4> <%= $update->{panel} . " panel" %> </h4>
     <ul>
     <% foreach my $entry (@{$update->{updates}}) { %>
       <li>
-%= form_for '/gene2phenotype/gfd' => (id => $entry->{GFD_ID}) => begin
-  <%= link_to '#' => ( onclick => "document.getElementById($entry->{GFD_ID}).submit();") => begin %>
-  %= hidden_field search_type => $entry->{search_type}
-  %= hidden_field dbID => $entry->{GFD_ID}
-    <strong><%== $entry->{date} %></strong>
-    <strong>Gene:</strong>
-    <em><%== $entry->{gene_symbol} %></em>
-    <strong>Disease:</strong>
-    <em><%== $entry->{disease_name} %></em>
-  <% end %>
-%= end
+        %= form_for '/gene2phenotype/gfd' => (id => $entry->{GFD_ID}) => begin
+          <%= link_to '#' => ( onclick => "document.getElementById($entry->{GFD_ID}).submit();") => begin %>
+            %= hidden_field search_type => $entry->{search_type}
+            %= hidden_field dbID => $entry->{GFD_ID}
+            <strong><%== $entry->{date} %></strong>
+            <strong>Gene:</strong>
+            <em><%== $entry->{gene_symbol} %></em>
+            <strong>Disease:</strong>
+            <em><%== $entry->{disease_name} %></em>
+          <% end %>
+        %= end
       </li>
-
     <% } %>
     </ul>
   <% } %>
