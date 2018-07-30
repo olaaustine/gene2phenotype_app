@@ -5,7 +5,7 @@
     <title>gene2phenotype</title>
 %= stylesheet '/gene2phenotype/css/bootstrap.min.css'
 %= stylesheet '/gene2phenotype/css/jquery-ui.min.css'
-%= stylesheet '/gene2phenotype/css/G2P.css?version=15'
+%= stylesheet '/gene2phenotype/css/G2P.css?version=16'
 %= stylesheet '/gene2phenotype/css/nv.d3.css'
 %= stylesheet '/gene2phenotype/css/docs.min.css'
 %= stylesheet '/gene2phenotype/css/jquery.dataTables.min.css'
@@ -23,6 +23,8 @@
 %= javascript '/gene2phenotype/scripts/ontology_tree.js'
 %= javascript '/gene2phenotype/scripts/jquery.dataTables.min.js'
 %= javascript '/gene2phenotype/scripts/jquery.confirm.min.js'
+%= javascript 'https://www.gstatic.com/charts/loader.js'
+%= javascript '/gene2phenotype/scripts/panel_statistics.js'
   </head>
  <body><%= content %></body>
 </html>
