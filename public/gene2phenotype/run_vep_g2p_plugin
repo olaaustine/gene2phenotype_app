@@ -1,0 +1,9 @@
+perl $HOME/src/ensembl-vep/vep \
+--input_file input.vcf \
+--output_file output.txt \
+--force_overwrite \
+--cache \
+--assembly GRCh37 \
+--port 3337 \
+--dir_plugins $HOME/src/VEP_plugins \
+--plugin G2P,file=DDG2P.csv,txt_report=report.txt,html_report=report.html,af_from_vcf=1 \

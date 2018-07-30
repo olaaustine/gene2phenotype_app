@@ -1,0 +1,4 @@
+RC1	CHD3	ENST00000380358	is_canonical	OBS=monoallelic	REQ=monoallelic	17:7796644:7796644:A:G:HET:missense_variant:SIFT=deleterious - low confidence(0.0):PolyPhen=probably damaging(0.995):TOPMed=3.4343e-005
+RC1	CHD3	ENST00000330494	not_canonical	OBS=monoallelic	REQ=monoallelic	17:7796644:7796644:A:G:HET:missense_variant:SIFT=deleterious(0.0):PolyPhen=probably damaging(0.992):TOPMed=3.4343e-005
+RC1	CHD3	ENST00000358181	not_canonical	OBS=monoallelic	REQ=monoallelic	17:7796644:7796644:A:G:HET:missense_variant:SIFT=deleterious(0.0):PolyPhen=probably damaging(0.987):TOPMed=3.4343e-005
+RC1	CHD3	ENST00000452447	not_canonical	OBS=monoallelic	REQ=monoallelic	17:7796644:7796644:A:G:HET:missense_variant:SIFT=deleterious(0.0):PolyPhen=probably damaging(0.998):TOPMed=3.4343e-005
