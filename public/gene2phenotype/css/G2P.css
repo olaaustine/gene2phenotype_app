@@ -17,6 +17,11 @@
   width: 23%; margin-right: 1%; float: right; text-align: right;
 }
 
+#barchart_material {
+  width: 1200px;
+  height: 400px;
+}
+
 .hide_fields {
   display:none;
 }
