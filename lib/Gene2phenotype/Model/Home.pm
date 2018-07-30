@@ -1,5 +1,25 @@
 package Gene2phenotype::Model::Home;
 use Mojo::Base 'MojoX::Model';
+use JSON;
+sub fetch_statistics {
+  my $self = shift;
+  my $logged_in = shift;
+  my $authorised_panels = shift;
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease');
+  my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
+  my $panel_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'panel');
+
+  my @panel_names = map {$_->name} @{$panel_adaptor->fetch_all_visible_Panels};
+  my @panels = ();
+  foreach my $panel_name (@$authorised_panels, @panel_names) {
+    next if ($panel_name eq 'ALL');
+    my $panel_id = $attribute_adaptor->attrib_id_for_value($panel_name);
+    push @panels, $panel_id;
+  }
+  my $stats = $GFD_adaptor->get_statistics(\@panels); 
+  return JSON::to_json($stats);
+}
 
 sub fetch_updates {
   my $self = shift;
