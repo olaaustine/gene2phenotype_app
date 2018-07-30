@@ -92,16 +92,95 @@
 
   <h4>Example input and output files</h4>
   <ul>
-    <li>run_vep_g2p_plugin</li>
-    <li>input_vcf</li>
-    <li>report.html</li>
-    <li>report.txt</li>
+    <li>
+      %= link_to 'run_vep_g2p_plugin' => 'run_vep_g2p_plugin'
+    </li>
+    <li>
+      %= link_to 'input.vcf' => 'input.vcf'
+    </li>
+    <li>
+      %= link_to 'VEP TXT output' => 'output.txt'
+    </li>
+    <li>
+      %= link_to 'report.html' => 'report.html'
+    </li>
+    <li>
+     %= link_to 'report.txt' => 'report.txt'
+    </li>
   </ul>
   <h4>Remarks</h4>
   <ul>
     <li>The VEP can look up existing annotations from locally installed cache files in order to increase the speed of computation. The VEP installation process will guide you through the cache file selection and installation process. Converting your cache files with tabix will increase the speed of retrieving existing co-located variants even more. You need to run the convert_cache.pl script which is located in the ensembl-vep repository. <pre>perl convert_cache.pl -species [species] -version [vep_version]</pre></li>
     <li><a href="http://www.ensembl.org/info/docs/tools/vep/script/vep_other.html#faster">More ways to make sure that your VEP installation is running as fast as possible.</a></li>
   </ul>
+
+  <h4>PanelApp</h4>
+  <p>The G2P VEP plugin accepts PanelApp data files as input. We use the following mappings to translate between the terminologies used by G2P and PanelApp.</p>
+
+  <table class="table">
+    <tr>
+      <th>G2P</th>
+      <th>PanelApp</th>
+    </tr>
+    <tr>
+      <th>G2P confidence</th>
+      <th>Gene Ratings</th>
+    </tr>
+    <tr>
+      <td>Confirmed</td>
+      <td rowspan="3">Green</td>
+    </tr>
+    <tr>
+      <td>Probable</td>
+    </tr>
+    <tr>
+      <td>Possible</td>
+    </tr>
+    <tr>
+      <th>Allelic requirement</th>
+      <th>Model of inheritance</th>
+    </tr>
+    <tr>
+      <td rowspan="6">monoallelic</td>
+      <td>MONOALLELIC, autosomal or pseudoautosomal, not imprinted</td>
+    </tr>
+    <tr>
+      <td>MONOALLELIC, autosomal or pseudoautosomal, maternally imprinted (paternal allele expressed)</td>
+    </tr>
+    <tr>
+      <td>MONOALLELIC, autosomal or pseudoautosomal, paternally imprinted (maternal allele expressed)</td>
+    </tr>
+    <tr>
+      <td>MONOALLELIC, autosomal or pseudoautosomal, imprinted status unknown</td>
+    </tr>
+    <tr>
+      <td>BOTH monoallelic and biallelic, autosomal or pseudoautosomal</td>
+    </tr>
+    <tr>
+      <td>BOTH monoallelic and biallelic (but BIALLELIC mutations cause a more SEVERE disease form), autosomal or pseudoautosomal</td>
+    </tr>
+    <tr>
+      <td rowspan="3">biallelic</td>
+      <td>BIALLELIC, autosomal or pseudoautosomal</td>
+    </tr>
+    <tr>
+      <td>BOTH monoallelic and biallelic, autosomal or pseudoautosomal</td>
+    </tr>
+    <tr>
+      <td>BOTH monoallelic and biallelic (but BIALLELIC mutations cause a more SEVERE disease form), autosomal or pseudoautosomal</td>
+    </tr>
+    <tr>
+      <td>hemizygous</td>
+      <td>X-LINKED: hemizygous mutation in males, biallelic mutations in females</td>
+    </tr>
+    <tr>
+      <td>X-linked dominant</td>
+      <td>X-LINKED: hemizygous mutation in males, monoallelic mutations in females may cause disease (may be less severe, later onset than males)</td>
+    </tr>
+  </table>
+  
+
+
 
 
 </div>
