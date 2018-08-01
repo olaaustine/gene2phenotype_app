@@ -104,6 +104,11 @@ function __highlight(s, t) {
           var start = data.start;
           var end = data.end;
           var strand = data.strand;
+          if (strand == 1) {
+            strand = 'forward strand';
+          } else {
+            strand = 'reverse strand';
+          }
           var gene_location = assembly_name + ':' + chrom + ':' + start + '-' + end + ' (' + strand + ')';
           $("#gene_location").append(gene_location);
         }
