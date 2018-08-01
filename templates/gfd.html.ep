@@ -17,7 +17,6 @@
     <li><a href="#publications">Publications</a></li>
     <li><a href="#phenotypes">Phenotypes</a></li>
     <li><a href="#organ_specificity">Organ specificity</a></li>
-    <li><a href="#variants">Variants</a> </li>
   </ul> 
 
   <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>  
