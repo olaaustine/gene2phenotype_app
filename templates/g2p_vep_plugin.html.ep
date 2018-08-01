@@ -1,5 +1,4 @@
 %= include 'header'
-%= include 'search'
 <div class="container">
   <h3>G2P VEP plugin</h3>
   <p>The G2P VEP plugin identifies likely disease causing genes based on the knowledge encoded in the G2P database and runs as part of the Variant Effect Predictor (VEP).</p>
@@ -22,11 +21,11 @@
 
   <h3>Software</h3>
   <h4>Installing and running the VEP and G2P VEP plugin</h4>
-  <p>For installation and running the VEP script please refer to the <a href="https://github.com/Ensembl/ensembl-vep">VEP git repository</a> and <a href="http://www.ensembl.org/info/docs/tools/vep/script/vep_options.html">VEP documentation pages</a>. Plugins are installed and configured during the VEP installation. The <a href="https://github.com/Ensembl/VEP_plugins/blob/dev/G2P.pm">G2P VEP plugin</a> is located in the VEP plugins repository.</p>
+  <p>For installation and running the VEP script please refer to the <a href="https://github.com/Ensembl/ensembl-vep" target="_blank">VEP git repository</a> and <a href="http://www.ensembl.org/info/docs/tools/vep/script/vep_options.html" target="_blank">VEP documentation pages</a>. Plugins are installed and configured during the VEP installation. The <a href="https://github.com/Ensembl/VEP_plugins/blob/release/93/G2P.pm" target="_blank">G2P VEP plugin</a> is located in the VEP plugins repository.</p>
  
   <h4>To run the G2P VEP plugin add the following argument to the VEP command:</h4>
   <pre>./vep -i input.vcf --plugin G2P,file='DDG2P_11_7_2017.csv',log_dir='g2p_log_dir',txt_report='report.txt',html_report='report.html'</pre>
-  <p>The options that can be added to the plugin command are listed and explained in the <a href="https://github.com/Ensembl/VEP_plugins/blob/dev/G2P.pm">G2P VEP plugin module</a>.</p>
+  <p>The options that can be added to the plugin command are listed and explained in the <a href="https://github.com/Ensembl/VEP_plugins/blob/release/93/G2P.pm" target="_blank">G2P VEP plugin module</a>.</p>
 
   <h4>Allele frequencies from reference populations</h4>
 
@@ -111,7 +110,7 @@
   <h4>Remarks</h4>
   <ul>
     <li>The VEP can look up existing annotations from locally installed cache files in order to increase the speed of computation. The VEP installation process will guide you through the cache file selection and installation process. Converting your cache files with tabix will increase the speed of retrieving existing co-located variants even more. You need to run the convert_cache.pl script which is located in the ensembl-vep repository. <pre>perl convert_cache.pl -species [species] -version [vep_version]</pre></li>
-    <li><a href="http://www.ensembl.org/info/docs/tools/vep/script/vep_other.html#faster">More ways to make sure that your VEP installation is running as fast as possible.</a></li>
+    <li><a href="http://www.ensembl.org/info/docs/tools/vep/script/vep_other.html#faster" target="_blank">More ways to make sure that your VEP installation is running as fast as possible.</a></li>
   </ul>
 
   <h4>PanelApp</h4>
