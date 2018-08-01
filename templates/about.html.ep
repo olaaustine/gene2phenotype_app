@@ -1,6 +1,7 @@
 %= include 'header'
 <div class="container">
   <h3>About</h3>
+  <p>G2P is a publicly-accessible online system designed to facilitate the development, validation, curation and distribution of large-scale, evidence-based datasets for use in diagnostic variant filtering. Each G2P entry associates an allelic requirement and a mutational consequence at a defined locus with a disease entity. A confidence level and evidence link are assigned to each entry.</p>
   <h3>Curators</h3>
   <h4>DD Panel</h4>
   <ul class="list-unstyled">
@@ -45,8 +46,8 @@
       <td>Possible disease-causing mutations within, affecting or encompassing an interpretable functional region of a single gene identified in more than one unrelated cases/families or segregation within multiple individuals within a single large family with a developmental disorder</td>
     </tr>
     <tr>
-      <th>Both DD and IF</th>
-      <td>Plausible disease-causing mutations within, affecting or encompassing the coding region of a single gene identified in multiple (&gt;3) unrelated cases/families with both a developmental disorder and an incidental (non-developmental) disorder</td>
+      <th>Both RD and IF</th>
+      <td>Plausible disease-causing mutations within, affecting or encompassing the coding region of a single gene identified in multiple (&gt;3) unrelated cases/families with both the relevant disease (RD) and an incidental disorder</td>
     </tr>
     <tr>
       <th>Child IF</th>
