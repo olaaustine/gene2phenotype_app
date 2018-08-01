@@ -9,10 +9,10 @@
           %= link_to About => '/gene2phenotype/about' => (class => 'navbar-brand')
         </li>
         <li>
-          %= link_to Downloads => '/gene2phenotype/downloads' => (class => 'navbar-brand')
+          %= link_to 'G2P VEP Plugin' => '/gene2phenotype/g2p_vep_plugin' => (class => 'navbar-brand')
         </li>
         <li>
-          %= link_to 'G2P VEP Plugin' => '/gene2phenotype/g2p_vep_plugin' => (class => 'navbar-brand')
+          %= link_to Downloads => '/gene2phenotype/downloads' => (class => 'navbar-brand')
         </li>
         <% if ($logged_in) { %>
           <li class="dropdown">
