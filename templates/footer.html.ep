@@ -22,11 +22,12 @@
           </li>
           <li>&middot;</li>
           <li>
-            %= link_to Privacy => 'https://www.ebi.ac.uk/about/terms-of-use#privacy'
+            %= link_to Privacy => 'https://www.ebi.ac.uk/data-protection/privacy-notice/gene2phenotype-helpdesk'
+
           </li>
           <li>&middot;</li>
           <li>
-            %= link_to 'Terms of use' => 'https://www.ebi.ac.uk/data-protection/privacy-notice/gene2phenotype-helpdesk'
+            %= link_to 'Terms of use' => 'https://www.ebi.ac.uk/about/terms-of-use#general'
           </li>
         </ul>
       </div>
