@@ -490,7 +490,7 @@ sub _get_publications {
       my $mesh_stable_id = $disease->mesh_stable_id;
       $mesh_stable_id =~ s/MESH://;
       my $mesh_name = $disease->mesh_name || 'No MESH name';
-      my @phenotype_ids = @{$disease->get_all_phenotype_ids};
+      my $phenotype_id = $disease->phenotype_id;
       my $annotated_text = $disease->annotated_text;
       my $source = $disease->source;
       my $tm_row = {
@@ -499,16 +499,14 @@ sub _get_publications {
         annotated_text => $annotated_text,  
       };
 
-      if (@phenotype_ids) {
-        foreach my $phenotype_id (@phenotype_ids) {
-          my $phenotype = $phenotype_adaptor->fetch_by_dbID($phenotype_id);
-          my $hpo_term = $phenotype->name;
-          my @is_GFD_phenotype = grep {$_ eq $phenotype_id} @GFD_phenotype_ids;
-          $tm_row->{has_hpo_term} = 1;
-          $tm_row->{phenotype_id} = $phenotype_id;
-          $tm_row->{hpo_term} = $hpo_term;
-          $tm_row->{is_GFD_phenotype} = (@is_GFD_phenotype) ? 1 : 0;
-        }
+      if ($phenotype_id) {
+        my $phenotype = $phenotype_adaptor->fetch_by_dbID($phenotype_id);
+        my $hpo_term = $phenotype->name;
+        my @is_GFD_phenotype = grep {$_ eq $phenotype_id} @GFD_phenotype_ids;
+        $tm_row->{has_hpo_term} = 1;
+        $tm_row->{phenotype_id} = $phenotype_id;
+        $tm_row->{hpo_term} = $hpo_term;
+        $tm_row->{is_GFD_phenotype} = (@is_GFD_phenotype) ? 1 : 0;
       } else {
         $tm_row->{has_hpo_term} = 0;
       }
