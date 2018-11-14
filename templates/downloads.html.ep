@@ -6,7 +6,7 @@
       %= link_to README => 'README'
     </li>
 
-    <% foreach my $panel ( sort @{$all_panels}) { 
+    <% foreach my $panel ( sort @{$authorised_panels}) { 
         next if ($panel eq 'ALL');
         my $link = '/gene2phenotype/downloads/'. $panel . 'G2P.csv.gz';
         my $description = $panel . ' gene-disease pairs and attributes (' . $panel . 'G2P.csv.gz)';
