@@ -70,7 +70,7 @@ sub startup {
     my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
 
     my @panels = map { $_->name } @{$panel_adaptor->fetch_all_visible_Panels};
-    my @authorised_panels = ();
+    my @authorised_panels = (); # all visible and only visible by curator
     my $logged_in = $c->session('logged_in');
     if ($logged_in) {
       my $email = $c->session('email');
@@ -94,8 +94,7 @@ sub startup {
       }
     }
     $c->stash(panel_imgs => \@panel_imgs);
-    $c->stash(authorised_panels => \@authorised_panels);
-    $c->stash(all_panels => \@panels);
+    $c->stash(authorised_panels => \@panels);
   });
 
 
