@@ -1,0 +1,48 @@
+%= include 'header'
+<div class="container">
+  <h3>Create your own panel</h3>
+  <p>In G2P, each dataset is focused on a disease grouping or defined category of clinical presentation that is of relevance to the clinical diagnosis of Mendelian disease. For a dataset to be publicly released it must be comprehensive, up-to-date and have a plan for future active curation. If you would like to curate your own panel please request an account by contacting <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a>. Once you started curating your panel you can download the annotations and use it as input for the VEP G2P plugin. If you already annotate an existing panel with PanelApp it is also possible to use the file version of your PanelApp panel and use it as input for the VEP G2P plugin.</p>
+
+  <h3>Curator views</h3>
+  Each entry in each dataset links a gene or locus, via a disease mechanism, to a disease. As a curator you can enter a new gene disease pair and edit its attributes.  
+  <h4>Gene-Disease pair confidence</h4>
+  %= image '/gene2phenotype/images/disease_confidence.png', alt => 'diease_confidence', width => '100%'
+  <ol>
+    <li>A confidence attribute – confirmed, probable or possible – is assigned to indicate how likely it is that the gene is implicated in the cause of disease.</li>
+    <li>Any edits will be documented with the date, curator name and applied edit.</li>
+  </ol>
+  <h4>Gene-Disease Attributes: Allelic requirement and mutation consequence</h4>
+  %= image '/gene2phenotype/images/AR_MC.png', alt => 'ar_mc', width => '100%'
+  <ol>
+    <li>A disease mechanism is defined as both an allelic requirement (mode of inheritance, for example biallelic or monoallelic) and a mutation consequence (mode of pathogenicity, for example activating or loss of function).</li>
+    <li>Any edits will be documented with the date, curator name and applied edit.</li>
+  </ol>
+  <h4>Publications</h4>
+  %= image '/gene2phenotype/images/publication.png', alt => 'publication', width => '100%'
+  <ol>
+    <li>We store the links to the publications (via PMID) that provide evidence for a specific gene-disease pair. A new publication is retrived by its PMID using Europe PMC's REST API.</li>
+    <li>The title of the added publication is listed and links out to Europe PMC. A publication can be deleted, you can add comments for a publication and you can show text mining results from Pubtator.</li>
+  </ol>
+  <h4>Add phenotypes from text mining results</h4>
+  %= image '/gene2phenotype/images/pubtator.png', alt => 'pubtator', width => '100%'
+  <ol>
+    <li>For each publication we import text mining results from Pubtator.</li>
+    <li>PubTator annotates gene and disease terms in the abstract.</li>
+    <li>We implement a mapping between MeSH terms assigned by PubTator to HPO terms using EBI's ontology xref service. HPO terms can then be added to the list of phenotypes associated with the gene-disease pair.</li>
+  </ol>
+  <h4>Add phenotypes from HBO</h4>
+  %= image '/gene2phenotype/images/phenotype.png', alt => 'phenotype', width => '100%'
+  <ol>
+    <li>Phenotype terms are added from the Human Phenotype Ontology. The term can be selected using autocomplete.</li>
+    <li>Phenotype terms are added to the list of phenotypes associated with the G2P entry.</li>  
+    <li>After the new phenotype term has been added to the list of phenotypes it can be deleted again or comments can be added for the phenotype.</li>
+    <li>You can add a comment or disard and go back to the list of phenotypes.</li>
+  </ol>
+  <h4>Add organ specifity</h4>
+  %= image '/gene2phenotype/images/organ.png', alt => 'organ', width => '100%'
+  <ol>
+    <li>Selected organ specificity for a gene-disease pair.</li>
+    <li>Edit organ specificity list.</li>
+  </ol>
+</div>
+%= include 'footer'
