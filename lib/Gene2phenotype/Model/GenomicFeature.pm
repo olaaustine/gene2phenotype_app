@@ -54,12 +54,30 @@ sub fetch_by_dbID {
   my $ensembl_stable_id = $gf->ensembl_stable_id;
   my $synonyms = join(', ', @{$gf->get_all_synonyms});
 
-  return {
+  my $gf_attribs = {
     gene_symbol => $gene_symbol,
     mim => $mim,
     ensembl_stable_id => $ensembl_stable_id,
     synonyms => $synonyms,
   };
+
+  my $genomic_feature_statistic_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureStatistic');
+  my $genomic_feature_statistics = $genomic_feature_statistic_adaptor->fetch_all_by_GenomicFeature($gf);
+
+  if (scalar @$genomic_feature_statistics) {
+    my @statistics = ();
+    foreach (@$genomic_feature_statistics) {
+      my $clustering = ( $_->clustering) ? 'Mutatations are considered clustered.' : '';
+      push @statistics, {
+        'p-value' => $_->p_value,
+        'dataset' => $_->dataset,
+        'clustering' => $clustering,
+      }
+    }
+    $gf_attribs->{statistics} = \@statistics;
+  }
+  return $gf_attribs;
+ 
 }
 
 sub fetch_by_gene_symbol {
