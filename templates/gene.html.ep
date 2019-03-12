@@ -28,6 +28,14 @@
       <dd><div id='gene_location'></div></dd>
     </dl>
   </div>
+  <% if ($gene->{statistics}) {  %> 
+    <dl>
+      <dt>Genome-wide significance</dt>
+      <% foreach my $statistic (@{$gene->{statistics}}) { %>
+        <dd>Minimum <em>P</em>-value <%= $statistic->{'p-value'} %> from testing the  <%= $statistic->{dataset} %> dataset. <%= $statistic->{'clustering'} %> <a href="https://www.nature.com/articles/nature21062" target="_blank" title="Prevalence and architecture of de novo mutations in developmental disorders">Source</a></dd>
+      <% } %>
+    </dl>
+  <% } %>
   <p>
     <% my $link = "https://decipher.sanger.ac.uk/gene/" . $gene->{gene_symbol} . "#variants/" . $gene->{gene_symbol} . "/patient-overlap/snvs"; %>
     <%= link_to $link => (target => '_blank') => begin %>Look up <%= $gene->{gene_symbol} %> in Decipher <% end %>
@@ -36,5 +44,9 @@
     <% $link = "https://panelapp.genomicsengland.co.uk/panels/genes/" . $gene->{gene_symbol}; %>
     <%= link_to $link => (target => '_blank') => begin %>Look up <%= $gene->{gene_symbol} %> in PanelApp <% end %>
   </p>
+
+
+
+
   <div class="clear"></div>
 </div>
