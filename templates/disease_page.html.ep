@@ -2,7 +2,7 @@
 %= include 'search'
   <div class="container">
     <div class="show_db_content">
-      <h3>Disease</h3>
+      <h3><%= $disease->{name} %></h3>
       <dl>
         <dt>MIM</dt>
         <dd>

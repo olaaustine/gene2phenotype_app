@@ -102,13 +102,9 @@
         <ul>
           <% foreach my $disease (@{$search_results->{disease_names}}) { %>
             <li>
-               %= form_for '/gene2phenotype/disease' => (id => $disease->{dbID}) => begin
-                 %= hidden_field search_type => $disease->{search_type}
-                 %= hidden_field dbID => $disease->{dbID}
-                <%= link_to '#' => ( onclick => "document.getElementById($disease->{dbID}).submit();") => begin %><%== $disease->{display_disease_name} %><% end %>
-               % end
+              <%== $disease->{display_disease_name} %>
             </li>
-            <% if ($disease->{gfd_results}) { %>
+            <% if (@{$disease->{gfd_results}}) { %>
               <ul>
                 <% foreach my $gfd (@{$disease->{gfd_results}}) {
                     if ($logged_in) {
@@ -173,6 +169,11 @@
                   <% } %>
                 <% } %>
               </ul>
+            <% } else { %>
+            <ul>
+              <li><p>The disease is currently not linked to a G2P entry. If you are expecting results please contact <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a>.</p>
+              </li>
+            </ul>
             <% } %>
           <% } %>
         </ul>
