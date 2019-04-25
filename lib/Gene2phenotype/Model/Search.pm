@@ -35,18 +35,13 @@ sub fetch_all_by_substring {
   my $gfd_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease'); 
   my $gf_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeature'); 
 
-
-  my $lc_search_term = lc $search_term;
-  my $uc_search_term = uc $search_term;
-
   my @disease_names = ();
   my $diseases = $disease_adaptor->fetch_all_by_substring($search_term);
 
   foreach my $disease ( sort { $a->name cmp $b->name } @$diseases) {
     my $disease_name = $disease->name;
     my $dbID = $disease->dbID;
-    $disease_name =~ s/$lc_search_term/<b>$lc_search_term<\/b>/g;
-    $disease_name =~ s/$uc_search_term/<b>$uc_search_term<\/b>/g;
+    $disease_name =~ s/$search_term/<b>$search_term<\/b>/gi;
     my $gfds = $gfd_adaptor->fetch_all_by_Disease_panels($disease, $search_panels);
     @$gfds = sort { ( $a->panel cmp $b->panel ) || ( $a->get_GenomicFeature->gene_symbol cmp $b->get_GenomicFeature->gene_symbol ) } @$gfds;
     my $gfd_results = $self->_get_gfd_results($gfds, $is_authorised);
@@ -58,8 +53,7 @@ sub fetch_all_by_substring {
   foreach my $gene ( sort { $a->gene_symbol cmp $b->gene_symbol } @$genes) {
     my $gene_symbol = $gene->gene_symbol;
     my $dbID = $gene->dbID;
-    $gene_symbol =~ s/$lc_search_term/<b>$lc_search_term<\/b>/g;
-    $gene_symbol =~ s/$uc_search_term/<b>$uc_search_term<\/b>/g;
+    $gene_symbol =~ s/$search_term/<b>$search_term<\/b>/gi;
     my $gfds = $gfd_adaptor->fetch_all_by_GenomicFeature_panels($gene, $search_panels);
     @$gfds = sort { ( $a->panel cmp $b->panel ) || ( $a->get_Disease->name cmp $b->get_Disease->name ) } @$gfds;
     my $gfd_results = $self->_get_gfd_results($gfds, $is_authorised);
@@ -97,11 +91,8 @@ sub fetch_all_by_gene_symbol {
   my @gene_names = ();
   my $gene_symbol = $gene->gene_symbol;
   my $dbID = $gene->dbID;
-  my $lc_search_term = lc $search_term;
-  my $uc_search_term = uc $search_term;
 
-  $gene_symbol =~ s/$lc_search_term/<b>$lc_search_term<\/b>/g;
-  $gene_symbol =~ s/$uc_search_term/<b>$uc_search_term<\/b>/g;
+  $gene_symbol =~ s/$search_term/<b>$search_term<\/b>/gi;
   my $gfds = $gfd_adaptor->fetch_all_by_GenomicFeature_panels($gene, $search_panels);
   @$gfds = sort { ( $a->panel cmp $b->panel ) || ( $a->get_Disease->name cmp $b->get_Disease->name ) } @$gfds;
   my $gfd_results = $self->_get_gfd_results($gfds, $is_authorised);
@@ -118,17 +109,13 @@ sub fetch_all_by_disease_name {
   my $registry = $self->app->defaults('registry');
   my $disease_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'disease');
   my $gfd_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease'); 
- 
-  my $lc_search_term = lc $search_term;
-  my $uc_search_term = uc $search_term;
 
   my @disease_names = ();
   my $disease = $disease_adaptor->fetch_by_name($search_term);
 
   my $disease_name = $disease->name;
   my $dbID = $disease->dbID;
-  $disease_name =~ s/$lc_search_term/<b>$lc_search_term<\/b>/g;
-  $disease_name =~ s/$uc_search_term/<b>$uc_search_term<\/b>/g;
+  $disease_name =~ s/$search_term/<b>$search_term<\/b>/gi;
   my $gfds = $gfd_adaptor->fetch_all_by_Disease_panels($disease, $search_panels);
   @$gfds = sort { ( $a->panel cmp $b->panel ) || ( $a->get_GenomicFeature->gene_symbol cmp $b->get_GenomicFeature->gene_symbol ) } @$gfds;
   my $gfd_results = $self->_get_gfd_results($gfds, $is_authorised);
