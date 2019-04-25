@@ -138,7 +138,6 @@ sub startup {
       $c->flash({message => 'Passwords don\'t match. Please ensure retyped password matches your new password.', alert_class => 'alert-danger'});
       return $c->redirect_to('/gene2phenotype/account');
     }
-
     my $success = $auth->htpasswd($email, $new_pwd, {'overwrite' => 1});        
     if ($success) {
       $c->flash({message => 'Successfully updated password', alert_class => 'alert-success'});
@@ -164,10 +163,15 @@ sub startup {
     if ($authcode eq $saved_authcode) {
       if ($new_pwd eq $retyped_pwd) {
         my $success = $auth->htpasswd($email, $new_pwd, {'overwrite' => 1});        
-        $c->session(logged_in => 1);
-        $c->stash(logged_in => 1);
-        $c->flash({message => 'Successfully updated password', alert_class => 'alert-success'});
-        return $c->redirect_to('/gene2phenotype');
+        if ($success) {
+          $c->session(logged_in => 1);
+          $c->stash(logged_in => 1);
+          $c->flash({message => 'Successfully updated password', alert_class => 'alert-success'});
+          return $c->redirect_to('/gene2phenotype');
+        } else {
+          $c->flash(message => 'Error occurred while resetting your password. Please contact g2p-help@ebi.ac.uk', alert_class => 'alert-danger');
+          return $c->redirect_to('/gene2phenotype');
+        }
       }
     }
     $c->flash(message => 'Error occurred while resetting your password. Please contact g2p-help@ebi.ac.uk', alert_class => 'alert-danger');
