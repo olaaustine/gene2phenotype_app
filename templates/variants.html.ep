@@ -1,5 +1,4 @@
-<div>
-  <h3><a class="anchor" name="variants">Variants</a><a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a></h3>
+<div class="container">
   <div class="variations">
     <% if (@{$variations->{tmpl}}) { %>
       <p>The following variants are retrieved from Ensembl. We only select variants that have been annotated as pathogenic by ClinVar. For each of the variants we display the most severe consequence. If there are multiple transcripts producing the consequence, we choose the canonical transcript, otherwise we select the transcript randomly.</p>
