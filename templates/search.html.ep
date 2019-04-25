@@ -27,7 +27,7 @@
         <var onclick="document.forms.namedItem('search_field').search_term.value=this.innerHTML;">ZEB2</var>,
         <var onclick="document.forms.namedItem('search_field').search_term.value=this.innerHTML;">TBX1</var>,
         <var onclick="document.forms.namedItem('search_field').search_term.value=this.innerHTML;">CHANARIN-DORFMAN SYNDROME</var> or
-        <var onclick="document.forms.namedItem('search_field').search_term.value=this.innerHTML;">MITOCHONDRIAL COMPLEX III DEFICIENCY, NUCLEAR TYPE 1</var>
+        <var onclick="document.forms.namedItem('search_field').search_term.value=this.innerHTML;">Severe Neurodevelopmental Syndrome</var>
       </p>
     </div>
   </div> <!-- End search body-->
