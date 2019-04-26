@@ -192,7 +192,11 @@
                     <td>
                       <%  if (!$disease->{is_GFD_phenotype}) { %>
                         <div style="overflow: hidden; padding-right: .5em; width: 20em;">
-                          <input type="search" id="query_phenotype_name" name="phenotype" style='width:100%'/>
+                          <%  if ($disease->{has_hpo_term}) { %> 
+                            <input type="search" id="query_phenotype_name" name="phenotype" value="<%==$disease->{hpo_term}%>" style='width:100%'/>
+                          <% } else {  %>
+                            <input type="search" id="query_phenotype_name" name="phenotype" value="" style='width:100%'/>
+                          <% } %>
                         </div>
                       <% } else {  %>
                         Already in phenotype list
