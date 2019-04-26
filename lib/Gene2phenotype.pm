@@ -383,7 +383,7 @@ sub startup {
     my $query = '';
 
     if ($type eq 'query_phenotype_name') {
-      $query = 'select name AS value FROM phenotype where name like ?';
+      $query = 'select name AS value FROM phenotype where name like ? AND source="HP"';
     }
     elsif ($type eq 'query_gene_name') {
       $query = 'select gene_symbol AS value FROM genomic_feature where gene_symbol like ?';
