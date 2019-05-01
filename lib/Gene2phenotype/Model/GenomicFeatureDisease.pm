@@ -492,7 +492,6 @@ sub _get_publications {
       my $mesh_name = $disease->mesh_name || 'No MESH name';
       my $phenotype_id = $disease->phenotype_id;
       my $annotated_text = $disease->annotated_text;
-      my $source = $disease->source;
       my $tm_row = {
         mesh_stable_id => $mesh_stable_id,
         mesh_name => $mesh_name,
