@@ -351,85 +351,30 @@ function __highlight(s, t) {
       $(".add_publication_feedback").removeClass("alert alert-danger").addClass("alert alert-danger");
     } else {
       $(".next_step_add_publication").removeClass("hide_fields");
-      //var europepmcAPI = 'http://www.ebi.ac.uk/europepmc/webservices/rest/search/query=ext_id:' + pmid + '&format=json&callback=?';
-      var europepmcAPI = 'https://www.ebi.ac.uk/europepmc/webservices/rest/search/query=ext_id:' + pmid + '%20src:med&format=json';
-      var result;      
-      var title, journalTitle, journalVolume, pageInfo, pubYear;
-      $.getJSON(europepmcAPI).done(function(data) {
-        result = data.resultList.result[0];
-        if (result) {
-          if ('title' in result === true) {
-            title = result.title;
-          }
-          if ('journalTitle' in result === true) {
-            journalTitle = result.journalTitle;
-          }
-          if ('journalVolume' in result === true) {
-            journalVolume = result.journalVolume;
-          }
-          if ('pageInfo' in result === true) {
-            pageInfo = result.pageInfo;
-          }
-
-          if ('pubYear' in result === true) {
-            pubYear = result.pubYear;
-          }
-          var source_components = [];
-          if (journalTitle) {
-            source_components.push(journalTitle);
-          }       
-          if (journalVolume) {
-            if (pageInfo || pubYear) {
-              source_components.push(journalVolume + ':');
-            } else {
-              source_components.push(journalVolume);
+      $.ajax({
+        url: "/gene2phenotype/ajax/publication",
+        dataType: "json",
+        type: "get",
+        data: {
+          pmid : pmid,
+       },
+        success: function(data, textStatus, jqXHR) {
+          if (data && typeof data.title !== "undefined") {
+            $(':input.title[type="text"]').val(data.title); 
+            if (data.hasOwnProperty('source')) {
+              $(':input.source[type="text"]').val(data.source);
             }
+          } else {
+            $(".add_publication_feedback").append("No publication information could be found for your input PMID. You can enter the publication information yourself or contact g2p-help@ebi.ac.uk for help.");
+            $(".add_publication_feedback").removeClass("alert alert-warning").addClass("alert alert-warning");
           }
-          if (pageInfo) {
-            if (pubYear) {
-              source_components.push(pageInfo + ',');
-            } else {
-              source_components.push(pageInfo);
-            }
-          }
-          if (pubYear) {
-            source_components.push(pubYear);
-          }
-          var source = source_components.join(' ');
-          $(':input.title[type="text"]').val(title);
-          $(':input.source[type="text"]').val(source);
-        } else {
-          $(".add_publication_feedback").append("No publication information could be found for your input PMID. You can enter the publication information yourself or contact g2p-help@ebi.ac.uk for help.");
-          $(".add_publication_feedback").removeClass("alert alert-warning").addClass("alert alert-warning");
-          $(':input.title[type="text"]').val('');
-          $(':input.source[type="text"]').val('');
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+          console.log(jqXHR);
+          console.log(textStatus);
+          console.log(errorThrown);
         }
       });
-
-//      $.ajax({
-//        url: "/gene2phenotype/ajax/publication",
-//        dataType: "json",
-//        type: "get",
-//        data: {
-//          pmid : pmid,
-//        },
-//        success: function(data, textStatus, jqXHR) {
-//          var title = data.title;
-//          var source = data.source;
-//          if (title && source) {
-//            $(':input.title[type="text"]').val(title);
-//            $(':input.source[type="text"]').val(source);
-//          } else {
-//            $(".add_publication_feedback").append("No publication information could be found for your input PMID. You can enter the publication information yourself or contact g2p-help@ebi.ac.uk for help.");
-//            $(".add_publication_feedback").removeClass("alert alert-warning").addClass("alert alert-warning");
-//          }
-//        },
-//        error: function(jqXHR, textStatus, errorThrown){
-//          console.log(jqXHR);
-//          console.log(textStatus);
-//          console.log(errorThrown);
-//        }
-//      });
     }
   });
 
