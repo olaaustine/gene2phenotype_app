@@ -15,7 +15,7 @@
 %= javascript '/gene2phenotype/scripts/bootstrap.min.js'
 %= javascript '/gene2phenotype/scripts/d3.min.js'
 %= javascript '/gene2phenotype/scripts/nv.d3.js'
-%= javascript '/gene2phenotype/scripts/behavior.js?version=18'
+%= javascript '/gene2phenotype/scripts/behavior.js?version=19'
 %= javascript '/gene2phenotype/scripts/cookie_banner.js?version=1'
 %= javascript '/gene2phenotype/scripts/alerts.js'
 %= javascript '/gene2phenotype/scripts/piecharts.js'
