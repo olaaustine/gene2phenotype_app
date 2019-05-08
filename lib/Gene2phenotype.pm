@@ -206,73 +206,7 @@ sub startup {
 
   $r->get('/gene2phenotype/search')->to('search#results');
 
-
-  $r->get('/gene2phenotype/ajax/publication' => sub {
-    my $c = shift;
-    my $pmid = $c->param('pmid');
-    my $http = HTTP::Tiny->new();
-    my $request = "http://www.ebi.ac.uk/europepmc/webservices/rest/search/query=ext_id:$pmid%20src:med&format=json";
-    my $response = $http->get($request, {
-      headers => { 'Content-type' => 'application/json' }
-    });
-    if (!$response->{success}) {
-      $c->render(json => {});
-      return;  
-    }
-    my $hash = decode_json($response->{content});
-    my $result = $hash->{resultList}->{result}->[0];
-    if ($result) {
-      # Europ. J. Pediat. 149: 574-576, 1990.
-      # journalTitle. journalVolume: pageInfo, pubYear.
-      my $title = $result->{title};
-      my $journalTitle = $result->{journalTitle};
-      my $journalVolume = $result->{journalVolume};
-      my $pageInfo = $result->{pageInfo};
-      my $pubYear = $result->{pubYear};
-      my @source_components = ();
-      push @source_components, $journalTitle if ($journalTitle);
-      if ($journalVolume) {
-        if ($pageInfo || $pubYear) {
-          push @source_components, "$journalVolume:";
-        } else {
-          push @source_components, "$journalVolume";
-        }
-      }
-      if ($pageInfo) {
-        if ($pubYear) {
-          push @source_components, "$pageInfo,";
-        } else {
-          push @source_components, "$pageInfo";
-        }
-      }
-      if ($pubYear) {
-        push @source_components, "$pubYear";
-      }
-      my $source = join(' ', @source_components);
-
-      $c->render(json => {title => $title, source => $source});  
-    } else {
-      $request = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=$pmid&retmode=json";
-      $response = $http->get($request, {
-        headers => { 'Content-type' => 'application/json' }
-      });
-      if (!$response->{success}) {
-        $c->render(json => {});
-        return;  
-      }
-      $hash = decode_json($response->{content});
-      $result = $hash->{result}->{$pmid};
-      my $title = $result->{title};
-      my $journalTitle = $result->{source};
-      my $journal_info = $result->{elocationid};
-      if ($title && $journalTitle && $journal_info) {
-        my $source = "$journalTitle $journal_info";
-        $c->render(json => {title => $title, source => $source});  
-      } else {
-        $c->render(json => {});
-      }
-    }
-  });
+  $r->get('/gene2phenotype/ajax/publication')->to('publication#get_description');
 
   $r->get('/gene2phenotype/ajax/gene_location' => sub {
     my $c = shift;
