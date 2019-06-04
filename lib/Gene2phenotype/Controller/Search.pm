@@ -6,6 +6,7 @@ sub results {
   my $model = $self->model('search');
 
   my $search_term = $self->param('search_term');
+  $search_term =~ s/'/\\'/g;
   my $panel = $self->param('panel');
 
   my @authorised_panels = ();     
