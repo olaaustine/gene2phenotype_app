@@ -29,9 +29,12 @@ sub show {
         push @duplicate_to_panels, $panel;
       }
     } 
-    if (@duplicate_to_panels) {
+    if (scalar @duplicate_to_panels > 0) {
       $self->stash(duplicate => 1);
       $self->stash(duplicate_to => \@duplicate_to_panels);
+    } else {
+      $self->stash(duplicate => 0);
+      $self->stash(duplicate_to => []);
     }
   } else {
     $self->stash(duplicate => 0);
