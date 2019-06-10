@@ -10,7 +10,7 @@ sub add {
   my $phenotype_model = $self->model('phenotype');
   my @added = ();
   my @already_in_db = ();
-  my @unknown_phenotype = ();
+  my @unknown_phenotypes = ();
   foreach my $phenotype_name (@$phenotype_names) {
     next if (length($phenotype_name) == 0);
     my $phenotype = $phenotype_model->fetch_by_name($phenotype_name); 
@@ -42,7 +42,6 @@ sub add {
     $info .= '_ERROR';
     push @values, join(', ', @unknown_phenotypes);
   }
-
   $self->add_phenotypes_message($info, \@values);
 
   return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id#phenotypes");
