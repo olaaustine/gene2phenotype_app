@@ -14,6 +14,7 @@
         <li>
           %= link_to Downloads => '/gene2phenotype/downloads' => (class => 'navbar-brand')
         </li>
+
         <% if ($logged_in) { %>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button">Curator views <span class="caret"></span></a>
@@ -26,17 +27,20 @@
               </li>
             </ul>
           </li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button">Documentation <span class="caret"></span></a>
-            <ul class="dropdown-menu">
+        <% } %>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button">Documentation <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li>
+              %= link_to 'Create your own panel' => '/gene2phenotype/create_panel' => (class => 'navbar-brand')
+            </li>
+
+            <% if ($logged_in) { %>
               <li>
                 %= link_to 'Enter a new gene-disease pair' => '/gene2phenotype/documentation/enter_new_gene_disease_pair' => (class => 'navbar-brand')
               </li>
-            </ul>
-          </li>
-        <% } %>
-        <li>
-          %= link_to 'Create your own panel' => '/gene2phenotype/create_panel' => (class => 'navbar-brand')
+            <% } %>
+          </ul>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
