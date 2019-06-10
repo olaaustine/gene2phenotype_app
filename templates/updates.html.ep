@@ -1,6 +1,11 @@
 <div class="container">
-  <h3>Latest updates</h3>
+<blockquote>
+  <p class="h4"><a href="http://europepmc.org/abstract/MED/31147538" target="_blank">Flexible and scalable diagnostic filtering of genomic variants using G2P with Ensembl VEP.</a></p>
+  <p class="h5">Thormann A, Halachev M, McLaren W, Moore DJ, Svinti V, Campbell A, Kerr SM, Tischkowitz M, Hunt SE, Dunlop MG, Hurles ME, Wright CF, Firth HV, Cunningham F, FitzPatrick DR.</p>
+  <footer>Nat Commun Volume 10 (2019) p.2373</footer>
+</blockquote>
 
+  <h3>Latest updates</h3>
   %= tag div => (id => 'barchart_material',  data => $statistics) => begin
   % end
 
