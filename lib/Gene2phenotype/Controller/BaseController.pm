@@ -24,7 +24,7 @@ our %MESSAGES = (
   DISEASE_MIM_IN_DB => { msg => 'Disease mim is already in database.', type => 'danger',},
   WRONG_FORMAT_DISEASE_MIM => { msg => 'Invalid format for disease mim. It needs to be a number.', type => 'danger',},
   UPDATED_ORGAN_LIST => { msg => 'Successfully updated organ specificity list.', type => 'success',},
-  UPDATED_DDD_CATEGORY_SUC => { msg => 'Successfully updated DDD category', type => 'success',},
+  UPDATED_CONFIDENCE_CATEGORY_SUC => { msg => 'Successfully updated confidence category', type => 'success',},
   UPDATED_GFD_ACTION_SUC => { msg => 'Successfully updated genomic feature disease action.', type => 'success',},
   ADDED_GFD_ACTION_SUC => { msg => 'Successfully added a new genomic feature disease action.', type => 'success'},
   ADDED_GFDPHENOTYPE_SUC => { msg => 'Successfully added a new phenotype for the genomic feature disease pair.', type => 'success'},

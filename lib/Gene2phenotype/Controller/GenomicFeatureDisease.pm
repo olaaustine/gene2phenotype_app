@@ -145,7 +145,7 @@ sub update {
   my $email = $self->session('email');
   $model->update_GFD_category($email, $GFD_id, $category_attrib_id);
   $self->session(last_url => "/gene2phenotype/gfd?GFD_id=$GFD_id");
-  $self->feedback_message('UPDATED_DDD_CATEGORY_SUC');
+  $self->feedback_message('UPDATED_CONFIDENCE_CATEGORY_SUC');
   return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
 
