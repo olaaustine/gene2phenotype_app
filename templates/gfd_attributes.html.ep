@@ -2,7 +2,7 @@
   <div class="clear"></div>
 
   <h3><a class="anchor" name="GD_attribs">Gene-Disease Attributes</a><a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a></h3>
-  <div id="DDD_category">
+  <div id="confidence_category">
     <div class="show_db_content">
       <div class="display_attributes">
         <dl>
@@ -53,7 +53,7 @@
       </table>  
       </div>
     <% } %>
-  </div> <!--End DDD category-->
+  </div> <!--End confidence category-->
 
   <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>
     <div class="add_GDM">
