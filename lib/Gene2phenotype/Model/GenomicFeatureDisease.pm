@@ -22,8 +22,8 @@ sub fetch_by_dbID {
       my $user_id = $log->user_id;  
       my $user = $user_adaptor->fetch_by_dbID($user_id);
       my $user_name = $user->username;
-      my $disease_confidence = $log->disease_confidence;
-      push @logs, {created => $created, user => $user_name, disease_confidence => $disease_confidence, action => $action};
+      my $confidence_category = $log->confidence_category;
+      push @logs, {created => $created, user => $user_name, confidence_category => $confidence_category, action => $action};
     }
   }
 
