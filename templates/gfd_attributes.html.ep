@@ -46,7 +46,7 @@
           <tr>
             <td><%= $log->{created} %></td>
             <td><%= $log->{user} %></td>
-            <td><%= $log->{disease_confidence} %></td>
+            <td><%= $log->{confidence_category} %></td>
             <td><%= $log->{action} %></td>
           </tr>
         <% } %>
