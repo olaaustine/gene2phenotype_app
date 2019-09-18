@@ -105,7 +105,7 @@ sub duplicate {
     -panel => $panel,
     -disease_id => $disease->dbID,
     -genomic_feature_id => $gf->dbID,
-    -DDD_category => $from_gfd->DDD_category,
+    -confidence_category => $from_gfd->confidence_category,
     -adaptor => $GFD_adaptor,
   );
   $gfd_to_panel = $GFD_adaptor->store($gfd_to_panel, $user);
@@ -233,7 +233,7 @@ sub add {
     -panel_attrib => $panel_id,
     -disease_id => $disease->dbID,
     -genomic_feature_id => $gf->dbID,
-    -DDD_category_attrib => $category_attrib_id,
+    -confidence_category_attrib => $category_attrib_id,
     -adaptor => $GFD_adaptor,
   );
   my $user = $user_adaptor->fetch_by_email($email);
@@ -258,7 +258,7 @@ sub get_default_GFD_category_list {
   my $self = shift;
   my $registry = $self->app->defaults('registry');
   my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
-  my $attribs = $attribute_adaptor->get_attribs_by_type_value('DDD_Category');
+  my $attribs = $attribute_adaptor->get_attribs_by_type_value('confidence_category');
   my @list = ();
   foreach my $value (sort keys %$attribs) {
     my $id = $attribs->{$value};
@@ -270,11 +270,11 @@ sub get_default_GFD_category_list {
 sub _get_GFD_category_list {
   my $self = shift;
   my $GFD = shift;
-  my $GFD_category = $GFD->DDD_category;
+  my $GFD_category = $GFD->confidence_category;
   my $GFD_id = $GFD->dbID;
   my $registry = $self->app->defaults('registry');
   my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
-  my $attribs = $attribute_adaptor->get_attribs_by_type_value('DDD_Category');
+  my $attribs = $attribute_adaptor->get_attribs_by_type_value('confidence_category');
   my @list = ();
   foreach my $value (sort keys %$attribs) {
     my $id = $attribs->{$value};
@@ -291,7 +291,7 @@ sub _get_GFD_category_list {
 sub _get_GFD_category {
   my $self = shift;
   my $GFD = shift;
-  my $category = $GFD->DDD_category || 'Not assigned';
+  my $category = $GFD->confidence_category || 'Not assigned';
   return $category;
 }
 
@@ -651,7 +651,7 @@ sub update_GFD_category {
   my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
   my $user = $user_adaptor->fetch_by_email($email);
   my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
-  $GFD->DDD_category_attrib($category_attrib_id);
+  $GFD->confidence_category_attrib($category_attrib_id);
   $GFD_adaptor->update($GFD, $user); 
 }
 
