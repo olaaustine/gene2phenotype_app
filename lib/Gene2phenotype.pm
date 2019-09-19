@@ -351,6 +351,7 @@ sub startup {
   $r->get('/gene2phenotype/about')->to(template => 'about');
   $r->get('/gene2phenotype/g2p_vep_plugin')->to(template => 'g2p_vep_plugin');
   $r->get('/gene2phenotype/create_panel')->to(template => 'create_panel');
+  $r->get('/gene2phenotype/terminology')->to(template => 'terminology');
 
   $r->get('/gene2phenotype/downloads/#file_name' => sub {
     my $c = shift;
