@@ -1,9 +1,9 @@
 package Gene2phenotype;
 use Mojo::Base 'Mojolicious';
 use Mojo::Home;
+use Mojo::Log;
 use HTTP::Tiny;
 use Apache::Htpasswd;
-#use File::Path qw(make_path remove_tree);
 use File::Path;
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::G2P::Utils::Downloads qw(download_data);
@@ -25,6 +25,9 @@ sub startup {
   my $registry_file = $config->{registry};
   my $public_folder = $config->{public_folder};
   my $passphrase = $config->{passphrase};
+  my $log_dir = $config->{log_dir};
+  my $log = Mojo::Log->new(path => "$log_dir/log_file"); 
+
   $self->app->secrets([$passphrase]);
 
 #  my $static = $self->app->static();
@@ -355,6 +358,8 @@ sub startup {
 
   $r->get('/gene2phenotype/downloads/#file_name' => sub {
     my $c = shift;
+    my $host   = $c->req->url->to_abs->host;
+    $log->debug("download file $host");
     my $file_name = $c->stash('file_name');
     my $is_logged_in = $c->session('logged_in');
     my $user_panels = $c->session('panels');
@@ -369,8 +374,10 @@ sub startup {
     $file_name .= "_$file_time_stamp.csv";
     my $tmp_dir = "$downloads_dir/$stamp";
     mkpath($tmp_dir);
+    $log->debug("download file $host $panel_name $year $mon $mday");
     download_data($tmp_dir, $file_name, $registry_file, $is_logged_in, $user_panels, $panel_name);
     $c->render_file('filepath' => "$tmp_dir/$file_name.gz", 'filename' => "$file_name.gz", 'format' => 'zip', 'cleanup' => 1);
+    rmtree($tmp_dir);
   });
 
   $r->get('/gene2phenotype/curator/no_publication')->to('curator#no_publication');
