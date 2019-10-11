@@ -7,7 +7,6 @@ use Apache::Htpasswd;
 use File::Path;
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::G2P::Utils::Downloads qw(download_data);
-
 use JSON;
 use Data::Dumper;
 
@@ -377,7 +376,6 @@ sub startup {
     $log->debug("download file $host $panel_name $year $mon $mday");
     download_data($tmp_dir, $file_name, $registry_file, $is_logged_in, $user_panels, $panel_name);
     $c->render_file('filepath' => "$tmp_dir/$file_name.gz", 'filename' => "$file_name.gz", 'format' => 'zip', 'cleanup' => 1);
-    rmtree($tmp_dir);
   });
 
   $r->get('/gene2phenotype/curator/no_publication')->to('curator#no_publication');
