@@ -38,6 +38,7 @@ sub startup {
       $c->req->url->query->param(registry_file => $registry_file);
     },
   });
+  $self->plugin('RemoteAddr');
   $self->plugin('Model');
   $self->plugin('RenderFile');
   $self->plugin(mail => {
@@ -357,8 +358,8 @@ sub startup {
 
   $r->get('/gene2phenotype/downloads/#file_name' => sub {
     my $c = shift;
-    my $host   = $c->req->url->to_abs->host;
-    $log->debug("download file $host");
+
+    my $ip = $c->remote_addr;
     my $file_name = $c->stash('file_name');
     my $is_logged_in = $c->session('logged_in');
     my $user_panels = $c->session('panels');
@@ -373,7 +374,7 @@ sub startup {
     $file_name .= "_$file_time_stamp.csv";
     my $tmp_dir = "$downloads_dir/$stamp";
     mkpath($tmp_dir);
-    $log->debug("download file $host $panel_name $year $mon $mday");
+    $log->debug("download file $ip $panel_name $year $mon $mday");
     download_data($tmp_dir, $file_name, $registry_file, $is_logged_in, $user_panels, $panel_name);
     $c->render_file('filepath' => "$tmp_dir/$file_name.gz", 'filename' => "$file_name.gz", 'format' => 'zip', 'cleanup' => 1);
   });
