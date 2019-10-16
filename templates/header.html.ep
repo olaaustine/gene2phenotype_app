@@ -20,6 +20,9 @@
             <a href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button">Curator views <span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li>
+                %= link_to 'Duplicated LGM entries' => '/gene2phenotype/curator/show_all_duplicated_LGM_by_panel' => (class => 'navbar-brand')
+              </li>
+              <li>
                 %= link_to 'Entries without publications' => '/gene2phenotype/curator/no_publication' => (class => 'navbar-brand')
               </li>
               <li>
