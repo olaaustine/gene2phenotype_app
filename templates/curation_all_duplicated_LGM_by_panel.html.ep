@@ -1,0 +1,41 @@
+%= include 'header'
+%= include 'search'
+<div class="container">
+  <h3>All G2P entries with duplicated Locus Genotype Mechanism</h3>
+  <% foreach my $result (@$gfs_merge_LGM) { %>
+    <h3><%= $result->{panel}%></h3>
+    <table id="curator_table_<%= $result->{panel}%>" class="table">
+      <thead>
+        <tr>
+          <th>Gene symbol</th>
+          <th>Genotype (allelic requirement)</th>
+          <th>Mechanism (mutation consquence)</th>
+          <th>Duplicated counts</th>
+          <th>Go to merge page</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% foreach my $merge_entry (@{$result->{merge_list}}) { %>
+          <tr>
+            <td> <%= $merge_entry->{gene_symbol} %> </td>
+            <td> <%= $merge_entry->{allelic_requirement} %> </td>
+            <td> <%= $merge_entry->{mutation_consequence} %> </td>
+            <td> <%= $merge_entry->{count} %> </td>
+            <td>
+            %= form_for '/gene2phenotype/curator/show_all_duplicated_LGM_by_gene' => begin
+              <button type="submit" class="btn btn-primary btn-sm" id="go_to_merge_page_button">Go to merge page</button>
+              %= hidden_field gf_id => $merge_entry->{gf_id}
+              %= hidden_field panel => $merge_entry->{panel}
+              %= hidden_field allelic_requirement_attrib => $merge_entry->{allelic_requirement_attrib}
+              %= hidden_field mutation_consequence_attrib => $merge_entry->{mutation_consequence_attrib}
+            %end
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  <% } %>
+
+</div>
+
+%= include 'footer'

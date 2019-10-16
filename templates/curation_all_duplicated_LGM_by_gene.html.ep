@@ -1,0 +1,34 @@
+%= include 'header'
+%= include 'search'
+<div class="container">
+  %= form_for '/gene2phenotype/gfd/merge_duplicated_LGM' => begin 
+    <% foreach my $gfd (@{$duplicated_gfds->{entries}}) { %>
+      <div class="form-group">
+        %= check_box gfd_id => $gfd->{gfd_id}
+        <b>Gene symbol:</b> <%= $gfd->{gene_symbol}%> <b>Disease name:</b> <%= $gfd->{disease_name}%>
+        <ul>
+          <li><b>Genotype Mechanism:</b></li>
+          <ul>
+            <% foreach my $genotype_mechanism (@{$gfd->{actions}}) { %>
+              <li><%= $genotype_mechanism %></li>          
+            <% } %>
+          </ul>
+          <li><b>Phenotypes:</b> <%== join(', ', sort @{$gfd->{phenotypes}})%></li>
+          <li><b>Publications:</b></li>
+          <ul>
+            <% foreach my $title (sort @{$gfd->{publications}}) { %>
+              <li><%= $title %> </li>
+            <% } %>
+          </ul>
+        </ul>
+      </div>
+    <% } %>
+    <div class="form-group">
+      <label>Select from disease names:</label>
+      %= select_field new_disease_name => $duplicated_gfds->{all_disease_names} 
+    </div>
+    %= hidden_field gf_id => $duplicated_gfds->{gf_id}
+    <button type="submit" class="btn btn-primary">Merge</button>
+  %end
+</div>
+%= include 'footer'
