@@ -201,6 +201,81 @@ sub fetch_all_by_panel_without_publication {
   return \@results;
 }
 
+sub fetch_all_duplicated_LGM_entries_by_panel {
+  my $self = shift;
+  my $panel = shift;
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease');
+  my $merge_list = $GFD_adaptor->_get_all_duplicated_LGM_entries_by_panel($panel);
+  return $merge_list;
+}
+
+sub fetch_all_duplicated_LGM_entries_by_gene {
+  my $self = shift;
+  my $gf_id = shift;
+  my $panel = shift;
+  my $allelic_requirement_attrib = shift;
+  my $mutation_consequence_attrib = shift;
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease');
+  my $GF_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeature');
+  my $genomic_feature = $GF_adaptor->fetch_by_dbID($gf_id);
+  my $gfds = $GFD_adaptor->fetch_all_by_GenomicFeature_panel($genomic_feature, $panel); 
+
+  my @entries = ();
+  my @all_disease_names = ();
+  foreach my $gfd (@$gfds) {
+    my $gfd_actions = $gfd->get_all_GenomicFeatureDiseaseActions;
+    next unless (grep {$_->allelic_requirement_attrib == $allelic_requirement_attrib && $_->mutation_consequence_attrib == $mutation_consequence_attrib} @$gfd_actions);
+
+    my $gene_symbol = $gfd->get_GenomicFeature->gene_symbol; 
+    my $disease_name = $gfd->get_Disease->name;
+    my $disease_id = $gfd->get_Disease->dbID;
+    push @all_disease_names, [$disease_name => $disease_id];
+    my $gfd_id = $gfd->dbID;
+    my @actions = ();
+    foreach my $gfd_action (@$gfd_actions) {
+      my $allelic_requirement = $gfd_action->allelic_requirement;
+      my $mutation_consequence = $gfd_action->mutation_consequence; 
+      push @actions, "$allelic_requirement $mutation_consequence";
+    }
+
+    my @publications = ();  
+    my $gfd_publications = $gfd->get_all_GFDPublications;
+    foreach my $gfd_publication (@$gfd_publications) {
+      my $publication =  $gfd_publication->get_Publication;
+      my $title = $publication->title;
+      if ($publication->source) {
+        $title .= " " . $publication->source;
+      }
+      push @publications, $title;
+    }
+
+    my @phenotypes = ();
+    my $gfd_phenotypes = $gfd->get_all_GFDPhenotypes;
+    foreach my $gfd_phenotype (@$gfd_phenotypes) {
+      push @phenotypes, $gfd_phenotype->get_Phenotype->name;
+    }
+
+    push @entries, {
+      gene_symbol => $gene_symbol,
+      disease_name => $disease_name,
+      gfd_id => $gfd_id,
+      actions => \@actions,
+      phenotypes => \@phenotypes,
+      publications => \@publications,
+    };
+  
+  }
+  return {
+    gf_id => $gf_id,
+    entries => \@entries,
+    all_disease_names => \@all_disease_names,
+  };
+}
+
+
+
 sub fetch_by_panel_GenomicFeature_Disease {
   my $self = shift;
   my $panel = shift;

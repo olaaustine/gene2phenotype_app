@@ -28,6 +28,54 @@ sub no_publication {
   }
 }
 
+sub show_all_duplicated_LGM_by_panel {
+  my $self = shift;
+  my $logged_in = $self->stash('logged_in');
+  my $is_authorised = ($logged_in) ? 1 : 0;
+
+  if ($is_authorised) {
+    my $user_model = $self->model('user');
+    my $gfd_model = $self->model('genomic_feature_disease');
+    my $email = $self->session('email');  
+
+    my $user = $user_model->fetch_by_email($email); 
+    my @panels = split(',', $user->panel);
+    my @results = ();    
+    foreach my $panel (@panels) {
+      my $merge_list = $gfd_model->fetch_all_duplicated_LGM_entries_by_panel($panel);
+      push @results, {
+        panel => $panel,
+        merge_list => $merge_list,
+      };
+    }
+    $self->stash(gfs_merge_LGM => \@results);
+    $self->render(template => 'curation_all_duplicated_LGM_by_panel');
+  } else {
+    return $self->redirect_to("/gene2phenotype/");
+  }
+
+}
+
+sub show_all_duplicated_LGM_by_gene {
+  my $self = shift;
+  my $logged_in = $self->stash('logged_in');
+  my $is_authorised = ($logged_in) ? 1 : 0;
+  if ($is_authorised) {
+    my $gf_id = $self->param('gf_id');
+    my $panel = $self->param('panel');
+    my $allelic_requirement_attrib = $self->param('allelic_requirement_attrib');
+    my $mutation_consequence_attrib = $self->param('mutation_consequence_attrib');
+
+    my $gfd_model = $self->model('genomic_feature_disease');
+
+    my $duplicated_gfds = $gfd_model->fetch_all_duplicated_LGM_entries_by_gene($gf_id, $panel, $allelic_requirement_attrib, $mutation_consequence_attrib);
+    $self->stash(duplicated_gfds => $duplicated_gfds);
+    $self->render(template => 'curation_all_duplicated_LGM_by_gene');
+  } else {
+    return $self->redirect_to("/gene2phenotype/");
+  }
+}
+
 sub restricted {
   my $self = shift;
   my $logged_in = $self->stash('logged_in');

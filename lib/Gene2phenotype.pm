@@ -202,6 +202,7 @@ sub startup {
   $r->get('/gene2phenotype/gfd/add')->to('genomic_feature_disease#add');
   $r->get('/gene2phenotype/gfd/delete')->to('genomic_feature_disease#delete');
   $r->get('/gene2phenotype/gfd/duplicate')->to('genomic_feature_disease#duplicate');
+  $r->get('/gene2phenotype/gfd/merge_duplicated_LGM')->to('genomic_feature_disease#merge_duplicated_LGM');
 
   $r->get('/gene2phenotype/gene')->to('genomic_feature#show');
   $r->get('/gene2phenotype/disease')->to('disease#show');
@@ -381,6 +382,8 @@ sub startup {
 
   $r->get('/gene2phenotype/curator/no_publication')->to('curator#no_publication');
   $r->get('/gene2phenotype/curator/restricted_entries')->to('curator#restricted');
+  $r->get('/gene2phenotype/curator/show_all_duplicated_LGM_by_panel')->to('curator#show_all_duplicated_LGM_by_panel');
+  $r->get('/gene2phenotype/curator/show_all_duplicated_LGM_by_gene')->to('curator#show_all_duplicated_LGM_by_gene');
 
 }
 

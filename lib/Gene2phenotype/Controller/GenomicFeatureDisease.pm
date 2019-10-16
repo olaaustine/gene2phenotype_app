@@ -1,6 +1,6 @@
 package Gene2phenotype::Controller::GenomicFeatureDisease;
 use base qw(Gene2phenotype::Controller::BaseController);
-
+use Data::Dumper;
 sub show {
   my $self = shift;
   my $model = $self->model('genomic_feature_disease');  
@@ -186,5 +186,14 @@ sub update_visibility {
   $self->feedback_message('UPDATED_VISIBILITY_STATUS_SUC');
   return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
+
+sub merge_duplicated_LGM {
+  my $self = shift;
+  my $hash   = $self->req->params->to_hash;
+  print Dumper $hash;
+  return $self->redirect_to("/gene2phenotype/");
+
+}
+
 
 1;
