@@ -187,12 +187,31 @@ sub update_visibility {
   return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
 
-sub merge_duplicated_LGM {
+sub merge_all_duplicated_LGM_by_gene_by_panel {
   my $self = shift;
-  my $hash   = $self->req->params->to_hash;
-  print Dumper $hash;
-  return $self->redirect_to("/gene2phenotype/");
+  my $gf_id = $self->param('gf_id');
+  my $panel = $self->param('panel');
+  my $ar_attrib = $self->param('ar_attrib');
+  my $mc_attrib = $self->param('mc_attrib');
 
+  if ($self->session('logged_in')) {
+    my $hash   = $self->req->params->to_hash;
+    my $model = $self->model('genomic_feature_disease');  
+    my $email = $self->session('email');
+    my $gfd_ids = $self->every_param('gfd_id');
+    my $disease_id = $self->param('disease_id');
+
+    if (scalar @$gfd_ids < 2) {
+      $self->feedback_message('LGM_MERGE_ERROR_LESS_THAN_TWO_ENTRIES'); # need at least 2 entries for merging
+      return $self->redirect_to("/gene2phenotype/curator/show_all_duplicated_LGM_by_gene?gf_id=$gf_id&panel=$panel&allelic_requirement_attrib=$ar_attrib&mutation_consequence_attrib=$mc_attrib");
+    }
+    my $gfd = $model->merge_all_duplicated_LGM_by_panel_gene($email, $gf_id, $disease_id, $panel, $gfd_ids);
+    my $GFD_id = $gfd->dbID;
+    $self->feedback_message('LGM_MERGE_SUCCESS');
+    return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+  }
+  $self->feedback_message('LGM_MERGE_ERROR_NOT_LOGGED_IN');
+  return $self->redirect_to("/gene2phenotype/curator/show_all_duplicated_LGM_by_gene?gf_id=$gf_id&panel=$panel&allelic_requirement_attrib=$ar_attrib&mutation_consequence_attrib=$mc_attrib");
 }
 
 
