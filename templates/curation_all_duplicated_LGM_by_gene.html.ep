@@ -4,7 +4,7 @@
   %= form_for '/gene2phenotype/gfd/merge_duplicated_LGM' => begin 
     <% foreach my $gfd (@{$duplicated_gfds->{entries}}) { %>
       <div class="form-group">
-        %= check_box gfd_id => $gfd->{gfd_id}
+        %= check_box gfd_id => $gfd->{gfd_id}, checked => undef
         <b>Gene symbol:</b> <%= $gfd->{gene_symbol}%> <b>Disease name:</b> <%= $gfd->{disease_name}%>
         <ul>
           <li><b>Genotype Mechanism:</b></li>
@@ -25,9 +25,13 @@
     <% } %>
     <div class="form-group">
       <label>Select from disease names:</label>
-      %= select_field new_disease_name => $duplicated_gfds->{all_disease_names} 
+      %= select_field disease_id => $duplicated_gfds->{all_disease_name_2_id} 
     </div>
     %= hidden_field gf_id => $duplicated_gfds->{gf_id}
+    %= hidden_field panel => $duplicated_gfds->{panel}
+    %= hidden_field mc_attrib => $duplicated_gfds->{mc_attrib}
+    %= hidden_field ar_attrib => $duplicated_gfds->{ar_attrib}
+
     <button type="submit" class="btn btn-primary">Merge</button>
   %end
 </div>
