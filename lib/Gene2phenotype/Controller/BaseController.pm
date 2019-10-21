@@ -53,6 +53,9 @@ our %MESSAGES = (
   PHENOTYPE_INFO_IN_DB_ERROR => {msg => 'Already in the list of phenotypes: XXX. Not part of HPO: XXX.', type => 'info' },
   DUPLICATED_ENTRY_SUC => {msg => 'Successfully duplicated entry.', type => 'success'},
   ENTRY_HAS_NOT_BEEN_DUPLICATED => {msg => 'The entry has not been duplicated.', type => 'info'},
+  LGM_MERGE_ERROR_LESS_THAN_TWO_ENTRIES => {msg => 'At least 2 entries are needed for merging.', type => 'danger'},
+  LGM_MERGE_ERROR_NOT_LOGGED_IN => {msg => 'You need to login in first in order to be able to merge.', type => 'danger'},
+  LGM_MERGE_SUCCESS => {msg => 'Successfully merged duplicated LGM entries', type => 'success'},
 );
 
 our @EXPORT_OK = (%MESSAGES); 
