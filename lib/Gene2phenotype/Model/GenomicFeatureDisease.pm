@@ -34,6 +34,9 @@ sub fetch_by_dbID {
 
   my $disease_name = $GFD->get_Disease->name; 
   my $disease_id = $GFD->get_Disease->dbID;
+
+  my $disease_name_synonyms = $self->_get_disease_name_synonyms($GFD);
+
   my $disease_ontology_accessions = $self->_get_disease_ontology_accessions($GFD); 
 
   my $GFD_comments = $self->_get_GFD_comments($GFD);
@@ -57,6 +60,7 @@ sub fetch_by_dbID {
     gene_id => $gene_id,
     disease_name => $disease_name,
     disease_id => $disease_id,
+    disease_name_synonyms => $disease_name_synonyms,
     ontology_accessions => $disease_ontology_accessions,
     authorised => $authorised,
     GFD_id => $dbID,
@@ -267,13 +271,14 @@ sub fetch_all_duplicated_LGM_entries_by_gene {
     };
   
   }
+  my @sorted_all_disease_names = sort {$a->[0] cmp $b->[0]} @all_disease_names;
   return {
     gf_id => $gf_id,
     panel => $panel,
     mc_attrib => $mutation_consequence_attrib,
     ar_attrib => $allelic_requirement_attrib,
     entries => \@entries,
-    all_disease_name_2_id => \@all_disease_names,
+    all_disease_name_2_id => \@sorted_all_disease_names,
   };
 }
 
@@ -387,6 +392,20 @@ sub _get_GFD_category {
   my $GFD = shift;
   my $category = $GFD->confidence_category || 'Not assigned';
   return $category;
+}
+
+sub _get_disease_name_synonyms {
+  my $self = shift;
+  my $GFD = shift;
+  my @synonyms = ();
+  my $gfd_disease_synonyms = $GFD->get_all_GFDDiseaseSynonyms;
+  foreach my $gfd_disease_synonym (sort {$a->synonym cmp $b->synonym} @{$gfd_disease_synonyms}) {
+    push @synonyms, {
+      synonym => $gfd_disease_synonym->synonym,
+      gfd_disease_synonym_id => $gfd_disease_synonym->dbID,
+    };
+  }
+  return \@synonyms;
 }
 
 sub _get_GFD_action_attributes_list {
