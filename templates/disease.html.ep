@@ -54,4 +54,12 @@
       </div>
     %end
   </div>
+  <% if (scalar @{$gfd->{disease_name_synonyms}}) { %>
+    <h4>Disease name synonyms</h4>   
+    <ul id="disease_name_synonym_list">
+      <% foreach my $synonym (@{$gfd->{disease_name_synonyms}}) { %>
+        <li><%= $synonym->{synonym} %></li>
+      <% } %>
+    </ul>
+  <% } %>
 </div>
