@@ -269,12 +269,31 @@ sub fetch_all_duplicated_LGM_entries_by_gene {
   }
   return {
     gf_id => $gf_id,
+    panel => $panel,
+    mc_attrib => $mutation_consequence_attrib,
+    ar_attrib => $allelic_requirement_attrib,
     entries => \@entries,
-    all_disease_names => \@all_disease_names,
+    all_disease_name_2_id => \@all_disease_names,
   };
 }
 
+sub merge_all_duplicated_LGM_by_panel_gene {
+  my $self = shift;
+  my $email = shift;
+  my $gf_id = shift;
+  my $disease_id = shift;
+  my $panel = shift;
+  my $gfd_ids = shift;
 
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease');
+  my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
+  my $user = $user_adaptor->fetch_by_email($email);
+
+  my $gfd = $GFD_adaptor->_merge_all_duplicated_LGM_by_panel_gene($user, $gf_id, $disease_id, $panel, $gfd_ids);
+
+  return $gfd;
+}
 
 sub fetch_by_panel_GenomicFeature_Disease {
   my $self = shift;
@@ -490,7 +509,6 @@ sub _get_disease_ontology_accessions {
   }
 
   @ontology_accessions_tmpl = sort {$a->{name} cmp $b->{name}} @ontology_accessions_tmpl; 
-
 
   return \@ontology_accessions_tmpl;
 }
