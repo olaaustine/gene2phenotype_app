@@ -31,8 +31,6 @@
 
   <p>The G2P plugin filters input variants on allele frequencies. The allele frequencies are retrieved from major genotyping projects like the 1000 Genomes project, ESP and gnomAD. The VEP provides a cache which contains allele frequencies in order to speed up the variant annotation. VEP's cache currently contains only frequency data for alleles that have been submitted to dbSNP.</p>
 
-  <p>The gnomAD's full data set has not been submitted to dbSNP and incorporated into Ensembl for release/90. As a consequence, the frequency for some gnomAD alleles may be missing from VEP's cache data.</p>
-
   <p>It is possible to retrieve allele frequencies for input variants that are not yet in dbSNP from VCF files. In order to enable the functionality add af_from_vcf=1 to the vep command: <pre>./vep -i input.vcf --plugin G2P,file='DDG2P_11_7_2017.csv,af_from_vcf=1'</pre></p>
 
   <div class="accordion">
@@ -56,34 +54,34 @@
       <tr><td>EUR</td><td>1000GENOMES:phase_3:EUR</td><td>VEP cache</td></tr>
       <tr><td>SAS</td><td>1000GENOMES:phase_3:SAS</td><td>VEP cache</td></tr>
       <tr><td>gnomAD</td><td>Genome Aggregation Database:Total</td><td>VEP cache</td></tr>
-      <tr><td>gnomAD_AFR</td><td>Genome Aggregation Database exomes:African/African American</td><td>VEP cache</td></tr>
-      <tr><td>gnomAD_AMR</td><td>Genome Aggregation Database exomes:Latino</td><td>VEP cache</td></tr>
-      <tr><td>gnomAD_ASJ</td><td>Genome Aggregation Database exomes:Ashkenazi Jewish</td><td>VEP cache</td></tr>
-      <tr><td>gnomAD_EAS</td><td>Genome Aggregation Database exomes:East Asian</td><td>VEP cache</td></tr>
-      <tr><td>gnomAD_FIN</td><td>Genome Aggregation Database exomes:Finnish</td><td>VEP cache</td></tr>
-      <tr><td>gnomAD_NFE</td><td>Genome Aggregation Database exomes:Non-Finnish European</td><td>VEP cache</td></tr>
-      <tr><td>gnomAD_OTH</td><td>Genome Aggregation Database exomes:Other (population not assigned)</td><td>VEP cache</td></tr>
-      <tr><td>gnomAD_SAS</td><td>Genome Aggregation Database exomes:South Asian</td><td>VEP cache</td></tr>
+      <tr><td>gnomAD_AFR</td><td>Genome Aggregation Database exomes r2.1:African/African American</td><td>VEP cache</td></tr>
+      <tr><td>gnomAD_AMR</td><td>Genome Aggregation Database exomes r2.1:Latino</td><td>VEP cache</td></tr>
+      <tr><td>gnomAD_ASJ</td><td>Genome Aggregation Database exomes r2.1:Ashkenazi Jewish</td><td>VEP cache</td></tr>
+      <tr><td>gnomAD_EAS</td><td>Genome Aggregation Database exomes r2.1:East Asian</td><td>VEP cache</td></tr>
+      <tr><td>gnomAD_FIN</td><td>Genome Aggregation Database exomes r2.1:Finnish</td><td>VEP cache</td></tr>
+      <tr><td>gnomAD_NFE</td><td>Genome Aggregation Database exomes r2.1:Non-Finnish European</td><td>VEP cache</td></tr>
+      <tr><td>gnomAD_OTH</td><td>Genome Aggregation Database exomes r2.1:Other (population not assigned)</td><td>VEP cache</td></tr>
+      <tr><td>gnomAD_SAS</td><td>Genome Aggregation Database exomes r2.1:South Asian</td><td>VEP cache</td></tr>
       <tr><td>TOPMed</td><td>Trans-Omics for Precision Medicine (TOPMed) Program</td><td>VCF file</td></tr>
       <tr><td>ALSPAC</td><td>UK10K:ALSPAC cohort</td><td>VCF file</td></tr>
       <tr><td>TWINSUK</td><td>UK10K:TWINSUK cohort</td><td>VCF file</td></tr>
-      <tr><td>gnomADe:AFR</td><td>Genome Aggregation Database exomes v170228</td><td>VCF file</td></tr>
-      <tr><td>gnomADe:ALL</td><td>Genome Aggregation Database exomes v170228</td><td>VCF file</td></tr>
-      <tr><td>gnomADe:AMR</td><td>Genome Aggregation Database exomes v170228</td><td>VCF file</td></tr>
-      <tr><td>gnomADe:ASJ</td><td>Genome Aggregation Database exomes v170228</td><td>VCF file</td></tr>
-      <tr><td>gnomADe:EAS</td><td>Genome Aggregation Database exomes v170228</td><td>VCF file</td></tr>
-      <tr><td>gnomADe:FIN</td><td>Genome Aggregation Database exomes v170228</td><td>VCF file</td></tr>
-      <tr><td>gnomADe:NFE</td><td>Genome Aggregation Database exomes v170228</td><td>VCF file</td></tr>
-      <tr><td>gnomADe:OTH</td><td>Genome Aggregation Database exomes v170228</td><td>VCF file</td></tr>
-      <tr><td>gnomADe:SAS</td><td>Genome Aggregation Database exomes v170228</td><td>VCF file</td></tr>
-      <tr><td>gnomADg:AFR</td><td>Genome Aggregation Database genomes v170228:African/African American</td><td>VCF file</td></tr>
-      <tr><td>gnomADg:ALL</td><td>Genome Aggregation Database genomes v170228:All gnomAD genomes individuals</td><td>VCF file</td></tr>
-      <tr><td>gnomADg:AMR</td><td>Genome Aggregation Database genomes v170228:Latino</td><td>VCF file</td></tr>
-      <tr><td>gnomADg:ASJ</td><td>Genome Aggregation Database genomes v170228:Ashkenazi Jewish</td><td>VCF file</td></tr>
-      <tr><td>gnomADg:EAS</td><td>Genome Aggregation Database genomes v170228:East Asian</td><td>VCF file</td></tr>
-      <tr><td>gnomADg:FIN</td><td>Genome Aggregation Database genomes v170228:Finnish</td><td>VCF file</td></tr>
-      <tr><td>gnomADg:NFE</td><td>Genome Aggregation Database genomes v170228:Non-Finnish European</td><td>VCF file</td></tr>
-      <tr><td>gnomADg:OTH</td><td>Genome Aggregation Database genomes v170228:Other (population not assigned)</td><td>VCF file</td></tr>
+      <tr><td>gnomADe:afr</td><td>Genome Aggregation Database exomes r2.1</td><td>VCF file</td></tr>
+      <tr><td>gnomADe:ALL</td><td>Genome Aggregation Database exomes r2.1</td><td>VCF file</td></tr>
+      <tr><td>gnomADe:amr</td><td>Genome Aggregation Database exomes r2.1</td><td>VCF file</td></tr>
+      <tr><td>gnomADe:asj</td><td>Genome Aggregation Database exomes r2.1</td><td>VCF file</td></tr>
+      <tr><td>gnomADe:eas</td><td>Genome Aggregation Database exomes r2.1</td><td>VCF file</td></tr>
+      <tr><td>gnomADe:fin</td><td>Genome Aggregation Database exomes r2.1</td><td>VCF file</td></tr>
+      <tr><td>gnomADe:nfe</td><td>Genome Aggregation Database exomes r2.1</td><td>VCF file</td></tr>
+      <tr><td>gnomADe:oth</td><td>Genome Aggregation Database exomes r2.1</td><td>VCF file</td></tr>
+      <tr><td>gnomADe:sas</td><td>Genome Aggregation Database exomes r2.1</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:afr</td><td>Genome Aggregation Database genomes r2.1:African/African American</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:ALL</td><td>Genome Aggregation Database genomes r2.1:All gnomAD genomes individuals</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:amr</td><td>Genome Aggregation Database genomes r2.1:Latino</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:asj</td><td>Genome Aggregation Database genomes r2.1:Ashkenazi Jewish</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:eas</td><td>Genome Aggregation Database genomes r2.1:East Asian</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:fin</td><td>Genome Aggregation Database genomes r2.1:Finnish</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:nfe</td><td>Genome Aggregation Database genomes r2.1:Non-Finnish European</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:oth</td><td>Genome Aggregation Database genomes r2.1:Other (population not assigned)</td><td>VCF file</td></tr>
     </tbody>
   </table> 
   </div>
