@@ -21,11 +21,79 @@
 
   <h3>Software</h3>
   <h4>Installing and running the VEP and G2P VEP plugin</h4>
-  <p>For installation and running the VEP script please refer to the <a href="https://github.com/Ensembl/ensembl-vep" target="_blank">VEP git repository</a> and <a href="http://www.ensembl.org/info/docs/tools/vep/script/vep_options.html" target="_blank">VEP documentation pages</a>. Plugins are installed and configured during the VEP installation. The <a href="https://github.com/Ensembl/VEP_plugins/blob/release/93/G2P.pm" target="_blank">G2P VEP plugin</a> is located in the VEP plugins repository.</p>
+  <p>For installation and running the VEP script please refer to the <a href="https://github.com/Ensembl/ensembl-vep" target="_blank">VEP git repository</a> and <a href="http://www.ensembl.org/info/docs/tools/vep/script/vep_options.html" target="_blank">VEP documentation pages</a>. Plugins are installed and configured during the VEP installation. The <a href="https://github.com/Ensembl/VEP_plugins/blob/release/98/G2P.pm" target="_blank">G2P VEP plugin</a> is located in the VEP plugins repository.</p>
  
   <h4>To run the G2P VEP plugin add the following argument to the VEP command:</h4>
-  <pre>./vep -i input.vcf --plugin G2P,file='DDG2P_11_7_2017.csv',log_dir='g2p_log_dir',txt_report='report.txt',html_report='report.html'</pre>
-  <p>The options that can be added to the plugin command are listed and explained in the <a href="https://github.com/Ensembl/VEP_plugins/blob/release/93/G2P.pm" target="_blank">G2P VEP plugin module</a>.</p>
+  <pre>./vep -i input.vcf --plugin G2P,file='DDG2P.csv'</pre>
+  <p>Options are passed to the plugin as key=value pairs</p>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Key</th>
+        <th scope="col">Description</th>
+        <th scope="col">Default</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">file</th>
+        <td>Path to G2P data file. The file needs to be uncompressed.<br>- Download from http://www.ebi.ac.uk/gene2phenotype/downloads<br>- Download from PanelApp</td>
+        <td></td>
+      </tr>
+      <tr>
+        <th scope="row">af_monoallelic</th>
+        <td>maximum allele frequency for inclusion for monoallelic genes</td>
+        <td>0.0001</td>
+      </tr>
+      <tr>
+        <th scope="row">af_biallelic</th>
+        <td>maximum allele frequency for inclusion for biallelic genes</td>
+        <td>0.005</td>
+      </tr>
+      <tr>
+        <th scope="row">confidence_levels</th>
+        <td>Confidence levels to include: confirmed, probable, possible, both RD and IF. Separate multiple values with '&'.<br> https://www.ebi.ac.uk/gene2phenotype/terminology</td>
+        <td>confirmed, probable</td>
+      </tr>
+      <tr>
+        <th scope="row">all_confidence_levels</th>
+        <td>Set value to 1 to include all confidence levels: confirmed, probable and possible</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <th scope="row">af_from_vcf</th>
+        <td>set value to 1 to include allele frequencies from VCF file.</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <th scope="row">af_from_vcf_keys</th>
+        <td>Select VCF collections. Separate multiple values with '&'.
+        </td>
+        <td>topmed, uk10k, gnomADe, gnomADg
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">types</th>
+        <td>SO consequence types to include. Separate multiple values with '&'.</td>
+        <td>splice_donor_variant, splice_acceptor_variant, stop_gained, frameshift_variant, stop_lost, initiator_codon_variant, inframe_insertion, inframe_deletion, missense_variant, coding_sequence_variant, start_lost, transcript_ablation, transcript_amplification, protein_altering_variant</td>
+      </tr>
+      <tr>
+        <th scope="row">log_dir</td>
+        <td>The log_dir is required to store log_files which are used for writting intermediate results. The log_files can be consulted for any frequency filtering decisions.</td>
+        <td>current_working_dir/g2p_log_dir_[year]_[mon]_[mday]_[hour]_[min]_[sec]</td>
+      </tr>
+      <tr>
+        <th scope="row">txt_report</td>
+        <td>Write all G2P complete genes and attributes to txt file</td>
+        <td>current_working_dir/txt_report_[year]_[mon]_[mday]_[hour]_[min]_[sec].txt</td>
+      </tr>
+      <tr>
+        <th scope="row">html_report</td>
+        <td>Write all G2P complete genes and attributes to html file</td>
+        <td>current_working_dir/html_report_[year]_[mon]_[mday]_[hour]_[min]_[sec].html</td>
+      </tr>
+    </tbody>
+  </table>
 
   <h4>Allele frequencies from reference populations</h4>
 
@@ -107,7 +175,7 @@
   </ul>
   <h4>Remarks</h4>
   <ul>
-    <li>The VEP can look up existing annotations from locally installed cache files in order to increase the speed of computation. The VEP installation process will guide you through the cache file selection and installation process. Converting your cache files with tabix will increase the speed of retrieving existing co-located variants even more. You need to run the convert_cache.pl script which is located in the ensembl-vep repository. <pre>perl convert_cache.pl -species [species] -version [vep_version]</pre></li>
+    <li>VEP can look up existing annotations from locally installed cache files in order to increase the speed of computation. The VEP installation process will guide you through the cache file selection and installation process. 
     <li><a href="http://www.ensembl.org/info/docs/tools/vep/script/vep_other.html#faster" target="_blank">More ways to make sure that your VEP installation is running as fast as possible.</a></li>
   </ul>
 
