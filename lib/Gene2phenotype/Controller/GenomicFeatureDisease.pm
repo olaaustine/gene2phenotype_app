@@ -14,8 +14,12 @@ sub show {
   }
   # check if GFD is authorised
   my $logged_in = $self->session('logged_in'); 
-
+  my $authorised_panels = $self->stash('authorised_panels');
   my $gfd = $model->fetch_by_dbID($dbID, $logged_in); 
+  my $panel = $gfd->{panel};
+  if (!grep {$panel eq $_} @$authorised_panels) {
+    return $self->redirect_to("/gene2phenotype/");
+  }
 
   $self->stash(gfd => $gfd);
 
