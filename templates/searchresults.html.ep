@@ -15,13 +15,7 @@
         <h4>Genes:</h4>
         <ul>
           <% foreach my $gene (@{$search_results->{gene_names}}) { %>
-            <li>
-               %= form_for '/gene2phenotype/gene' => (id => $gene->{dbID}) => begin
-                 %= hidden_field search_type => $gene->{search_type}
-                 %= hidden_field dbID => $gene->{dbID}
-                <%= link_to '#' => ( onclick => "document.getElementById($gene->{dbID}).submit();") => begin %><%== $gene->{gene_symbol} %><% end %>
-               % end
-            </li>
+            <li> <%== $gene->{gene_symbol} %> </li>
             <% if ($gene->{gfd_results}) { %>
               <ul>
                 <% foreach my $gfd (@{$gene->{gfd_results}}) {
