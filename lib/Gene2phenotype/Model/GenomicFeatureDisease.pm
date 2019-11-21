@@ -1,6 +1,5 @@
 package Gene2phenotype::Model::GenomicFeatureDisease; 
 use Mojo::Base 'MojoX::Model';
-
 sub fetch_by_dbID {
   my $self = shift;
   my $dbID = shift;
@@ -53,6 +52,7 @@ sub fetch_by_dbID {
   my $add_GFD_action = $self->_get_GFD_action_attributes_list('add');
   my $add_AR_loop = $add_GFD_action->{AR};
   my $add_MC_loop = $add_GFD_action->{MC};
+  my $gf_statistics = $self->_get_GF_statistics($GFD);
 
   return {
     panel => $panel,
@@ -76,6 +76,7 @@ sub fetch_by_dbID {
     add_AR_loop => $add_AR_loop,
     add_MC_loop => $add_MC_loop,
     logs => \@logs,
+    statistics => $gf_statistics,
   };
 
 }
@@ -741,6 +742,31 @@ sub _get_edit_organs {
   }
   return \@organs;
 }
+
+sub _get_GF_statistics {
+  my $self = shift;
+  my $GFD = shift;
+  my $registry = $self->app->defaults('registry');
+  my $genomic_feature_statistic_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureStatistic');
+  my $GF = $GFD->get_GenomicFeature;
+  my $panel_attrib = $GFD->panel_attrib;
+  my $genomic_feature_statistics = $genomic_feature_statistic_adaptor->fetch_all_by_GenomicFeature_panel_attrib($GF, $panel_attrib);
+
+  if (scalar @$genomic_feature_statistics) {
+    my @statistics = ();
+    foreach (@$genomic_feature_statistics) {
+      my $clustering = ( $_->clustering) ? 'Mutatations are considered clustered.' : '';
+      push @statistics, {
+        'p-value' => $_->p_value,
+        'dataset' => $_->dataset,
+        'clustering' => $clustering,
+      }
+    }
+    return \@statistics;
+  }
+  return [];
+}
+
 
 sub get_phenotype_ids_list {
   my $self = shift;
