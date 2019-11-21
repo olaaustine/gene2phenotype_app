@@ -42,6 +42,14 @@
 
   %= include 'duplicate_entry'
   %= include 'gene'
+  <% if ($gfd->{statistics}) {  %>
+    <dl>
+      <dt>Genome-wide significance</dt>
+      <% foreach my $statistic (@{$gfd->{statistics}}) { %>
+        <dd>Minimum <em>P</em>-value <%= $statistic->{'p-value'} %> from testing the  <%= $statistic->{dataset} %> dataset. <%= $statistic->{'clustering'} %> <a href="https://www.nature.com/articles/nature21062" target="_blank" title="Prevalence and architecture of de novo mutations in developmental disorders">Source</a></dd>
+      <% } %>
+    </dl>
+  <% } %>
   %= include 'disease'
   <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>
     %= include 'comments'
