@@ -42,7 +42,7 @@
 
   %= include 'duplicate_entry'
   %= include 'gene'
-  <% if ($gfd->{statistics}) {  %>
+  <% if (scalar @{$gfd->{statistics}} > 0) {  %>
     <dl>
       <dt>Genome-wide significance</dt>
       <% foreach my $statistic (@{$gfd->{statistics}}) { %>
