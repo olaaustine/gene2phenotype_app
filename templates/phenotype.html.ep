@@ -1,6 +1,5 @@
 <div>
   <h3><a class="anchor" name="phenotypes">Phenotypes</a><a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a></h3>
-
   <div id='phenotype_wrapper'>
     <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>
       <div id='phenotype_first'>
@@ -26,8 +25,20 @@
         % } 
       </div>
 
-      <label>List of phenotypes that have been assigned to the G2P entry.</label>
-
+    <p>
+      <% my $link = "https://decipher.sanger.ac.uk/gene/" . $gene->{gene_symbol} . "#phenotypes"; %>
+      <%= link_to $link => (target => '_blank') => begin %>Look up phenotypes associated with <%= $gfd->{gene_symbol} %> in Decipher <% end %>
+    </p>
+    
+    <% if (scalar @{$gfd->{phenotypes}} > 0) { %>
+      <p>
+        <label>List of phenotypes that have been assigned to the G2P entry.</label>
+      </p>
+    <% } else { %>
+      <p>
+        <label>No phenotypes have been assigned to the G2P entry yet.</label>
+      </p>
+    <% } %>
       <% foreach my $phenotype (@{$gfd->{phenotypes}}) { %>
 
         <div class="phenotype_list">
