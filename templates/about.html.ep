@@ -3,10 +3,28 @@
   <h3>About</h3>
   <p>G2P is a publicly-accessible online system designed to facilitate the development, validation, curation and distribution of large-scale, evidence-based datasets for use in diagnostic variant filtering. Each G2P entry associates an allelic requirement and a mutational consequence at a defined locus with a disease entity. A confidence level and evidence link are assigned to each entry.</p>
   <h3>Curators</h3>
+  <h4>Cancer Panel</h4>
+  <ul class="list-unstyled">
+    <li><a href="https://www.sanger.ac.uk/people/faculty/honorary-faculty/helen-firth">Helen V Firth</a></li>
+  </ul> 
   <h4>DD Panel</h4>
   <ul class="list-unstyled">
     <li><a href="https://www.sanger.ac.uk/people/faculty/honorary-faculty/helen-firth">Helen V Firth</a></li>
     <li><a href="https://www.ed.ac.uk/profile/david-fitzpatrick">David FitzPatrick</a></li>
+    <li>Michael Yates</li>
+  </ul>
+  <h4>Eye Panel</h4>
+  <ul class="list-unstyled">
+    <li><a href="https://www.research.manchester.ac.uk/portal/graeme.black.html">Graeme Black</a></li>
+    <li>Ana Carvalho</li>
+    <li>Eva Lenassi</li>
+    <li>Panagiotis Sergouniotis</li>
+  </ul>
+  <h4>Skin Panel</h4>
+  <ul class="list-unstyled">
+    <li>Anna Dubois</li>
+    <li>Richard Martin</li>
+    <li><a href="https://www.ncl.ac.uk/medicalsciences/research/groups/profile/neilrajan.html#background">Neil Rajan</a></li>
   </ul>
 </div>
 %= include 'footer'
