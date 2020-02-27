@@ -3,7 +3,7 @@
     <div class="container">
       <div class="container">
         <ul class="bs-docs-footer-links text-muted">
-          <li>Copyright © EMBL-EBI 2019</li>
+          <li>Copyright © EMBL-EBI 2020</li>
           <li>&middot;</li>
           <li>
             %= link_to Contact  => '/gene2phenotype/help'
