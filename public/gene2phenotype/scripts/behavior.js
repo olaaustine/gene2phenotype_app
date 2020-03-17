@@ -146,7 +146,9 @@ function __highlight(s, t) {
  
   $("#select_panel").change(function(){
     var value =  $(this).val(); 
+console.log(value);
     var img_src = '/gene2phenotype/images/G2P-' + value + '.png';
+    console.log(img_src);
     $('img[alt="panel_image"]').attr('src', img_src);
   }); 
 
@@ -193,7 +195,7 @@ function __highlight(s, t) {
   $('.tm_variants_table').DataTable();
 
   var index;
-  var panels = ["DD", "Cancer", "Ear", "Prenatal", "Eye", "Skin", "NeonatalRespiratory", "Rapid_PICU_NICU", "Demo"];
+  var panels = ["DD", "Cancer", "Ear", "Prenatal", "Eye", "Skin", "NeonatalRespiratory", "Rapid_PICU_NICU", "Demo", "PaedNeuro"];
   for (index = 0; index < panels.length; ++index) {
     $('#curator_table_' + panels[index]).DataTable();
   }
