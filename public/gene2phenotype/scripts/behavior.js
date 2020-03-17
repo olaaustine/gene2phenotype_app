@@ -146,9 +146,7 @@ function __highlight(s, t) {
  
   $("#select_panel").change(function(){
     var value =  $(this).val(); 
-console.log(value);
     var img_src = '/gene2phenotype/images/G2P-' + value + '.png';
-    console.log(img_src);
     $('img[alt="panel_image"]').attr('src', img_src);
   }); 
 
