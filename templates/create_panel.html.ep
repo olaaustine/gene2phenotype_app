@@ -32,15 +32,7 @@ Once you started curating your panel you can download the annotations and use it
   %= image '/gene2phenotype/images/publication.png', alt => 'publication', width => '100%'
   <ol>
     <li>We store the links to the publications (via PMID) that provide evidence for a specific gene-disease pair. A new publication is retrived by its PMID using Europe PMC's REST API.</li>
-    <li>The title of the added publication is listed and links out to Europe PMC. A publication can be deleted, you can add comments for a publication and you can show text mining results from Pubtator.</li>
-  </ol>
-  <h4>Add phenotypes from text mining results</h4>
-  %= image '/gene2phenotype/images/pubtator.png', alt => 'pubtator', width => '100%'
-  <ol>
-    <li>For each publication we import text mining results from Pubtator.</li>
-    <li>PubTator annotates gene and disease terms in the abstract.</li>
-    <li>We implement a mapping between MeSH terms assigned by PubTator to HPO terms using EBI's ontology xref service. HPO terms can then be added to the list of phenotypes associated with the gene-disease pair.</li>
-    <li>Hide text mining results.</li>
+    <li>The title of the added publication is listed and links out to Europe PMC. A publication can be deleted and you can add comments for a publication.</li>
   </ol>
   <h4>Add phenotypes from HPO</h4>
   %= image '/gene2phenotype/images/phenotype.png', alt => 'phenotype', width => '100%'
