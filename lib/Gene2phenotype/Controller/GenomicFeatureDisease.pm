@@ -51,8 +51,7 @@ sub show {
 
   my $gene_id = $gfd->{gene_id};
   my $gene_attribs = $GF_model->fetch_by_dbID($gene_id);
-  my $variations = $GF_model->fetch_variants($gene_id);
-  $self->stash(gene => $gene_attribs, variations => $variations);
+  $self->stash(gene => $gene_attribs);
 
   $self->session(last_url => "/gene2phenotype/gfd?GFD_id=$dbID");
   $self->render(template => 'gfd');
