@@ -24,5 +24,4 @@
   </div>
   <div class="clear"></div>
 </div>
-%= include 'variants'
 %= include 'footer'
