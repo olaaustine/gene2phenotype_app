@@ -11,7 +11,6 @@ sub add_publication {
 
   my $registry = $self->app->defaults('registry');  
   my $GFDPublication_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseasePublication');
-  my $text_mining_disease_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'TextMiningDisease');
   my $publication_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'Publication');
 
   my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
@@ -42,7 +41,6 @@ sub add_publication {
     $GFDPublication_adaptor->store($GFDPublication);
   }
 
-  eval {  $text_mining_disease_adaptor->store_all_by_Publication($publication); }; warn $@ if $@;
 }
 
 sub delete {
