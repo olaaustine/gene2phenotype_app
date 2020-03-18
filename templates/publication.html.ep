@@ -86,10 +86,7 @@
       %end
 
       <input type="button" name="show_add_comment" value="Add New Comment" class="btn btn-primary btn-sm align_buttons_left show_add_comment"/>
-      <input type="button" name="show_pubtator_annotations" value="Show PubTator Text Mining Results" class="btn btn-primary btn-sm show_pubtator_annotations align_buttons_left"/>
-
       <div class="clear"></div>
-
       <div class='add_comment'>
         <h4>Add comment:</h4>
         %= form_for '/gene2phenotype/gfd/publication/add_comment' => begin
@@ -100,123 +97,6 @@
           <input type="button" value="Discard" class="btn btn-primary btn-sm discard_add_comment"/>
         %end
       </div> <!--div class add comment-->
-
-
-      <div class="tm_annotations">
-        <div class="tm_pmid"><%= $publication->{pmid} %></div>
-        <div class="tm">
-          <div class="tm_pubtator">
-            <span>
-              <% my $link = "https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/PubTator/curator_identifier.cgi?pmid=" . $publication->{pmid} . "&searchtype=PubMed_Search&query=" . $publication->{pmid} . "&page=1&Species_display=1&Gene_display=1&Chemical_display=1&Disease_display=1&Mutation_display=1&tax="; %>
-              <%= link_to $link => (target => '_blank') =>  begin %>
-                %= image '/gene2phenotype/images/pubtator_logo.png', title => 'View annotations in Pubtator', class => 'pubtator_img'
-              <% end %>
-            </span>
-          </div>
-
-          <div class="tm_vep">
-            <% if (@{$publication->{text_mining_results}}) { %>
-              <div class="accordion">
-                <h3>VEP annotations:</h3>
-                <div>
-                  <div class="table-responsive">
-                    <table class='table'>
-                    <thead>
-                    <tr>
-                    <th>Location</th>
-                    <th>Text mining ID</th>
-                    <th>Alleles REF/ALT</th>
-                    <th>Consequence</th>
-                    <th>Transcript ID</th>
-                    <th>Transcript biotype</th>
-                    <th>PolyPhen prediction</th>
-                    <th>SIFT prediction</th>
-                    <th>Colocated variants in Ensembl</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <% foreach my $variation (@{$publication->{text_mining_results}}) { %>
-                    <tr>
-                    <td><%= $variation->{location} %></td>
-                    <td><%= $variation->{text_mining_hgvs} %></td>
-                    <td><%= $variation->{allele_string} %></td>
-                    <td><%= $variation->{consequence} %></td>
-                    <td><%= $variation->{transcript_stable_id} %></td>
-                    <td><%= $variation->{biotype} %></td>
-                    <td><%= $variation->{polyphen_prediction} %></td>
-                    <td><%= $variation->{sift_prediction} %></td>
-                    <td><%== join('<br>', @{$variation->{colocated_variants}}) %></td>
-                    </tr>
-                    <% } %>
-                    </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            <% } %>
-          </div> <!--div tmp vep-->
-          <div class="tm_disease">
-            <% if (@{$publication->{text_mining_disease_results}}) { %>
-              <div class="accordion">
-                <h3>Disease/phenotype annotations:</h3>   
-                <div>
-                  %= form_for '/gene2phenotype/gfd/phenotype/add' => begin
-                  <div class="table-responsive">
-                    <table class='table'>
-                    <thead>
-                    <tr>
-                    <th>Annotated text</th>
-                    <th>MeSH term</th>
-                    <th>HPO term</th>
-                    <th>Search and add HPO term</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <% foreach my $disease (@{$publication->{text_mining_disease_results}}) { %>
-                    <%  if ($disease->{is_GFD_phenotype}) { %>
-                      <tr class="success">
-                    <% } else { %>            
-                      <tr>
-                    <% } %>
-                    <td><%= $disease->{annotated_text} %></td>
-                    <td>
-                      <% my $url = "https://meshb-prev.nlm.nih.gov/record/ui?ui=" . $disease->{mesh_stable_id}; %>
-                      %= link_to $disease->{mesh_name} => $url
-                    </td>
-                    <td>
-                      <%  if ($disease->{has_hpo_term}) { %>
-                        <% my $url = "http://www.human-phenotype-ontology.org/hpoweb/showterm?id=" . $disease->{phenotype_id}; %>
-                        %= link_to $disease->{hpo_term} => $url
-                      <% } %>
-                    </td>
-                    <td>
-                      <%  if (!$disease->{is_GFD_phenotype}) { %>
-                        <div style="overflow: hidden; padding-right: .5em; width: 20em;">
-                          <%  if ($disease->{has_hpo_term}) { %> 
-                            <input type="search" id="query_phenotype_name" name="phenotype" value="<%==$disease->{hpo_term}%>" style='width:100%'/>
-                          <% } else {  %>
-                            <input type="search" id="query_phenotype_name" name="phenotype" value="" style='width:100%'/>
-                          <% } %>
-                        </div>
-                      <% } else {  %>
-                        Already in phenotype list
-                      <% } %>
-                    </td>
-                    </tr>
-                    <% } %>
-                    </tbody>
-                    </table>  
-                  <button type="submit" class="btn btn-primary btn-sm" id="fast_add_phenotype_button" style="float: right">Add</button>
-                  %= hidden_field GFD_id => $gfd->{GFD_id}
-                  %end
-                  </div> <!-- div table-responsive-->
-                </div>
-              </div> <!-- div accordion-->
-            <% } %>
-          </div> <!--div tmp disease-->
-        </div> <!--div class tm-->
-      </div> <!--div tm_annotations-->
-      <input type="button" name="hide_pubtator_annotations" value="Hide PubTator Text Mining Results" class="btn btn-primary btn-sm hide hide_pubtator_annotations align_buttons_left"/>
     </div> <!--div publication action-->
     <% } %>
   <% } %>
