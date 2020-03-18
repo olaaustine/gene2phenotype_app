@@ -539,91 +539,13 @@ sub _get_publications {
   my @publications = ();
 
   my $registry = $self->app->defaults('registry');
-  my $text_mining_variation_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'textminingvariation');
-  my $text_mining_disease_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'textminingdisease');
   my $phenotype_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'phenotype');
   my $GFD_phenotype_adaptor =  $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseasePhenotype');
 
   my $GFD_publications = $GFD->get_all_GFDPublications;
   foreach my $GFD_publication (sort {$a->get_Publication->title cmp $b->get_Publication->title} @$GFD_publications) {
     my $publication = $GFD_publication->get_Publication;
-    my $text_mining_variations = $text_mining_variation_adaptor->fetch_all_by_Publication($publication);
-    my @text_mining_variations_tmpl = ();
-    foreach my $variation (@$text_mining_variations) {
-      my $assembly = $variation->assembly;
-      my $seq_region_name = $variation->seq_region;
-      my $seq_region_start = $variation->seq_region_start;
-      my $seq_region_end = $variation->seq_region_end;
-
-      my $coords = "$seq_region_start-$seq_region_end";
-      if ($seq_region_start == $seq_region_end) {
-        $coords = $seq_region_start;
-      }
-
-      my $text_mining_hgvs = $variation->text_mining_hgvs;
-      my $ensembl_hgvs = $variation->ensembl_hgvs;
-
-      my $allele_string = $variation->allele_string;
-      my $consequence = $variation->consequence;
-      my @colocated_variants = ('-');
-      if ($variation->colocated_variants) {
-        @colocated_variants = ();
-        foreach my $v (split(',', $variation->colocated_variants)) {
-          if ($assembly eq 'GRCh38') {
-            push @colocated_variants,  "<a href=\"http://ensembl.org/Homo_sapiens/Variation/Explore?v=$v\" target=\"_blank\" >$v</a>";
-          } else {
-            push @colocated_variants,  "<a href=\"http://$assembly.ensembl.org/Homo_sapiens/Variation/Explore?v=$v\" target=\"_blank\" >$v</a>";
-          } 
-        }
-      }
-      my $transcript_stable_id = $variation->feature_stable_id;
-      my $biotype = $variation->biotype;
-      my $polyphen_prediction = $variation->polyphen_prediction || '-';
-      my $sift_prediction = $variation->sift_prediction || '-';
-      push @text_mining_variations_tmpl, {
-        location => "$assembly:$seq_region_name:$coords",
-        text_mining_hgvs => $text_mining_hgvs,
-        ensembl_hgvs => $ensembl_hgvs,
-        allele_string => $allele_string,
-        consequence => $consequence,
-        transcript_stable_id => $transcript_stable_id,
-        biotype => $biotype,
-        polyphen_prediction => $polyphen_prediction,
-        sift_prediction => $sift_prediction,
-        colocated_variants => \@colocated_variants,
-      };
-    }
-
-    my @text_mining_diseases = sort { $a->annotated_text cmp $b->annotated_text } @{$text_mining_disease_adaptor->fetch_all_by_Publication($publication)};
-    my @text_mining_diseases_tmpl = ();
     my @GFD_phenotype_ids = map {$_->phenotype_id} @{$GFD_phenotype_adaptor->fetch_all_by_GenomicFeatureDisease($GFD)};
-
-    foreach my $disease (@text_mining_diseases) {
-      my $tm_disease_id = $disease->text_mining_disease_id;
-      my $mesh_stable_id = $disease->mesh_stable_id;
-      $mesh_stable_id =~ s/MESH://;
-      my $mesh_name = $disease->mesh_name || 'No MESH name';
-      my $phenotype_id = $disease->phenotype_id;
-      my $annotated_text = $disease->annotated_text;
-      my $tm_row = {
-        mesh_stable_id => $mesh_stable_id,
-        mesh_name => $mesh_name,
-        annotated_text => $annotated_text,  
-      };
-
-      if ($phenotype_id) {
-        my $phenotype = $phenotype_adaptor->fetch_by_dbID($phenotype_id);
-        my $hpo_term = $phenotype->name;
-        my @is_GFD_phenotype = grep {$_ eq $phenotype_id} @GFD_phenotype_ids;
-        $tm_row->{has_hpo_term} = 1;
-        $tm_row->{phenotype_id} = $phenotype_id;
-        $tm_row->{hpo_term} = $hpo_term;
-        $tm_row->{is_GFD_phenotype} = (@is_GFD_phenotype) ? 1 : 0;
-      } else {
-        $tm_row->{has_hpo_term} = 0;
-      }
-      push @text_mining_diseases_tmpl, $tm_row;
-    }
 
     my $comments = $GFD_publication->get_all_GFDPublicationComments;
     my @comments_tmpl = ();
@@ -644,8 +566,6 @@ sub _get_publications {
     $title .= " ($source)" if ($source);
 
     push @publications, {
-      text_mining_results => \@text_mining_variations_tmpl, 
-      text_mining_disease_results => \@text_mining_diseases_tmpl, 
       comments => \@comments_tmpl,
       title => $title,
       pmid => $pmid,
