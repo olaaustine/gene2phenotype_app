@@ -9,6 +9,5 @@
   <p>You can direct any questions to <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a></p>
   <h5>Data</h5>
   <p>Phenotypes are annotated with vocabulary from <a href="https://academic.oup.com/nar/article/45/D1/D865/2574174/The-Human-Phenotype-Ontology-in-2017">The Human Phenotype Ontology</a></p>  
-  <p>We use <a href="http://europepmc.org/abstract/MED/31114887">PubTator</a> for automated extraction of phenotypes from publications</p>  
 </div>
 %= include 'footer'
