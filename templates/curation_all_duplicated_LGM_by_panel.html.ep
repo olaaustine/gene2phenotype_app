@@ -23,7 +23,7 @@
             <td> <%= $merge_entry->{count} %> </td>
             <td>
             %= form_for '/gene2phenotype/curator/show_all_duplicated_LGM_by_gene' => begin
-              <button type="submit" class="btn btn-primary btn-sm" id="go_to_merge_page_button">Go to merge page</button>
+              <button type="submit" class="btn btn-primary btn-sm" id="go_to_merge_page_button" formtarget="_blank">Go to merge page</button>
               %= hidden_field gf_id => $merge_entry->{gf_id}
               %= hidden_field panel => $merge_entry->{panel}
               %= hidden_field allelic_requirement_attrib => $merge_entry->{allelic_requirement_attrib}
