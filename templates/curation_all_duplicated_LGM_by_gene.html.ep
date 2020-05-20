@@ -1,6 +1,8 @@
 %= include 'header'
 %= include 'search'
 <div class="container">
+
+  <h3><%=$duplicated_gfds->{gene_symbol}%>, <%=$duplicated_gfds->{genotype}%>, <%=$duplicated_gfds->{mechanism}%></h3>
   %= form_for '/gene2phenotype/gfd/merge_duplicated_LGM' => begin 
     <% foreach my $gfd (@{$duplicated_gfds->{entries}}) { %>
       <div class="form-group">
@@ -34,5 +36,66 @@
 
     <button type="submit" class="btn btn-primary">Merge</button>
   %end
+
+
+  <% if (scalar @{$duplicated_gfds->{all_phenotypes}}) { %>
+    <h4>Phenotype overlap</h4>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <% foreach my $disease_name (sort keys %{$duplicated_gfds->{disease_name_2_gfd_id}}) { %>
+            <th scope="col"><%= $disease_name %></th>
+          <% } %>
+        </tr>
+      </thead>
+      <tbody>
+      <% foreach my $phenotype (sort @{$duplicated_gfds->{all_phenotypes}}) { %>
+        <tr>
+          <th><%= $phenotype %></th>
+          <% foreach my $disease_name (sort keys %{$duplicated_gfds->{disease_name_2_gfd_id}}) { %>
+            % my $gfd_id = $duplicated_gfds->{disease_name_2_gfd_id}->{$disease_name};
+            <% if ($duplicated_gfds->{phenotype_2_gfd_id}->{$phenotype}->{$gfd_id} ) { %>
+              <td class="success">YES</td>
+            <% } else { %>
+              <td class="danger">NO</td>
+            <% } %>
+          <% } %>
+        </tr>
+      <% } %> 
+      </tbody>
+    </table>
+  <% } %>
+
+
+  <% if (scalar @{$duplicated_gfds->{all_publications}}) { %>
+    <h4>Publication overlap</h4>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <% foreach my $disease_name (sort keys %{$duplicated_gfds->{disease_name_2_gfd_id}}) { %>
+            <th scope="col"><%= $disease_name %></th>
+          <% } %>
+        </tr>
+      </thead>
+      <tbody>
+      <% foreach my $publication (sort @{$duplicated_gfds->{all_publications}}) { %>
+        <tr>
+          <th><%= $publication %></th>
+          <% foreach my $disease_name (sort keys %{$duplicated_gfds->{disease_name_2_gfd_id}}) { %>
+            % my $gfd_id = $duplicated_gfds->{disease_name_2_gfd_id}->{$disease_name};
+            <% if ($duplicated_gfds->{publication_2_gfd_id}->{$publication}->{$gfd_id} ) { %>
+              <td class="success">YES</td>
+            <% } else { %>
+              <td class="danger">NO</td>
+            <% } %>
+          <% } %>
+        </tr>
+      <% } %> 
+      </tbody>
+    </table>
+  <% } %>
+
 </div>
 %= include 'footer'
