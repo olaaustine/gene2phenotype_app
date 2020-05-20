@@ -224,11 +224,23 @@ sub fetch_all_duplicated_LGM_entries_by_gene {
   my $registry = $self->app->defaults('registry');
   my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease');
   my $GF_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeature');
+  my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
+  my $genotype = $attribute_adaptor->attrib_value_for_id($allelic_requirement_attrib);
+  my $mechanism = $attribute_adaptor->attrib_value_for_id($mutation_consequence_attrib);
+
   my $genomic_feature = $GF_adaptor->fetch_by_dbID($gf_id);
+  my $gene_symbol = $genomic_feature->gene_symbol;
   my $gfds = $GFD_adaptor->fetch_all_by_GenomicFeature_panel($genomic_feature, $panel); 
 
   my @entries = ();
   my @all_disease_names = ();
+
+  my $phenotype_2_gfd_id = {};
+  my $publication_2_gfd_id = {};
+
+  my $gfd_id_2_disease_name = {};
+  my $disease_name_2_gfd_id = {};
+
   foreach my $gfd (@$gfds) {
     my $gfd_actions = $gfd->get_all_GenomicFeatureDiseaseActions;
     next unless (grep {$_->allelic_requirement_attrib == $allelic_requirement_attrib && $_->mutation_consequence_attrib == $mutation_consequence_attrib} @$gfd_actions);
@@ -238,6 +250,10 @@ sub fetch_all_duplicated_LGM_entries_by_gene {
     my $disease_id = $gfd->get_Disease->dbID;
     push @all_disease_names, [$disease_name => $disease_id];
     my $gfd_id = $gfd->dbID;
+
+    $gfd_id_2_disease_name->{$gfd_id} = $disease_name; 
+    $disease_name_2_gfd_id->{$disease_name} = $gfd_id;
+
     my @actions = ();
     foreach my $gfd_action (@$gfd_actions) {
       my $allelic_requirement = $gfd_action->allelic_requirement;
@@ -254,12 +270,15 @@ sub fetch_all_duplicated_LGM_entries_by_gene {
         $title .= " " . $publication->source;
       }
       push @publications, $title;
+      $publication_2_gfd_id->{$title}->{$gfd_id} = 1;
     }
 
     my @phenotypes = ();
     my $gfd_phenotypes = $gfd->get_all_GFDPhenotypes;
     foreach my $gfd_phenotype (@$gfd_phenotypes) {
-      push @phenotypes, $gfd_phenotype->get_Phenotype->name;
+      my $name = $gfd_phenotype->get_Phenotype->name;
+      push @phenotypes, $name;
+      $phenotype_2_gfd_id->{$name}->{$gfd_id} = 1;
     }
 
     push @entries, {
@@ -272,14 +291,27 @@ sub fetch_all_duplicated_LGM_entries_by_gene {
     };
   
   }
+
+  my @all_phenotypes = keys %$phenotype_2_gfd_id;
+  my @all_publications = keys %$publication_2_gfd_id;
+
   my @sorted_all_disease_names = sort {$a->[0] cmp $b->[0]} @all_disease_names;
   return {
+    gene_symbol => $gene_symbol,
+    genotype => $genotype,
+    mechanism => $mechanism, 
     gf_id => $gf_id,
     panel => $panel,
     mc_attrib => $mutation_consequence_attrib,
     ar_attrib => $allelic_requirement_attrib,
     entries => \@entries,
     all_disease_name_2_id => \@sorted_all_disease_names,
+    all_phenotypes => \@all_phenotypes,
+    all_publications => \@all_publications,
+    phenotype_2_gfd_id => $phenotype_2_gfd_id,
+    publication_2_gfd_id => $publication_2_gfd_id,
+    gfd_id_2_disease_name => $gfd_id_2_disease_name,
+    disease_name_2_gfd_id => $disease_name_2_gfd_id,
   };
 }
 
