@@ -37,7 +37,7 @@
             %= image '/gene2phenotype/images/EBI.png', alt => 'EBI', width => '20%', height => 'auto' 
           </li>
           <li>
-            %= image '/gene2phenotype/images/TGMI.png', alt => 'TGMI', width => '20%', height => 'auto' 
+            %= image '/gene2phenotype/images/TGMI.png', alt => 'TGMI', width => '40%', height => 'auto' 
           </li>
           <li>
             %= image '/gene2phenotype/images/wellcome_sanger.png', alt => 'sanger', width => '10%', height => 'auto' 
