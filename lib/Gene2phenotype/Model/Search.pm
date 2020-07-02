@@ -139,7 +139,13 @@ sub _get_gfd_results {
     my $disease_name = $disease->name;
     my $dbID = $gfd->dbID;
     my $panel = $gfd->panel;
-    push @gfd_results, {gene_symbol => $gene_symbol, disease_name => $disease_name, search_type => 'gfd', dbID => $dbID, GFD_panel => $panel};
+    my $actions = $gfd->get_all_GenomicFeatureDiseaseActions;
+
+    foreach my $action (@$actions) {
+      my $allelic_requirement = $action->allelic_requirement || 'not specified';
+      my $mutation_consequence = $action->mutation_consequence || 'not specified';  
+      push @gfd_results, {gene_symbol => $gene_symbol, disease_name => $disease_name, genotype => $allelic_requirement, mechanism =>  $mutation_consequence, search_type => 'gfd', dbID => $dbID, GFD_panel => $panel};
+    }
   }
   return \@gfd_results;
 }
