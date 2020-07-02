@@ -21,6 +21,10 @@
             <strong><%== $entry->{date} %></strong>
             <strong>Gene:</strong>
             <em><%== $entry->{gene_symbol} %></em>
+            <strong>Genotype:</strong>
+            <em><%== $entry->{genotype} %></em>
+            <strong>Mechanism:</strong>
+            <em><%== $entry->{mechanism} %></em>
             <strong>Disease:</strong>
             <em><%== $entry->{disease_name} %></em>
           <% end %>
