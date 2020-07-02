@@ -27,6 +27,7 @@ sub fetch_updates {
   my $authorised_panels = shift;
   my $registry = $self->app->defaults('registry');
   my $GFDL_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturediseaselog');
+
   my $panel_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'panel');
 
   my @results = ();
@@ -52,15 +53,30 @@ sub fetch_updates {
 sub format_updates {
   my $self = shift;
   my $updates = shift;
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease');
+
   my @results = ();
   foreach my $update (@$updates) {
     my ($date, $time) = split(/\s/, $update->created);    
-    push @results, {
-      date => $date,
-      gene_symbol => $update->gene_symbol,
-      disease_name => $update->disease_name,
-      GFD_ID => $update->genomic_feature_disease_id,
-      search_type => 'gfd' 
+
+    my $gfd_id = $update->genomic_feature_disease_id;
+    my $gfd = $GFD_adaptor->fetch_by_dbID($gfd_id);    
+
+    my $actions = $gfd->get_all_GenomicFeatureDiseaseActions;
+
+    foreach my $action (@$actions) {
+      my $allelic_requirement = $action->allelic_requirement || 'not specified';
+      my $mutation_consequence = $action->mutation_consequence || 'not specified';
+      push @results, {
+        date => $date,
+        gene_symbol => $update->gene_symbol,
+        disease_name => $update->disease_name,
+        genotype => $allelic_requirement,
+        mechanism => $mutation_consequence,
+        GFD_ID => $update->genomic_feature_disease_id,
+        search_type => 'gfd' 
+      }
     }
   }
   return \@results;
