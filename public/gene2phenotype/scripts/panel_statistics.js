@@ -11,7 +11,7 @@ $( document ).ready(function() {
     var data = google.visualization.arrayToDataTable(input_data);
     var options = {
       chart: {
-        title: 'G2P panels and gene counts for each confidence level',
+        title: 'Gene disease pair counts for each confidence level in each panel',
       },
       bars: 'horizontal' // Required for Material Bar Charts.
     };
