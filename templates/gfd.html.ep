@@ -6,17 +6,17 @@
   <h4>Page navigation</h4>
   <ul id="legend">
     <% if ($duplicate) { %>
-      <li><a href="#duplicate_entry">Duplicate entry</a></li>
+      <a href="#duplicate_entry">Duplicate entry</a>
     <% } %>
-    <li><a href="#gene">Gene</a></li>
-    <li><a href="#disease">Disease</a> </li>
+    <a href="#gene">Gene</a>
+    <a href="#disease">Disease</a>
     <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>  
-      <li><a href="#comments">Comments</a> </li>
+      <a href="#comments">Comments</a>
     <% } %>
-    <li><a href="#GD_attribs">Gene-Disease Attributes</a></li>
-    <li><a href="#publications">Publications</a></li>
-    <li><a href="#phenotypes">Phenotypes</a></li>
-    <li><a href="#organ_specificity">Organ specificity</a></li>
+    <a href="#GD_attribs">Gene-Disease Attributes</a>
+    <a href="#publications">Publications</a>
+    <a href="#phenotypes">Phenotypes</a>
+    <a href="#organ_specificity">Organ specificity</a>
   </ul> 
 
   <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>  
