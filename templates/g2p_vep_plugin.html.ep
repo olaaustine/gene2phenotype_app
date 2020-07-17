@@ -18,20 +18,24 @@
     <li>For a bi-allelic gene we need to count either at least 2 heterozygous (HET) variants or 1 homozygous (HOM) variant which pass all filtering rules and are located in the same transcript.</li>
     <li>For a mono-allelic gene we need to count either 1 HET variant or 1 HOM variant which passes all filtering rules.</li>
   </ul>
-
   <h3>Software</h3>
   <h4>Installing and running the VEP and G2P VEP plugin</h4>
   <p>For installation and running the VEP script please refer to the <a href="https://github.com/Ensembl/ensembl-vep" target="_blank">VEP git repository</a> and <a href="http://www.ensembl.org/info/docs/tools/vep/script/vep_options.html" target="_blank">VEP documentation pages</a>. Plugins are installed and configured during the VEP installation. The <a href="https://github.com/Ensembl/VEP_plugins/blob/release/98/G2P.pm" target="_blank">G2P VEP plugin</a> is located in the VEP plugins repository.</p>
- 
+
   <h4>To run the G2P VEP plugin add the following argument to the VEP command:</h4>
   <pre>./vep -i input.vcf --plugin G2P,file='DDG2P.csv'</pre>
+  <p> 
+    %=image '/gene2phenotype/images/G2P_overview.png', alt => 'vep_g2p_plugin_overview', width => '85%', height => 'auto'
+  </p>
+
+
   <p>Options are passed to the plugin as key=value pairs</p>
   <table class="table">
     <thead>
       <tr>
         <th scope="col">Key</th>
         <th scope="col">Description</th>
-        <th scope="col">Default</th>
+        <th scope="col">Default value</th>
       </tr>
     </thead>
     <tbody>
@@ -62,7 +66,7 @@
       </tr>
       <tr>
         <th scope="row">af_from_vcf</th>
-        <td>set value to 1 to include allele frequencies from VCF file.</td>
+        <td>set value to 1 to include allele frequencies from VCF files. The location of the VCF files is configured in: ensembl-variation/modules/Bio/EnsEMBL/Variation/DBSQL/vcf_config.json or ensembl-vep/Bio/EnsEMBL/Variation/DBSQL/vcf_config.json depending on how the ensembl-variation API was installed</td>
         <td>0</td>
       </tr>
       <tr>
@@ -70,6 +74,13 @@
         <td>Select VCF collections. Separate multiple values with '&'.
         </td>
         <td>topmed, uk10k, gnomADe, gnomADg
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">variant_include_list</th>
+        <td>A list of variants to include even if variants do not pass allele frequency filtering. The include list needs to be a sorted, bgzipped and tabixed VCF file.
+        </td>
+        <td>
         </td>
       </tr>
       <tr>
@@ -142,14 +153,16 @@
       <tr><td>gnomADe:nfe</td><td>Genome Aggregation Database exomes r2.1</td><td>VCF file</td></tr>
       <tr><td>gnomADe:oth</td><td>Genome Aggregation Database exomes r2.1</td><td>VCF file</td></tr>
       <tr><td>gnomADe:sas</td><td>Genome Aggregation Database exomes r2.1</td><td>VCF file</td></tr>
-      <tr><td>gnomADg:afr</td><td>Genome Aggregation Database genomes r2.1:African/African American</td><td>VCF file</td></tr>
-      <tr><td>gnomADg:ALL</td><td>Genome Aggregation Database genomes r2.1:All gnomAD genomes individuals</td><td>VCF file</td></tr>
-      <tr><td>gnomADg:amr</td><td>Genome Aggregation Database genomes r2.1:Latino</td><td>VCF file</td></tr>
-      <tr><td>gnomADg:asj</td><td>Genome Aggregation Database genomes r2.1:Ashkenazi Jewish</td><td>VCF file</td></tr>
-      <tr><td>gnomADg:eas</td><td>Genome Aggregation Database genomes r2.1:East Asian</td><td>VCF file</td></tr>
-      <tr><td>gnomADg:fin</td><td>Genome Aggregation Database genomes r2.1:Finnish</td><td>VCF file</td></tr>
-      <tr><td>gnomADg:nfe</td><td>Genome Aggregation Database genomes r2.1:Non-Finnish European</td><td>VCF file</td></tr>
-      <tr><td>gnomADg:oth</td><td>Genome Aggregation Database genomes r2.1:Other (population not assigned)</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:ALL</td><td>Genome Aggregation Database genomes v3:All gnomAD genomes individuals</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:afr</td><td>Genome Aggregation Database genomes v3:African/African American</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:ami</td><td>Genome Aggregation Database genomes v3:Amish</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:amr</td><td>Genome Aggregation Database genomes v3:Latino/Admixed American</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:asj</td><td>Genome Aggregation Database genomes v3:Ashkenazi Jewish</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:eas</td><td>Genome Aggregation Database genomes v3:East Asian</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:fin</td><td>Genome Aggregation Database genomes v3:Finnish</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:nfe</td><td>Genome Aggregation Database genomes v3:Non-Finnish European</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:eas</td><td>Genome Aggregation Database genomes v3:South Asian</td><td>VCF file</td></tr>
+      <tr><td>gnomADg:oth</td><td>Genome Aggregation Database genomes v3:Other (population not assigned)</td><td>VCF file</td></tr>
     </tbody>
   </table> 
   </div>
@@ -243,10 +256,5 @@
       <td>X-LINKED: hemizygous mutation in males, monoallelic mutations in females may cause disease (may be less severe, later onset than males)</td>
     </tr>
   </table>
-  
-
-
-
-
 </div>
 %= include 'footer'
