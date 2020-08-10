@@ -92,6 +92,44 @@
                       </li>
                   <% } %>
                 <% } %>
+                <% foreach my $locus_name (keys %{$gene->{lgm_results}}) { %>
+                      <li>
+                          <strong>Locus name:</strong>
+                          <em><%== $locus_name %></em>
+                      
+                    <% foreach my $hgvs_genomic (keys %{$gene->{lgm_results}->{$locus_name}}) { %>
+                          <ul>
+                            <li>
+                            <strong>HGVS genomic:</strong>
+                            <em><%== $hgvs_genomic %></em>
+                            <strong>Genotype:</strong>
+                            <em><%== $gene->{lgm_results}->{$locus_name}->{$hgvs_genomic}->{genotype} %></em>
+                            <strong>Mechanism:</strong>
+                            <em><%== $gene->{lgm_results}->{$locus_name}->{$hgvs_genomic}->{mechanism} %></em>
+          
+
+                            <% foreach my $ta (@{$gene->{lgm_results}->{$locus_name}->{$hgvs_genomic}->{transcript_alleles}}) { %>
+                              <ul>
+                                 <li> 
+                                 <strong>hgvs_transcript:</strong>
+                                 <em><%== $ta->{hgvs_transcript} %></em>
+                                 <strong>appris:</strong>
+                                 <em><%== $ta->{appris} %></em>
+                                 <strong>tsl:</strong>
+                                 <em><%== $ta->{tsl} %></em>
+                                 <strong>consequence:</strong>
+                                 <em><%== $ta->{consequence_types} %></em>
+                                 <strong>cadd:</strong>
+                                 <em><%== $ta->{cadd} %></em>
+                                 </li>
+                              </ul>
+
+                            <% } %>
+                            </li>
+                          </ul>
+                    <% } %>
+                      </li>
+                <% } %>
               </ul>
             <% } %>
           <% } %>
