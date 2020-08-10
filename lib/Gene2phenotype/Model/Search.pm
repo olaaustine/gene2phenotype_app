@@ -82,6 +82,8 @@ sub fetch_all_by_gene_symbol {
   my $disease_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'disease');
   my $gfd_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease'); 
   my $gf_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeature'); 
+  my $gene_feature_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genefeature');
+  my $lgm_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'LocusGenotypeMechanism');
  
   my $gene = $gf_adaptor->fetch_by_gene_symbol($search_term); 
   if (!$gene) {
@@ -96,7 +98,12 @@ sub fetch_all_by_gene_symbol {
   my $gfds = $gfd_adaptor->fetch_all_by_GenomicFeature_panels($gene, $search_panels);
   @$gfds = sort { ( $a->panel cmp $b->panel ) || ( $a->get_Disease->name cmp $b->get_Disease->name ) } @$gfds;
   my $gfd_results = $self->_get_gfd_results($gfds, $is_authorised);
-  push @gene_names, {gene_symbol => $gene_symbol, gfd_results => $gfd_results, search_type => 'gene_symbol', dbID => $dbID};
+
+  my $gene_feature = $gene_feature_adaptor->fetch_by_gene_symbol($search_term);
+  my $lgms = $lgm_adaptor->fetch_all_by_GeneFeature($gene_feature);
+  my $lgm_results = $self->_get_lgm_results($lgms);
+
+  push @gene_names, {gene_symbol => $gene_symbol, gfd_results => $gfd_results, search_type => 'gene_symbol', dbID => $dbID, lgm_results => $lgm_results};
 
   return {'gene_names' => \@gene_names};
 }
@@ -148,6 +155,44 @@ sub _get_gfd_results {
     }
   }
   return \@gfd_results;
+}
+
+sub _get_lgm_results {
+  my $self = shift;
+  my $lgms = shift;
+  my $lgm_results = {};
+
+  foreach my $lgm (@{$lgms}) {
+    my $genotype = $lgm->genotype;
+    my $mechanism = $lgm->mechanism;
+    my $dbID = $lgm->dbID;
+    my $locus_type = $lgm->locus_type(); 
+    my $locus_name = '';
+    if ($locus_type eq 'allele') {
+      my $allele_feature = $lgm->get_AlleleFeature;  
+      $locus_name = $allele_feature->hgvs_genomic . '  ' . $allele_feature->name;
+      $lgm_results->{$allele_feature->name}->{ $allele_feature->hgvs_genomic}->{genotype} = $genotype;
+      $lgm_results->{$allele_feature->name}->{ $allele_feature->hgvs_genomic}->{mechanism} = $mechanism;
+      my $transcript_alleles = $allele_feature->get_all_TranscriptAlleles;
+      my @tas = ();
+      foreach my $transcript_allele (@{$transcript_alleles}) {
+        my $summary = {};
+        $summary->{hgvs_transcript} = $transcript_allele->hgvs_transcript; 
+        $summary->{cadd} = $transcript_allele->cadd;
+        $summary->{appris} = $transcript_allele->appris || '-';
+        $summary->{tsl} = $transcript_allele->tsl || '-';
+        $summary->{consequence_types} = $transcript_allele->consequence_types; 
+        push @tas, $summary;
+      }
+      $lgm_results->{$allele_feature->name}->{ $allele_feature->hgvs_genomic}->{transcript_alleles} = \@tas;
+      
+    } elsif ($locus_type eq 'gene') {
+      my $gene_feature = $lgm->get_GeneFeature;
+      #push @lgm_results, {locus_name => $locus_name, genotype => $genotype, mechanism =>  $mechanism};
+    } 
+  } 
+
+  return $lgm_results;
 }
 
 1;
