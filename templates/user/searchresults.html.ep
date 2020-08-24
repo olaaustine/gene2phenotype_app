@@ -209,6 +209,4 @@
   </ul>
   <% } %>
 </div>
-
-%= include 'lgm_searchresults_as_table'
 %= include 'footer'
