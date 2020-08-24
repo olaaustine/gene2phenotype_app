@@ -24,6 +24,8 @@ sub startup {
   my $registry_file = $config->{registry};
   my $public_folder = $config->{public_folder};
   my $passphrase = $config->{passphrase};
+  $self->defaults(http_proxy => $config->{http_proxy});
+  $self->defaults(proxy => $config->{proxy});
   my $log_dir = $config->{log_dir};
   my $log = Mojo::Log->new(path => "$log_dir/log_file"); 
 
