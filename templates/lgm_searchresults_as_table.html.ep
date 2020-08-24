@@ -20,15 +20,29 @@
             <% foreach my $genotype_mechanism_key (keys %{$gene->{lgm_results_as_table}}) { %>
               <% my $genotype = $gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{genotype}; %>
               <% my $mechanism = $gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{mechanism}; %>
-              <% foreach my $disease_name (keys %{$gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{disease}}) { %>
+              <% foreach my $disease_name (sort keys %{$gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{disease}}) { %>
                 <% my $panels = join(', ', keys %{$gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{disease}->{$disease_name}->{panel}}); %>
                 <% foreach my $locus_type (qw/allele gene/) { %>
                   <% if ($locus_type eq 'allele') { %>
                     <% if ($gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{disease}->{$disease_name}->{allele}) { %>
-                      <% my $alleles = join(', ', keys %{$gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{disease}->{$disease_name}->{allele}}); %>
                       <tr>
                         <th>Allele</th>
-                        <th><%== $alleles %></th>
+                        <th>
+                          <ul>
+                          <% foreach my $allele (keys %{$gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{disease}->{$disease_name}->{allele}}) { %>
+                            <% my $dbID = $gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{disease}->{$disease_name}->{allele}->{$allele}; %>
+
+                            <li>
+                              %= form_for '/gene2phenotype/lgm' => (id => $dbID) => begin
+                                %= hidden_field lgm_id => $dbID
+                                <%= link_to '#' => ( onclick => "document.getElementById($dbID).submit();") => begin %>
+                                  <em><%== $allele %></em>
+                                <% end %>
+                              % end
+                            </li>
+                          <% } %>
+                          </ul>
+                        </th>
                         <th><%= $genotype %></th>
                         <th><%= $mechanism %></th>
                         <th><%= $disease_name %></th>
