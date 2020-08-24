@@ -7,16 +7,17 @@ use JSON;
 sub get_description {
   my $self = shift;
   my $pmid = $self->param('pmid');
-
+  my $http_proxy = $self->app->defaults('http_proxy');
+  my $proxy = $self->app->defaults('proxy');
   my $url = "https://www.ebi.ac.uk/europepmc/webservices/rest/search/query=ext_id:$pmid%20src:med&format=json";
-  my $content = do_GET($url);
+  my $content = do_GET($url, $http_proxy, $proxy);
   my $json = get_description_from_europepmc($content);
   if ($json) {
     $self->render(json => $json);
   } else {
     # If we cannot get the publication description from EuropePMC then let's try Pubmed:
     $url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=$pmid&retmode=json";
-    $content = do_GET($url);
+    $content = do_GET($url, $http_proxy, $proxy);
     $json = get_description_from_pubmed($content, $pmid);
     $self->render(json => $json);
   }
