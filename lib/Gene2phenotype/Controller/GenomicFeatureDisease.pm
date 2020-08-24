@@ -1,6 +1,6 @@
 package Gene2phenotype::Controller::GenomicFeatureDisease;
 use base qw(Gene2phenotype::Controller::BaseController);
-use Data::Dumper;
+
 sub show {
   my $self = shift;
   my $model = $self->model('genomic_feature_disease');  
@@ -12,37 +12,43 @@ sub show {
   if (!$dbID) {
     return $self->render(template => 'not_found');
   }
-  # check if GFD is authorised
+
   my $logged_in = $self->session('logged_in'); 
-  my $authorised_panels = $self->stash('authorised_panels');
   my $gfd = $model->fetch_by_dbID($dbID, $logged_in); 
+
+  # Is panel visible and can it be viewed by the curator?  
+  my $authorised_panels = $self->stash('authorised_panels');
   my $panel = $gfd->{panel};
+
   if (!grep {$panel eq $_} @$authorised_panels) {
     return $self->redirect_to("/gene2phenotype/");
   }
 
   $self->stash(gfd => $gfd);
 
-  # current panel
+  my $panel_can_be_edited = 0;
   if ($self->session('logged_in')) {
     my $current_panel = $gfd->{panel};
     my @panels = @{$self->session('panels')};
-    my @duplicate_to_panels = ();
-    foreach my $panel (@panels) {
-      if ($panel ne $current_panel) {
-        push @duplicate_to_panels, $panel;
+    if (grep {$panel eq $_} @panels) {
+      $panel_can_be_edited = 1;
+      my @duplicate_to_panels = ();
+      foreach my $panel (@panels) {
+        if ($panel ne $current_panel) {
+          push @duplicate_to_panels, $panel;
+        }
+      } 
+      if (scalar @duplicate_to_panels > 0) {
+        $self->stash(duplicate => 1);
+        $self->stash(duplicate_to => \@duplicate_to_panels);
+      } else {
+        $self->stash(duplicate => 0);
+        $self->stash(duplicate_to => []);
       }
-    } 
-    if (scalar @duplicate_to_panels > 0) {
-      $self->stash(duplicate => 1);
-      $self->stash(duplicate_to => \@duplicate_to_panels);
     } else {
       $self->stash(duplicate => 0);
       $self->stash(duplicate_to => []);
     }
-  } else {
-    $self->stash(duplicate => 0);
-    $self->stash(duplicate_to => []);
   } 
 
   my $disease_id = $gfd->{disease_id};
@@ -54,7 +60,12 @@ sub show {
   $self->stash(gene => $gene_attribs);
 
   $self->session(last_url => "/gene2phenotype/gfd?GFD_id=$dbID");
-  $self->render(template => 'gfd');
+
+  if ($self->session('logged_in') && $panel_can_be_edited) {
+    $self->render(template => 'user/gfd');
+  } else {
+    $self->render(template => 'gfd');
+  }
 }
 
 sub duplicate {
