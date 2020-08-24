@@ -17,10 +17,12 @@
             </tr>
           </thead>
           <tbody>
-            <% foreach my $genotype_mechanism_key (keys %{$gene->{lgm_results_as_table}}) { %>
+            <% foreach my $genotype_mechanism_key (sort keys %{$gene->{lgm_results_as_table}}) { %>
               <% my $genotype = $gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{genotype}; %>
               <% my $mechanism = $gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{mechanism}; %>
               <% foreach my $disease_name (sort keys %{$gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{disease}}) { %>
+                <% my $lgm_panel_disease_id = $gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{disease}->{$disease_name}->{dbID}; %>
+                <% my $lgm_panel_disease_link = '/gene2phenotype/lgm_panel_disease?id=' . $lgm_panel_disease_id; %>
                 <% my $panels = join(', ', keys %{$gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{disease}->{$disease_name}->{panel}}); %>
                 <% foreach my $locus_type (qw/allele gene/) { %>
                   <% if ($locus_type eq 'allele') { %>
@@ -45,7 +47,7 @@
                         </th>
                         <th><%= $genotype %></th>
                         <th><%= $mechanism %></th>
-                        <th><%= $disease_name %></th>
+                        <th><em><%= link_to $lgm_panel_disease_link => begin %><%= $disease_name %><% end %></em></th>
                         <th><%= $panels %></th>
                       </tr>
                     <% } %>

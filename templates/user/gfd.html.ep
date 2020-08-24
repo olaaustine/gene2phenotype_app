@@ -1,0 +1,55 @@
+%= include 'header'
+%= include 'search'
+<div class="container">
+  <h3 class="title"><a class="anchor" name="top">Panel: <%= $gfd->{panel} %> Gene: <em><%= $gfd->{gene_symbol} %></em> Disease: <em><%= $gfd->{disease_name} %></em></a></h3>
+  <div class="clear"></div>
+  <h4>Page navigation</h4>
+  <ul id="legend">
+    <a href="#gene">Gene</a>
+    <a href="#disease">Disease</a>
+    <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>  
+      <a href="#comments">Comments</a>
+    <% } %>
+    <a href="#GD_attribs">Gene-Disease Attributes</a>
+    <a href="#publications">Publications</a>
+    <a href="#phenotypes">Phenotypes</a>
+    <a href="#organ_specificity">Organ specificity</a>
+  </ul> 
+
+    <div class="form-group visibility">
+      %= form_for '/gene2phenotype/gfd/authorised/update' => begin
+        <select name="visibility">
+          <TMPL_IF NAME="authorised">
+          <% if ($gfd->{authorised}) { %>
+            <option value="authorised" selected>Authorised. Visible to all users.</option>
+            <option value="restricted">Restricted. Visible to editors only.</option>
+          <% } else { %>
+            <option value="authorised">Authorised. Visible to all users.</option>
+            <option value="restricted" selected>Restricted. Visible to editors only.</option>
+          <% } %>
+        </select> 
+        <div class="align_buttons_right">
+          %= hidden_field GFD_id => $gfd->{GFD_id}          
+          <input id="button" type="submit" value="Update" class="btn btn-primary btn-sm"/>
+        </div>
+      %end
+    </div>
+
+  %= include 'gene'
+  <% if (scalar @{$gfd->{statistics}} > 0) {  %>
+    <dl>
+      <dt>Genome-wide significance</dt>
+      <% foreach my $statistic (@{$gfd->{statistics}}) { %>
+        <dd>Minimum <em>P</em>-value <%= $statistic->{'p-value'} %> from testing the  <%= $statistic->{dataset} %> dataset. <%= $statistic->{'clustering'} %> <a href="https://www.nature.com/articles/nature21062" target="_blank" title="Prevalence and architecture of de novo mutations in developmental disorders">Source</a></dd>
+      <% } %>
+    </dl>
+  <% } %>
+  %= include 'disease'
+  %= include 'comments'
+  %= include 'user/gfd_attributes'
+  %= include 'user/publication'
+  %= include 'user/phenotype'
+  %= include 'organ'
+
+</div>
+%= include 'footer'

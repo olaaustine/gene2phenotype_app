@@ -1,0 +1,65 @@
+%= include 'header'
+%= include 'search'
+<div class="container">
+
+  <h3 class="title"><a class="anchor" name="top">Locus: <i><%= $lgm->{locus_name} %></i> Genotype: <i><%= $lgm->{genotype} %></i> Mechanism: <i><%= $lgm->{mechanism} %></i></a></h3>
+
+
+
+  <div class="clear"></div>
+
+  <% foreach my $panel (keys %{$lgm->{panel_to_disease}}) { %>
+    <ul>
+      <% foreach my $disease (keys %{$lgm->{panel_to_disease}->{$panel}}) { %>
+        <li> 
+          <strong>Panel:</strong>
+          <em><%== $panel %></em>
+          <strong>Disease:</strong>
+          <em><%== $disease %></em>
+        </li> 
+      <% } %>
+    </ul>
+  <% } %>
+
+  <% if ($lgm->{transcript_alleles}) { %>
+    <table class="table table-bordered table-condensed">
+        <thead>
+          <tr>
+            <th scope="col">HGVS genomic</th>
+            <th scope="col">HGVS protein</th>
+            <th scope="col">Transcript stable id</th>
+            <th scope="col">Variant consequences</th>
+            <th scope="col">CADD score</th>
+          </tr>
+        </thead>
+        <tbody>
+        <% foreach my $transcript_allele (@{$lgm->{transcript_alleles}}) { %>
+          <% if ($transcript_allele->{is_input_allele_feature} ) { %>
+            <tr class="success">
+          <% } else { %>
+            <tr>
+          <% } %>
+            <th><%= $transcript_allele->{hgvs_genomic} %></th>
+            <th><%= $transcript_allele->{hgvs_protein} %></th>
+            <th><%= $transcript_allele->{transcript_stable_id} %></th>
+            <th><%= $transcript_allele->{consequence_types} %></th>
+            <th><%= $transcript_allele->{cadd} %></th>
+          </tr>
+        <% } %> 
+        </tbody>
+    </table>
+  <% } %>
+
+  <% foreach my $publication (@{$lgm->{publications}}) { %>
+      <% if ($publication->{pmid}) { %>
+        <p>
+          <% my $url = 'http://europepmc.org/search?query=ext_id:' . $publication->{pmid}; %>
+          <%= link_to $url => (target => '_blank') => begin %> <%= $publication->{title} %>  <% end %>
+        </p>
+      <% } else {%>
+        <p><%= $publication->{title} %></p>
+      <% } %>
+  <% } %>
+
+</div>
+%= include 'footer'

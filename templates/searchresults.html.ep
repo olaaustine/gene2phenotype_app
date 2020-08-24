@@ -9,70 +9,19 @@
     <p>If you are expecting results please contact <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a>.</p>
   <% } %>
   <% if ($search_results->{gene_names}) { %>
-  <ul>
-    <li>
-      <div>
-        <h4>Genes:</h4>
-        <ul>
-          <% foreach my $gene (@{$search_results->{gene_names}}) { %>
-            <li> <%== $gene->{gene_symbol} %> </li>
-            <% if ($gene->{gfd_results}) { %>
-              <ul>
-                <% foreach my $gfd (@{$gene->{gfd_results}}) {
-                    if ($logged_in) {
-                      my $gfd_panel = $gfd->{GFD_panel};
-                      if (grep( /^$gfd_panel$/, @$panels )) { %>
-                        <li>
-                          <div class="align_left">
-                            %= form_for '/gene2phenotype/gfd' => (id => $gfd->{dbID}) => begin
-                              %= hidden_field search_type => $gfd->{search_type}
-                              %= hidden_field dbID => $gfd->{dbID}
-                              <%= link_to '#' => ( onclick => "document.getElementById($gfd->{dbID}).submit();") => begin %>
-                                <strong>Panel:</strong>
-                                <em><%== $gfd->{GFD_panel} %></em>
-                                <strong>Gene:</strong>
-                                <em><%== $gfd->{gene_symbol} %></em>
-                                <strong>Genotype:</strong>
-                                <em><%== $gfd->{genotype} %></em>
-                                <strong>Mechanism:</strong>
-                                <em><%== $gfd->{mechanism} %></em>
-                                <strong>Disease:</strong>
-                                <em><%== $gfd->{disease_name} %></em>
-                              <% end %>
-                            % end
-                          </div>
-                          <div class="align_right">
-                            <div class="align_inline">
-                              %= form_for '/gene2phenotype/gfd/delete' => begin
-                                <input id="button" type="submit" value="Delete" class="btn btn-primary btn-sm confirm"/>
-                                %= hidden_field dbID => $gfd->{dbID}
-                              %end
-                            </div>
-                          </div>
-                          <div class="clear"></div>
-                        </li>
-                      <% } else { %>
-                        <li>
-                        %= form_for '/gene2phenotype/gfd' => (id => $gfd->{dbID}) => begin
-                          %= hidden_field search_type => $gfd->{search_type}
-                          %= hidden_field dbID => $gfd->{dbID}
-                          <%= link_to '#' => ( onclick => "document.getElementById($gfd->{dbID}).submit();") => begin %>
-                            <strong>Panel:</strong>
-                            <em><%== $gfd->{GFD_panel} %></em>
-                            <strong>Gene:</strong>
-                            <em><%== $gfd->{gene_symbol} %></em>
-                            <strong>Genotype:</strong>
-                            <em><%== $gfd->{genotype} %></em>
-                            <strong>Mechanism:</strong>
-                            <em><%== $gfd->{mechanism} %></em>
-                            <strong>Disease:</strong>
-                            <em><%== $gfd->{disease_name} %></em>
-                          <% end %>
-                        % end
-                        </li>
-                      <% } 
-                    } else { %>
-                      <li>
+    <ul>
+      <li>
+        <div>
+          <h4>Genes:</h4>
+          <ul>
+            <% foreach my $gene (@{$search_results->{gene_names}}) { %>
+              <li>
+                <%== $gene->{gene_symbol} %>
+              </li>
+              <% if ($gene->{gfd_results}) { %>
+                <ul>
+                  <% foreach my $gfd (@{$gene->{gfd_results}}) { %>
+                    <li>
                       %= form_for '/gene2phenotype/gfd' => (id => $gfd->{dbID}) => begin
                         %= hidden_field search_type => $gfd->{search_type}
                         %= hidden_field dbID => $gfd->{dbID}
@@ -89,122 +38,30 @@
                           <em><%== $gfd->{disease_name} %></em>
                         <% end %>
                       % end
-                      </li>
+                    </li>
                   <% } %>
-                <% } %>
-                <% foreach my $locus_name (keys %{$gene->{lgm_results}}) { %>
-                      <li>
-                          <strong>Locus name:</strong>
-                          <em><%== $locus_name %></em>
-                      
-                    <% foreach my $hgvs_genomic (keys %{$gene->{lgm_results}->{$locus_name}}) { %>
-                          <ul>
-                            <li>
-                            <strong>HGVS genomic:</strong>
-                            <em><%== $hgvs_genomic %></em>
-                            <strong>Genotype:</strong>
-                            <em><%== $gene->{lgm_results}->{$locus_name}->{$hgvs_genomic}->{genotype} %></em>
-                            <strong>Mechanism:</strong>
-                            <em><%== $gene->{lgm_results}->{$locus_name}->{$hgvs_genomic}->{mechanism} %></em>
-          
-
-                            <% foreach my $ta (@{$gene->{lgm_results}->{$locus_name}->{$hgvs_genomic}->{transcript_alleles}}) { %>
-                              <ul>
-                                 <li> 
-                                 <strong>hgvs_transcript:</strong>
-                                 <em><%== $ta->{hgvs_transcript} %></em>
-                                 <strong>appris:</strong>
-                                 <em><%== $ta->{appris} %></em>
-                                 <strong>tsl:</strong>
-                                 <em><%== $ta->{tsl} %></em>
-                                 <strong>consequence:</strong>
-                                 <em><%== $ta->{consequence_types} %></em>
-                                 <strong>cadd:</strong>
-                                 <em><%== $ta->{cadd} %></em>
-                                 </li>
-                              </ul>
-
-                            <% } %>
-                            </li>
-                          </ul>
-                    <% } %>
-                      </li>
-                <% } %>
-              </ul>
+                </ul>
+              <% } %>
             <% } %>
-          <% } %>
-        </ul>
-      </div>
-    </li>
-  </ul>
+          </ul>
+        </div>
+      </li>
+    </ul>
   <% } %>
   <% if ($search_results->{disease_names}) { %>
-  <ul>
-    <li>
-      <div>
-        <h4>Diseases:</h4>
-        <ul>
-          <% foreach my $disease (@{$search_results->{disease_names}}) { %>
-            <li>
-              <%== $disease->{display_disease_name} %>
-            </li>
-            <% if (@{$disease->{gfd_results}}) { %>
-              <ul>
-                <% foreach my $gfd (@{$disease->{gfd_results}}) {
-                    if ($logged_in) {
-                      my $gfd_panel = $gfd->{GFD_panel};
-                      if (grep( /^$gfd_panel$/, @$panels )) { %>
-                        <li>
-                          <div class="align_left">
-                            %= form_for '/gene2phenotype/gfd' => (id => $gfd->{dbID}) => begin
-                              %= hidden_field search_type => $gfd->{search_type}
-                              %= hidden_field dbID => $gfd->{dbID}
-                              <%= link_to '#' => ( onclick => "document.getElementById($gfd->{dbID}).submit();") => begin %>
-                                <strong>Panel:</strong>
-                                <em><%== $gfd->{GFD_panel} %></em>
-                                <strong>Gene:</strong>
-                                <em><%== $gfd->{gene_symbol} %></em>
-                                <strong>Genotype:</strong>
-                                <em><%== $gfd->{genotype} %></em>
-                                <strong>Mechanism:</strong>
-                                <em><%== $gfd->{mechanism} %></em>
-                                <strong>Disease:</strong>
-                                <em><%== $gfd->{disease_name} %></em>
-                              <% end %>
-                            % end
-                          </div>
-                          <div class="align_right">
-                            <div class="align_inline">
-                              %= form_for '/gene2phenotype/gfd/delete' => begin
-                                <input id="button" type="submit" value="Delete" class="btn btn-primary btn-sm confirm"/>
-                                %= hidden_field dbID => $gfd->{dbID}
-                              %end
-                            </div>
-                          </div>
-                          <div class="clear"></div>
-                        </li>
-                      <% } else { %>
-                        <li>
-                        %= form_for '/gene2phenotype/gfd' => (id => $gfd->{dbID}) => begin
-                          %= hidden_field search_type => $gfd->{search_type}
-                          %= hidden_field dbID => $gfd->{dbID}
-                          <%= link_to '#' => ( onclick => "document.getElementById($gfd->{dbID}).submit();") => begin %>
-                            <strong>Panel:</strong>
-                            <em><%== $gfd->{GFD_panel} %></em>
-                            <strong>Gene:</strong>
-                            <em><%== $gfd->{gene_symbol} %></em>
-                            <strong>Genotype:</strong>
-                            <em><%== $gfd->{genotype} %></em>
-                            <strong>Mechanism:</strong>
-                            <em><%== $gfd->{mechanism} %></em>
-                            <strong>Disease:</strong>
-                            <em><%== $gfd->{disease_name} %></em>
-                          <% end %>
-                        % end
-                        </li>
-                      <% } 
-                    } else { %>
-                      <li>
+    <ul>
+      <li>
+        <div>
+          <h4>Diseases:</h4>
+          <ul>
+            <% foreach my $disease (@{$search_results->{disease_names}}) { %>
+              <li>
+                <%== $disease->{display_disease_name} %>
+              </li>
+              <% if (@{$disease->{gfd_results}}) { %>
+                <ul>
+                  <% foreach my $gfd (@{$disease->{gfd_results}}) { %>
+                    <li>
                       %= form_for '/gene2phenotype/gfd' => (id => $gfd->{dbID}) => begin
                         %= hidden_field search_type => $gfd->{search_type}
                         %= hidden_field dbID => $gfd->{dbID}
@@ -221,30 +78,21 @@
                           <em><%== $gfd->{disease_name} %></em>
                         <% end %>
                       % end
-                      </li>
+                    </li>
                   <% } %>
-                <% } %>
-              </ul>
-            <% } else { %>
-            <ul>
-              <li><p>The disease is currently not linked to a G2P entry. If you are expecting results please contact <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a>.</p>
-              </li>
-            </ul>
+                </ul>
+              <% } else { %>
+                <ul>
+                  <li>
+                    <p>The disease is currently not linked to a G2P entry. If you are expecting results please contact <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a>.</p>
+                  </li>
+                </ul>
+              <% } %>
             <% } %>
-          <% } %>
-        </ul>
-      </div>
-    </li>
-  </ul>
-  <% } %>
-  <% if ($logged_in) { %>
-  <ul>
-  <li>
-    <h4><strong>
-    %= link_to 'Add New Gene Disease Entry' => '/gene2phenotype/gfd/create'
-    </strong></h4>
-  </li>
-  </ul>
+          </ul>
+        </div>
+      </li>
+    </ul>
   <% } %>
 </div>
 

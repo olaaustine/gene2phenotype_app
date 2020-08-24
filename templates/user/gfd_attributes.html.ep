@@ -1,0 +1,164 @@
+<div>
+  <div class="clear"></div>
+
+  <h3><a class="anchor" name="GD_attribs">Gene-Disease Attributes</a><a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a></h3>
+  <div id="confidence_category">
+    <div class="show_db_content">
+      <div class="display_attributes">
+
+        <dl>
+          <dt>Disease confidence</dt>
+          <dd><%= $gfd->{GFD_category} %></dd>
+        </dl>
+
+      </div> <!--End display attributes-->
+
+      <div class="show_toggle_view_button">
+        <input type="button" name="show_edit_content" value="Edit" class="btn btn-primary btn-sm edit"/>
+      </div>
+      <div class="clear"></div>
+    </div> <!--End show_db_content-->
+
+    <div class="show_edit_content">
+      <h4>Edit disease confidence:</h4>
+      %= form_for '/gene2phenotype/gfd/category/update' => begin
+        <div class="form-group">
+          <label>Disease confidence: </label>
+          %= select_field category_attrib_id => $gfd->{GFD_category_list} 
+        </div>
+        <div class="align_buttons_right">
+          %= hidden_field GFD_id => $gfd->{GFD_id}
+          %= submit_button 'Save', class => 'btn btn-primary btn-sm', id => 'button'
+          <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
+        </div>
+      % end
+    </div> <!--End show edit content-->
+
+    <% if (@{$gfd->{logs}}) { %>
+      <div class="log_table">
+      <table class="table table-striped">
+        <tr>
+          <th>Created</th>
+          <th>User</th>
+          <th>Disease confidence</th>
+          <th>Action</th>
+        </tr>
+        <% foreach my $log (@{$gfd->{logs}}) { %>
+          <tr>
+            <td><%= $log->{created} %></td>
+            <td><%= $log->{user} %></td>
+            <td><%= $log->{confidence_category} %></td>
+            <td><%= $log->{action} %></td>
+          </tr>
+        <% } %>
+      </table>  
+      </div>
+    <% } %>
+  </div> <!--End confidence category-->
+
+  <div class="add_GDM">
+    <h4 class="section_header">Gene-Disease Mechanism</h4>
+    <div class="show_db_content">
+      <div class="show_toggle_view_button">
+        <input type="button" name="show_edit_content" value="Add New Gene-Disease Mechanism" class="btn btn-primary btn-sm edit"/>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <div class="show_edit_content">
+      <h4>Add allelic requirements and mutation consequence:</h4>
+      %= form_for '/gene2phenotype/gfd/attributes/add' => begin
+        <div class="form-group">
+          <% foreach my $AR (@{$gfd->{add_AR_loop}}) { %>
+            %= check_box allelic_requirement_attrib_id => $AR->{AR_attrib_id}
+            <%= $AR->{AR_attrib_value}%>
+            %= tag 'br'
+          <% } %>
+        </div>
+        <div class="form-group">
+          <label>Mutation consequence summary:</label>
+          %= select_field mutation_consequence_attrib_id => $gfd->{add_MC_loop} 
+        </div>
+        <div class="align_buttons_right">
+          %= hidden_field GFD_id => $gfd->{GFD_id}
+          <input id="button" type="submit" value="Add" class="btn btn-primary btn-sm"/>
+          <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
+        </div>
+      %end
+    </div> <!--End show edit content-->
+  </div>
+
+  <% foreach my $GFD_action (@{$gfd->{GFD_actions}}) { %>
+    <div class="show_db_content">
+      <div class="display_attributes">
+        <dl>
+          <dt>Allelic requirement</dt>
+          <dd><%= $GFD_action->{allelic_requirement} %></dd>
+          <dt>Mutation consequence summary</dt>
+          <dd><%= $GFD_action->{mutation_consequence_summary} %></dd>
+        </dl>
+      </div>
+      <div class="align_right">
+        <div class="align_inline">
+          %= form_for '/gene2phenotype/gfd/attributes/delete' => begin
+            %= hidden_field GFD_action_id => $GFD_action->{GFD_action_id}
+            %= hidden_field GFD_id => $gfd->{GFD_id}
+            <input id="button" type="submit" value="Delete" class="btn btn-primary btn-sm confirm"/>
+          %end
+        </div>
+        <div class="align_right show_toggle_view_button">
+          <input type="button" name="show_edit_content" value="Edit" class="btn btn-primary btn-sm edit"/>
+        </div>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <div class="show_edit_content">
+      <h4>Edit allelic requirements and mutation consequence:</h4>
+      %= form_for '/gene2phenotype/gfd/attributes/update' => begin
+        <div class="form-group">
+          <label>Allelic requirement:</label><br>
+          <% foreach my $AR (@{$GFD_action->{AR_loop}}) { %>
+            <% if ($AR->{checked}) { %> 
+              %= check_box allelic_requirement_attrib_id => $AR->{AR_attrib_id}, checked => undef
+            <% } else { %>
+              %= check_box allelic_requirement_attrib_id => $AR->{AR_attrib_id}
+            <% } %>
+            <%= $AR->{AR_attrib_value}%>
+            %= tag 'br'
+          <% } %>
+        </div>
+        <div class="form-group">
+          <label>Mutation consequence summary:</label>
+          %= select_field mutation_consequence_attrib_id => $GFD_action->{MC_loop} 
+        </div>
+        <div class="align_buttons_right">
+          %= hidden_field GFD_action_id => $GFD_action->{GFD_action_id}
+          %= hidden_field GFD_id => $gfd->{GFD_id}
+          <input id="button" type="submit" value="Save" class="btn btn-primary btn-sm"/>
+          <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
+        </div>
+      %end
+    </div> <!--End show edit content-->
+    <% if (@{$GFD_action->{logs}}) { %>
+      <div class="log_table">
+        <table class="table table-striped">
+          <tr>
+            <th>Created</th>
+            <th>User</th>
+            <th>Allelic requirement</th>
+            <th>Mutation consequence</th>
+            <th>Action</th>
+          </tr>
+          <% foreach my $log (@{$GFD_action->{logs}}) { %>
+            <tr>
+              <td><%= $log->{created} %></td>
+              <td><%= $log->{user} %></td>
+              <td><%= $log->{ar} %></td>
+              <td><%= $log->{mc} %></td>
+              <td><%= $log->{action} %></td>
+            </tr>
+          <% } %>
+        </table>  
+      </div>
+    <% } %>
+  <% } %>
+</div> <!--End-->

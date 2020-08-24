@@ -1,50 +1,8 @@
 <div>
-  <div class="show_db_content">
   <h3 class="section_header">
-  <a class="anchor" name="publications">Publications</a>
-  <a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a>
+    <a class="anchor" name="publications">Publications</a>
+    <a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a>
   </h3>
-  <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>
-    <div id="new_publication">
-      <div class="show_add_publication button_right">
-        <input type="button" name="show_add_publication" value="Add New Publication" class="btn btn-primary btn-sm show_add_publication_button"/>
-      </div>
-      <div class="add_publication">
-        <h4>Add new publication</h4>
-        <div class="add_publication_feedback" role="alert">
-        </div>
-        %= form_for '/gene2phenotype/gfd/publication/add' => begin
-          <div class="form-group">
-            <label>PMID</label>
-            <div id="find_article">
-              <input type="button" name="find_article" value="Find article" class="btn btn-primary btn-sm find"/>
-              <div id="pmid">
-                <input type="text" class="form-control pmid" name="pmid" placeholder="PMID e.g. 24509478" value="">
-              </div>
-            </div>
-          </div>
-
-          <div class="next_step_add_publication hide_fields">
-            <div class="form-group">
-              <label>Title</label>
-              <input type="text" class="form-control title" name="title" placeholder="Title" value="">
-            </div>
-            <div class="form-group">
-              <label>Source</label>
-              <input type="text" class="form-control source" name="source" placeholder="Source" value="">
-            </div>
-            <div class="align_buttons_right">
-              %= hidden_field GFD_id => $gfd->{GFD_id}
-              <input id="button" type="submit" class="btn btn-primary btn-sm hide_button" value="Add"/>
-              <input type="button" value="Discard" class="btn btn-primary btn-sm discard_add_publication clean_up_fields"/>
-            </div>
-          </div>
-        %end
-      </div>
-    </div>
-    <div class="clear"></div>
-  <% } %>    
-
   <% foreach my $publication (@{$gfd->{publications}}) { %>
     <div class="publication">
       <% if ($publication->{pmid}) { %>
@@ -55,49 +13,6 @@
       <% } else {%>
         <p><%= $publication->{title} %></p>
       <% } %>
-
     </div> <!--div class publication-->
-
-    <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>
-    <div class='publication_action'>
-
-     <%  if (scalar @{$publication->{comments}} > 0) { %>
-      <h4>Comments:</h4>
-     <% } %>
-      <% foreach my $comment (@{$publication->{comments}}) { %>
-        <div class="comment">
-          <div class="align_left"><p><%= $comment->{comment_text} %> (<%= $comment->{user} %> <%= $comment->{date} %>)</p></div>
-          <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>
-            <div class="align_right">
-              %= form_for '/gene2phenotype/gfd/publication/delete_comment' => begin
-                %= hidden_field GFD_publication_comment_id => $comment->{GFD_publication_comment_id}
-                %= hidden_field GFD_id => $gfd->{GFD_id}
-                <input id="button" type="submit" value="Delete Comment" class="btn btn-primary btn-sm confirm"/>
-              %end
-            </div>
-          <% } %>
-        </div>
-        <div class="clear"></div>
-      <% } %>
-      %= form_for '/gene2phenotype/gfd/publication/delete' => begin
-        %= hidden_field GFD_publication_id => $publication->{GFD_publication_id}
-        %= hidden_field GFD_id => $gfd->{GFD_id}
-        <input type="button" type="submit" value="Delete Publication" class="btn btn-primary btn-sm confirm align_buttons_left"/>
-      %end
-
-      <input type="button" name="show_add_comment" value="Add New Comment" class="btn btn-primary btn-sm align_buttons_left show_add_comment"/>
-      <div class="clear"></div>
-      <div class='add_comment'>
-        <h4>Add comment:</h4>
-        %= form_for '/gene2phenotype/gfd/publication/add_comment' => begin
-          <div class="comment_text_area"><textarea class="form-control" name="GFD_publication_comment" rows="3"></textarea></div>
-          %= hidden_field GFD_publication_id => $publication->{GFD_publication_id}
-          %= hidden_field GFD_id => $gfd->{GFD_id}
-          <input id="button" type="submit" value="Add" class="btn btn-primary btn-sm"/>
-          <input type="button" value="Discard" class="btn btn-primary btn-sm discard_add_comment"/>
-        %end
-      </div> <!--div class add comment-->
-    </div> <!--div publication action-->
-    <% } %>
   <% } %>
 </div>
