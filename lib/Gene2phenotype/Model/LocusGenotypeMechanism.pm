@@ -59,12 +59,24 @@ sub fetch_by_dbID {
     return {
       genotype => $genotype,
       mechanism => $mechanism,
-      hgvs_genomic => $input_allele_feature->hgvs_genomic,
+      locus_name => $input_allele_feature->hgvs_genomic,
       panel_to_disease => $panel_to_disease,
       transcript_alleles => \@transcript_alleles,
       publications => \@publications,
     };
 
+  }
+  if ($locus_type eq 'gene') {
+    my $gene_feature_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GeneFeature');
+    my $gene_feature = $gene_feature_adaptor->fetch_by_dbID($lgm->locus_id);
+
+    return {
+      genotype => $genotype,
+      mechanism => $mechanism,
+      locus_name => $gene_feature->gene_symbol,
+      panel_to_disease => $panel_to_disease,
+      publications => \@publications,
+    };
   }
 
 }
