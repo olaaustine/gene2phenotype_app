@@ -115,7 +115,9 @@ sub fetch_all_lgms_by_gene_symbol {
   my $lgm_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'LocusGenotypeMechanism');
 
   my $gene_feature = $gene_feature_adaptor->fetch_by_gene_symbol($search_term);
-  
+  if (!$gene_feature) {
+    return {};
+  }
   my $lgms = $lgm_adaptor->fetch_all_by_GeneFeature($gene_feature);
 
   my $lgm_results = $self->_get_lgm_results($lgms);
