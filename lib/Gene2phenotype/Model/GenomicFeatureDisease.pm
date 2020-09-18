@@ -36,7 +36,9 @@ sub fetch_by_dbID {
 
   my $disease_name_synonyms = $self->_get_disease_name_synonyms($GFD);
 
-  my $disease_ontology_accessions = $self->_get_disease_ontology_accessions($GFD); 
+#  my $disease_ontology_accessions = $self->_get_disease_ontology_accessions($GFD); 
+  my $disease_ontology_accessions = []; 
+
 
   my $GFD_comments = $self->_get_GFD_comments($GFD);
 
