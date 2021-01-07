@@ -7,6 +7,7 @@ requires 'Mojolicious::Plugin::CGI';
 requires 'Mojolicious::Plugin::Model';
 requires 'Mojolicious::Plugin::RenderFile';
 requires 'Mojolicious::Plugin::Authentication';
+requires 'Mojolicious::Plugin::RemoteAddr';
 requires 'namespace::autoclean';
 requires 'Moose';
 requires 'XML::RSS::Parser';
