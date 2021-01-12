@@ -18,6 +18,7 @@ requires 'HTML::Entities';
 requires 'IPC::Cmd';
 requires 'Data::Dumper';
 requires 'Perl::OSType';
+requires 'Crypt::PasswdMD5';
 
 on 'build' => sub {
     requires 'Module::Build::Pluggable';
