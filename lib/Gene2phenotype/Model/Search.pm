@@ -126,24 +126,32 @@ sub fetch_all_lgms_by_gene_symbol {
   my $search_panels = shift;
   my $is_authorised = shift;
   my $registry = $self->app->defaults('registry');
-  my $disease_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'disease');
-
   my $gene_feature_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genefeature');
   my $lgm_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'LocusGenotypeMechanism');
-
   my $gene_feature = $gene_feature_adaptor->fetch_by_gene_symbol($search_term);
   if (!$gene_feature) {
     return {};
   }
   my $lgms = $lgm_adaptor->fetch_all_by_GeneFeature($gene_feature);
-
-  my $lgm_results = $self->_get_lgm_results($lgms);
   my $lgm_results_as_table = $self->_get_lgm_results_as_table($lgms);
-  my @gene_names = ();
-  push @gene_names, {lgm_results => $lgm_results, gene_name => $search_term, lgm_results_as_table => $lgm_results_as_table};
+  return {search_term => $search_term, search_type => 'gene', lgm_results_as_table => $lgm_results_as_table};
+}
 
-  return {'gene_names' => \@gene_names};
-
+sub fetch_all_lgms_by_disease_name {
+  my $self = shift;
+  my $search_term = shift;
+  my $search_panels = shift;
+  my $is_authorised = shift;
+  my $registry = $self->app->defaults('registry');
+  my $disease_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'disease');
+  my $disease = $disease_adaptor->fetch_by_name($search_term);
+  if (!$disease) {
+    return {};
+  }
+  my $lgm_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'LocusGenotypeMechanism');
+  my $lgms = $lgm_adaptor->fetch_all_by_Disease($disease);
+  my $lgm_results_as_table = $self->_get_lgm_results_as_table($lgms);
+  return {search_term => $search_term, lgm_results_as_table => $lgm_results_as_table, search_type => 'disease'};
 }
 
 sub fetch_all_by_disease_name {
@@ -195,72 +203,49 @@ sub _get_gfd_results {
   return \@gfd_results;
 }
 
-sub _get_lgm_results {
-  my $self = shift;
-  my $lgms = shift;
-  my @lgm_results = ();
-
-  foreach my $lgm (@{$lgms}) {
-    my $genotype = $lgm->genotype;
-    my $mechanism = $lgm->mechanism;
-    my $dbID = $lgm->dbID;
-    my $locus_type = $lgm->locus_type(); 
-    my $locus_name = '';
-    my @panels = ();
-    my $lgm_panels = $lgm->get_all_LGMPanels;
-    foreach my $lgm_panel (@{$lgm_panels}) {
-      my $panel_name = $lgm_panel->get_Panel->name;
-      my $disease_name = $lgm_panel->get_disease_name;
-      push @panels, {panel => $panel_name, disease_name => $disease_name};
-    }
-    if ($locus_type eq 'allele') {
-      my $allele_feature = $lgm->get_AlleleFeature;  
-      $locus_name = $allele_feature->name;
-      push @lgm_results, {locus_type => 'allele', locus_name => $locus_name,  genotype => $genotype, mechanism => $mechanism, panels=> \@panels};
-    } elsif ($locus_type eq 'gene') {
-      my $gene_feature = $lgm->get_GeneFeature;
-      #push @lgm_results, {locus_name => $locus_name, genotype => $genotype, mechanism =>  $mechanism};
-    } 
-  } 
-  return \@lgm_results;
-}
-
 sub _get_lgm_results_as_table {
   my $self = shift;
   my $lgms = shift;
-  my $results = {};
+  my @results = ();
   foreach my $lgm (@{$lgms}) {
     my $genotype = $lgm->genotype;
     my $mechanism = $lgm->mechanism;
-    my $dbID = $lgm->dbID;
-    my $locus_type = $lgm->locus_type(); 
+    my $lgm_id = $lgm->dbID;
+    my $locus_type = $lgm->locus_type;
+    my $locus_name;
+    if ($locus_type eq 'gene') {
+      my $gene_feature = $lgm->get_GeneFeature;
+      $locus_name = $gene_feature->gene_symbol;
+    } elsif ($locus_type eq 'placeholder') {
+      my $placeholder_feature = $lgm->get_PlaceholderFeature;
+      $locus_name = $placeholder_feature->placeholder_name;
+    } elsif ($locus_type eq 'allele') {
+      my $allele_feature = $lgm->get_AlleleFeature;
+      $locus_name = $allele_feature->name;
+    }
     my @panels = ();
+    my @disease_names = ();
     my $lgm_panels = $lgm->get_all_LGMPanels;
-    $results->{"$locus_type\_$genotype\_$mechanism"}->{genotype} = $genotype;
-    $results->{"$locus_type\_$genotype\_$mechanism"}->{mechanism} = $mechanism;
     foreach my $lgm_panel (@{$lgm_panels}) {
       my $panel_name = $lgm_panel->get_Panel->name;
-      my $lgm_panel_diseases = $lgm_panel->get_all_LGMPanelDiseases;
-      foreach my $lgm_panel_disease (@{$lgm_panel_diseases}) {
-        my $disease_name = $lgm_panel_disease->get_Disease->name;
-        my $lgm_panel_disease_id = $lgm_panel_disease->dbID;
-        $results->{"$locus_type\_$genotype\_$mechanism"}->{disease}->{$disease_name}->{dbID} = $lgm_panel_disease_id;
-        $results->{"$locus_type\_$genotype\_$mechanism"}->{disease}->{$disease_name}->{panel}->{$panel_name} = 1;
-        if ($locus_type eq 'allele') {
-          my $allele_feature = $lgm->get_AlleleFeature;  
-          my $hgvs_genomic = $allele_feature->hgvs_genomic;
-          my $locus_name = $allele_feature->name;
-          my $allele_feature_id = $allele_feature->dbID;
-          $results->{"$locus_type\_$genotype\_$mechanism"}->{disease}->{$disease_name}->{allele}->{"$hgvs_genomic($locus_name)"} = $dbID;
-        } elsif ($locus_type eq 'gene') {
-          my $gene_feature = $lgm->get_GeneFeature; 
-          my $locus_name = $gene_feature->gene_symbol;
-          $results->{"$locus_type\_$genotype\_$mechanism"}->{disease}->{$disease_name}->{gene}->{$locus_name} = $dbID;
-        } 
+      my $disease_name = $lgm_panel->get_default_LGMPanelDisease->get_Disease->name;
+      push @panels, $panel_name;
+      if (!grep {$_ eq  $disease_name} @disease_names) {
+        push @disease_names, $disease_name;
       }
     }
+    push @results, {
+      locus_type => $locus_type,
+      locus_name => $locus_name,
+      genotype => $genotype,
+      mechanism => $mechanism,
+      disease_names => \@disease_names,
+      panels => \@panels,
+      lgm_id => $lgm_id
+    };
+
   }
-  return $results;
+  return \@results;
 }
 
 1;
