@@ -228,7 +228,12 @@ sub _get_lgm_results_as_table {
     my $lgm_panels = $lgm->get_all_LGMPanels;
     foreach my $lgm_panel (@{$lgm_panels}) {
       my $panel_name = $lgm_panel->get_Panel->name;
-      my $disease_name = $lgm_panel->get_default_LGMPanelDisease->get_Disease->name;
+      my $disease_name;
+      if ($lgm_panel->get_default_LGMPanelDisease) {
+        $disease_name = $lgm_panel->get_default_LGMPanelDisease->get_Disease->name;
+      } else {
+        $disease_name = $lgm_panel->get_all_LGMPanelDiseases->[0]->get_Disease->name;
+      }
       push @panels, $panel_name;
       if (!grep {$_ eq  $disease_name} @disease_names) {
         push @disease_names, $disease_name;
