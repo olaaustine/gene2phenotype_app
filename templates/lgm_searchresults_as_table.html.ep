@@ -1,76 +1,55 @@
 <div class="container">
+  <% if ($lgm_search_results) { %>
   <h3>Locus genotype mechanism disease evidence search results</h3>
-  <% if ($lgm_search_results->{gene_names}) { %>
     <div>
-      <h4>Genes:</h4>
-      <% foreach my $gene (@{$lgm_search_results->{gene_names}}) { %>
-        <p> <%== $gene->{gene_name}%> </p>
-        <table class="table table-bordered table-condensed">
-          <thead>
+      <table class="table table-bordered table-condensed">
+        <thead>
+          <tr>
+            <th scope="col">Locus type</th>
+            <th scope="col">Locus name</th>
+            <th scope="col">Genotype</th>
+            <th scope="col">Mechanism</th>
+            <th scope="col">Disease</th>
+            <th scope="col">Panel</th>
+            <th scope="col">Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% foreach my $lgm_search_result (sort {$a->{locus_type} cmp $b->{locus_type} || $a->{locus_name} cmp $b->{locus_name} || $a->{genotype} cmp $b->{genotype} || $a->{mechanism} cmp $b->{mechanism} } @{$lgm_search_results->{lgm_results_as_table}}) { %>
+            <% my $locus_type = $lgm_search_result->{locus_type}; %>
+            <% my $locus_name = $lgm_search_result->{locus_name}; %>
+            <% my $genotype = $lgm_search_result->{genotype}; %>
+            <% my $mechanism = $lgm_search_result->{mechanism}; %>
+            <% my @disease_names = @{$lgm_search_result->{disease_names}}; %>
+            <% my $panels = join(',', sort @{$lgm_search_result->{panels}}); %>
+            <% my $lgm_id = $lgm_search_result->{lgm_id}; %>
             <tr>
-              <th scope="col">Locus type</th>
-              <th scope="col">Locus name</th>
-              <th scope="col">Genotype</th>
-              <th scope="col">Mechanism</th>
-              <th scope="col">Disease</th>
-              <th scope="col">Panel</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% foreach my $genotype_mechanism_key (sort keys %{$gene->{lgm_results_as_table}}) { %>
-              <% my $genotype = $gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{genotype}; %>
-              <% my $mechanism = $gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{mechanism}; %>
-              <% foreach my $disease_name (sort keys %{$gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{disease}}) { %>
-                <% my $lgm_panel_disease_id = $gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{disease}->{$disease_name}->{dbID}; %>
-                <% my $lgm_panel_disease_link = '/gene2phenotype/lgm_panel_disease?id=' . $lgm_panel_disease_id; %>
-                <% my $panels = join(', ', sort keys %{$gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{disease}->{$disease_name}->{panel}}); %>
-                <% foreach my $locus_type (qw/allele gene/) { %>
-                  <% if ($locus_type eq 'allele') { %>
-                    <% if ($gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{disease}->{$disease_name}->{allele}) { %>
-                      <tr>
-                        <th>Allele</th>
-                        <th>
-                          <ul>
-                          <% foreach my $allele (keys %{$gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{disease}->{$disease_name}->{allele}}) { %>
-                            <% my $dbID = $gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{disease}->{$disease_name}->{allele}->{$allele}; %>
-
-                            <li>
-                              %= form_for '/gene2phenotype/lgm' => (id => $dbID) => begin
-                                %= hidden_field lgm_id => $dbID
-                                <%= link_to '#' => ( onclick => "document.getElementById($dbID).submit();") => begin %>
-                                  <em><%== $allele %></em>
-                                <% end %>
-                              % end
-                            </li>
-                          <% } %>
-                          </ul>
-                        </th>
-                        <th><%= $genotype %></th>
-                        <th><%= $mechanism %></th>
-                        <th><em><%= link_to $lgm_panel_disease_link => begin %><%= $disease_name %><% end %></em></th>
-                        <th><%= $panels %></th>
-                      </tr>
+              <td><%= $locus_type %></td>
+              <td><%= $locus_name %></td>
+              <td><%= $genotype %></td>
+              <td><%= $mechanism %></td>
+              <td>
+                <% if (scalar @disease_names > 1)  { %>
+                  <ul>
+                    <% foreach my $disease_name (@disease_names) { %>
+                      <li><%= $disease_name %></li>
                     <% } %>
-                  <% } %>
-                  <% if ($locus_type eq 'gene') { %>
-                    <% if ($gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{disease}->{$disease_name}->{gene}) { %>
-                      <% my $gene = join(', ', keys %{$gene->{lgm_results_as_table}->{$genotype_mechanism_key}->{disease}->{$disease_name}->{gene}}); %>
-                      <tr>
-                        <th>Gene</th>
-                        <th><%== $gene %></th>
-                        <th><%= $genotype %></th>
-                        <th><%= $mechanism %></th>
-                        <th><%= $disease_name %></th>
-                        <th><%= $panels %></th>
-                      </tr>
-                    <% } %>
-                  <% } %>
+                  </ul>
+                <% } else { %>
+                  <%= $disease_names[0] %>
                 <% } %>
-              <% } %>
-            <% } %>
-          </tbody>
-        </table>
-      <% } %>
+              </td>
+              <td><%= $panels %></td>
+              <td>
+                %= form_for '/gene2phenotype/lgm' => begin
+                  %= hidden_field lgm_id => $lgm_id
+                  <input id="button" type="submit" class="btn btn-primary btn-sm" value="Go to page"/>
+                %end
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
     </div>
   <% } %>
 </div>
