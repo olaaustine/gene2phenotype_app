@@ -32,12 +32,40 @@ sub fetch_by_dbID {
   my $lgm_panels = $lgm->get_all_LGMPanels;
 
   my $panel_to_disease = {};
+  my @disease_names = ();
+
   foreach my $lgm_panel (@{$lgm_panels}) {
     my $panel_name = $lgm_panel->get_Panel->name;
     my $lgm_panel_diseases = $lgm_panel->get_all_LGMPanelDiseases;
+    my $disease_confidence = $lgm_panel->confidence_category;
+    my @disease_synonyms = ();
+    my $default_disease_name = '';
     foreach my $lgm_panel_disease (@{$lgm_panel_diseases}) {
       my $disease_name = $lgm_panel_disease->get_Disease->name;
-      $panel_to_disease->{$panel_name}->{$disease_name} = 1;
+      if ($lgm_panel_disease->default_name) {
+        $default_disease_name = $disease_name;
+      } else {
+        push @disease_synonyms, $disease_name;
+      }
+    }
+    push @disease_names, {
+      panel_name => $panel_name,
+      disease_confidence => $disease_confidence,
+      default_disease_name => $default_disease_name,
+      disease_synonyms => \@disease_synonyms
+    };
+  }
+
+  my $lgm_phenotypes = $lgm->get_all_LGMPhenotypes;
+  my @phenotypes = ();
+  foreach my $lgm_phenotype (@{$lgm_phenotypes}) {
+    my $phenotype = $lgm_phenotype->get_Phenotype;
+    my $user = $lgm_phenotype->get_User->username;
+    my $created = $lgm_phenotype->created;
+
+    push @phenotypes, {
+      name => $phenotype->name,
+      created => "$user $created",
     }
   }
 
@@ -45,21 +73,22 @@ sub fetch_by_dbID {
   my @publications = ();
   foreach my $lgm_publication (@{$lgm_publications}) {
     my $publication = $lgm_publication->get_Publication;
+    my $user = $lgm_publication->get_User->username;
+    my $created = $lgm_publication->created;
+
     push @publications, {
       title => $publication->title,
-      pmid => $publication->pmid
+      pmid => $publication->pmid,
+      created => "$user $created",
     }
-  } 
+  }
 
   if ($locus_type eq 'allele') {
     my $allele_feature_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'AlleleFeature');
     my $input_allele_feature = $allele_feature_adaptor->fetch_by_dbID($lgm->locus_id);
     my $hgvs_protein = $input_allele_feature->name;
     my $allele_features = $allele_feature_adaptor->fetch_all_by_hgvs_protein($hgvs_protein);
-
-
     my @transcript_alleles = ();
-
     foreach my $allele_feature (@{$allele_features}) { 
       foreach my $transcript_allele (@{$allele_feature->get_all_TranscriptAlleles}) {
         push @transcript_alleles, {
@@ -72,13 +101,14 @@ sub fetch_by_dbID {
         };
       }
     }
-
     return {
       genotype => $genotype,
       mechanism => $mechanism,
-      locus_name => $input_allele_feature->hgvs_genomic,
+      locus_name => $input_allele_feature->name,
+      disease_names => \@disease_names,
       panel_to_disease => $panel_to_disease,
       transcript_alleles => \@transcript_alleles,
+      phenotypes => \@phenotypes,
       publications => \@publications,
     };
 
@@ -91,11 +121,27 @@ sub fetch_by_dbID {
       genotype => $genotype,
       mechanism => $mechanism,
       locus_name => $gene_feature->gene_symbol,
+      disease_names => \@disease_names,
       panel_to_disease => $panel_to_disease,
+      phenotypes => \@phenotypes,
       publications => \@publications,
     };
   }
 
+  if ($locus_type eq 'placeholder') {
+    my $placeholder_feature_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'PlaceholderFeature');
+    my $placeholder_feature = $placeholder_feature_adaptor->fetch_by_dbID($lgm->locus_id);
+    my $locus_name = $placeholder_feature->placeholder_name;
+    return {
+      genotype => $genotype,
+      mechanism => $mechanism,
+      locus_name => $locus_name,
+      disease_names => \@disease_names,
+      panel_to_disease => $panel_to_disease,
+      phenotypes => \@phenotypes,
+      publications => \@publications,
+    };
+  }
 }
 
 1;
