@@ -133,6 +133,7 @@ sub fetch_by_dbID {
     my $placeholder_feature = $placeholder_feature_adaptor->fetch_by_dbID($lgm->locus_id);
     my $locus_name = $placeholder_feature->placeholder_name;
     return {
+      restricted_mutation_set => 1,
       genotype => $genotype,
       mechanism => $mechanism,
       locus_name => $locus_name,
