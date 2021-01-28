@@ -1,6 +1,6 @@
 <div class="container">
-  <% if ($lgm_search_results) { %>
-  <h3>Locus genotype mechanism disease evidence search results</h3>
+  <% if (defined $lgm_search_results->{lgm_results_as_table}) { %>
+  <h3>Locus genotype mechanism disease evidence (LGMDE) search results</h3>
     <div>
       <table class="table table-bordered table-condensed">
         <thead>
@@ -43,7 +43,7 @@
               <td>
                 %= form_for '/gene2phenotype/lgm' => begin
                   %= hidden_field lgm_id => $lgm_id
-                  <input id="button" type="submit" class="btn btn-primary btn-sm" value="Go to page"/>
+                  <input id="button" type="submit" class="btn btn-primary btn-sm" value="See LGMDE"/>
                 %end
               </td>
             </tr>
