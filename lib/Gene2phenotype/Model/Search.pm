@@ -221,7 +221,7 @@ sub _get_lgm_results_as_table {
       $locus_name = $placeholder_feature->placeholder_name;
     } elsif ($locus_type eq 'allele') {
       my $allele_feature = $lgm->get_AlleleFeature;
-      $locus_name = $allele_feature->name;
+      $locus_name = $allele_feature->name . ', ' . $allele_feature->hgvs_genomic;
     }
     my @panels = ();
     my @disease_names = ();
