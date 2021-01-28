@@ -5,6 +5,12 @@
   <h3 class="title">Locus: <span class="text-primary"><i><%= $lgm->{locus_name} %></i></span> Genotype: <span class="text-primary"><i><%= $lgm->{genotype} %></i></span> Mechanism: <span class="text-primary"><i><%= $lgm->{mechanism} %></i></span></h3>
   <div class="clear"></div>
 
+  <% if (defined $lgm->{restricted_mutation_set}) {  %>
+    <div class="alert alert-warning" role="alert">
+      The locus is represented by a placeholder and will be replaced by an evidence based restricted mutation repertoire. 
+    </div>   
+  <% } %>
+
   <div>
     <dl>
       <dt>Genotype</dt>
