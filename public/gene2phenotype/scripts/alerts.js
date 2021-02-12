@@ -85,24 +85,30 @@ $(document).ready(function(){
   $('#add_gfd_form').submit(function(event){
     var gene_name = $('#add_gfd_form').find('input[name="gene_name"]').val();
     var disease_name = $('#add_gfd_form').find('input[name="disease_name"]').val();
+    var count_checked_genotypes =  $('#add_gfd_form').find('input[name="allelic_requirement_attrib_id"]:checked').length;
+ 
     if (gene_name == '') {
       event.preventDefault();
-      $(".alert").empty();
-      $(".alert").append("Please provide a gene name.");
-      $(".alert").removeClass("alert alert-danger").addClass("alert alert-danger");
+      $(".alert_add_gfd_form").empty();
+      $(".alert_add_gfd_form").append("Please enter a gene name.");
+      $(".alert_add_gfd_form").removeClass("alert alert-danger").addClass("alert alert-danger");
       return 0;
     }
     if (disease_name == '') {
       event.preventDefault();
-      $(".alert").empty();
-      $(".alert").append("Please provide a disease name.");
-      $(".alert").removeClass("alert alert-danger").addClass("alert alert-danger");
+      $(".alert_add_gfd_form").empty();
+      $(".alert_add_gfd_form").append("Please enter a disease name.");
+      $(".alert_add_gfd_form").removeClass("alert alert-danger").addClass("alert alert-danger");
+      return 0;
+    }
+    if (count_checked_genotypes == 0) {
+      event.preventDefault();
+      $(".alert_add_gfd_form").empty();
+      $(".alert_add_gfd_form").append("Please select a genotype.");
+      $(".alert_add_gfd_form").removeClass("alert alert-danger").addClass("alert alert-danger");
       return 0;
     }
     return 1;
   });
-
-
-
 
 });
