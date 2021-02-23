@@ -1,8 +1,5 @@
 <div>
-  <h3 class="section_header">
-    <a class="anchor" name="publications">Publications</a>
-    <a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a>
-  </h3>
+  <h3>Publications</h3>
   <% foreach my $publication (@{$gfd->{publications}}) { %>
     <div class="publication">
       <% if ($publication->{pmid}) { %>
