@@ -111,4 +111,17 @@ $(document).ready(function(){
     return 1;
   });
 
+  $('#update_gfd_action').submit(function(event){
+    var count_checked_genotypes =  $('#update_gfd_action').find('input[name="allelic_requirement_attrib_id"]:checked').length;
+
+    if (count_checked_genotypes == 0) {
+      event.preventDefault();
+      $(".alert_update_gfd_action").empty();
+      $(".alert_update_gfd_action").append("Please select a genotype.");
+      $(".alert_update_gfd_action").removeClass("alert alert-danger").addClass("alert alert-danger");
+      return 0;
+    }
+    return 1;
+  });
+
 });
