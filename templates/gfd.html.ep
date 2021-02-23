@@ -1,22 +1,12 @@
 %= include 'header'
 %= include 'search'
 <div class="container">
-  <h3 class="title"><a class="anchor" name="top">Panel: <%= $gfd->{panel} %> Gene: <em><%= $gfd->{gene_symbol} %></em> Disease: <em><%= $gfd->{disease_name} %></em></a></h3>
+  <h3 class="title">Panel: <span class="text-primary"><i><%= $gfd->{panel} %></i></span> Gene: <span class="text-primary"><i><%= $gfd->{gene_symbol} %></i></span> Disease: <span class="text-primary"><i><%= $gfd->{disease_name} %></i></span></h3>
   <div class="clear"></div>
-  <h4>Page navigation</h4>
-  <ul id="legend">
-    <a href="#gene">Gene</a>
-    <a href="#disease">Disease</a>
-    <a href="#GD_attribs">Gene-Disease Attributes</a>
-    <a href="#publications">Publications</a>
-    <a href="#phenotypes">Phenotypes</a>
-    <a href="#organ_specificity">Organ specificity</a>
-  </ul> 
-
+  %= include 'gfd_attributes'
   %= include 'gene'
   %= include 'statistics'
   %= include 'disease'
-  %= include 'gfd_attributes'
   %= include 'publication'
   %= include 'phenotype'
   %= include 'organ'
