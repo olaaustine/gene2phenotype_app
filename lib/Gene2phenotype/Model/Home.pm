@@ -82,17 +82,29 @@ sub format_updates {
 
     my $actions = $gfd->get_all_GenomicFeatureDiseaseActions;
 
-    foreach my $action (@$actions) {
-      my $allelic_requirement = $action->allelic_requirement || 'not specified';
-      my $mutation_consequence = $action->mutation_consequence || 'not specified';
-      push @results, {
-        date => $date,
-        gene_symbol => $update->gene_symbol,
-        disease_name => $update->disease_name,
-        genotype => $allelic_requirement,
-        mechanism => $mutation_consequence,
-        GFD_ID => $update->genomic_feature_disease_id,
-        search_type => 'gfd' 
+    if (scalar @$actions == 0) {
+        push @results, {
+          date => $date,
+          gene_symbol => $update->gene_symbol,
+          disease_name => $update->disease_name,
+          genotype => 'not specified',
+          mechanism => 'not specified',
+          GFD_ID => $update->genomic_feature_disease_id,
+          search_type => 'gfd' 
+        }
+    } else {
+      foreach my $action (@$actions) {
+        my $allelic_requirement = $action->allelic_requirement || 'not specified';
+        my $mutation_consequence = $action->mutation_consequence || 'not specified';
+        push @results, {
+          date => $date,
+          gene_symbol => $update->gene_symbol,
+          disease_name => $update->disease_name,
+          genotype => $allelic_requirement,
+          mechanism => $mutation_consequence,
+          GFD_ID => $update->genomic_feature_disease_id,
+          search_type => 'gfd' 
+        }
       }
     }
   }
