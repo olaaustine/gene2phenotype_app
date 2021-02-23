@@ -23,7 +23,7 @@
             <em><%== $entry->{gene_symbol} %></em>
             <strong>Genotype:</strong>
             <em><%== $entry->{genotype} %></em>
-            <strong>Mechanism:</strong>
+            <strong>Mutation consequence:</strong>
             <em><%== $entry->{mechanism} %></em>
             <strong>Disease:</strong>
             <em><%== $entry->{disease_name} %></em>
