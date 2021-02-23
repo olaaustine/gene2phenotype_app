@@ -234,6 +234,55 @@ sub fetch_all_duplicated_LGM_entries_by_panel {
   return $merge_list;
 }
 
+
+sub get_allelic_requirement_by_attrib_ids {
+  my $self = shift;
+  my $attribs = shift;
+  my @genotypes = ();
+  my $registry = $self->app->defaults('registry');
+  my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
+  foreach my $attrib_id (split(',', $attribs)) {
+    push @genotypes,  $attribute_adaptor->attrib_value_for_id($attrib_id);
+  }
+  return join(',', sort @genotypes);
+}
+
+sub get_allelic_requirement_attrib_ids_by_values {
+  my $self = shift;
+  my $values = shift;
+  my @attrib_ids = ();
+  my $registry = $self->app->defaults('registry');
+  my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
+  foreach my $value (split(',', $values)) {
+    push @attrib_ids, $attribute_adaptor->attrib_id_for_type_value('allelic_requirement', $value);
+  }
+  return join(',', sort { $a <=> $b } @attrib_ids);
+}
+
+sub get_mutation_consequence_by_attrib_id {
+  my $self = shift;
+  my $attrib_id = shift;
+  my $registry = $self->app->defaults('registry');
+  my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
+  return $attribute_adaptor->attrib_value_for_id($attrib_id);
+}
+
+sub get_mutation_consequence_attrib_id_by_value {
+  my $self = shift;
+  my $value = shift;
+  my $registry = $self->app->defaults('registry');
+  my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
+  return $attribute_adaptor->attrib_id_for_type_value('mutation_consequence', $value);
+}
+
+sub get_confidence_value_by_attrib_id {
+  my $self = shift;
+  my $attrib_id = shift;
+  my $registry = $self->app->defaults('registry');
+  my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
+  return $attribute_adaptor->attrib_value_for_id($attrib_id);
+}
+
 sub fetch_all_duplicated_LGM_entries_by_gene {
   my $self = shift;
   my $gf_id = shift;
@@ -365,12 +414,44 @@ sub fetch_by_panel_GenomicFeature_Disease {
   return $gfd;
 }
 
-sub add {
+sub fetch_all_existing_by_panel_LGM {
   my $self = shift;
   my $panel = shift;
   my $gf = shift;
+  my $ar_attrib_ids = shift;
+  my $mc_attrib_id = shift;
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease');
+
+  my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
+  my $gfds = $GFD_adaptor->fetch_all_by_GenomicFeature_panel($gf, $panel);
+  my @existing_gfds = ();
+  foreach my $gfd (@{$gfds}) {
+    my $actions = $gfd->get_all_GenomicFeatureDiseaseActions;
+    foreach my $action (@$actions) {
+      if ($action->allelic_requirement_attrib eq $ar_attrib_ids && $action->mutation_consequence_attrib eq $mc_attrib_id) {
+        push @existing_gfds, {
+          gfd_id => $gfd->dbID,
+          gene_symbol => $gfd->get_GenomicFeature->gene_symbol,
+          disease_name => $gfd->get_Disease->name,
+          allelic_requirement => $action->allelic_requirement,
+          mutation_consequence => $action->mutation_consequence, 
+          panel => $gfd->panel,
+        };
+      }     
+    }
+  }
+  return \@existing_gfds;
+}
+
+sub add {
+  my $self = shift;
+  my $panel = shift;
+  my $genomic_feature = shift;
   my $disease = shift;
-  my $category_attrib_id = shift;
+  my $allelic_requirement_attrib_ids = shift;
+  my $mutation_consequence_attrib_id = shift;
+  my $confidence_attrib_id = shift;
   my $email = shift;
 
   my $registry = $self->app->defaults('registry');
@@ -378,17 +459,65 @@ sub add {
   my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
   my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
 
-  my $panel_id = $attribute_adaptor->attrib_id_for_value($panel); 
+  my $panel_id = $attribute_adaptor->attrib_id_for_type_value('g2p_panel', $panel); 
 
   my $gfd =  Bio::EnsEMBL::G2P::GenomicFeatureDisease->new(
     -panel_attrib => $panel_id,
     -disease_id => $disease->dbID,
-    -genomic_feature_id => $gf->dbID,
-    -confidence_category_attrib => $category_attrib_id,
+    -genomic_feature_id => $genomic_feature->dbID,
+    -confidence_category_attrib => $confidence_attrib_id,
     -adaptor => $GFD_adaptor,
   );
   my $user = $user_adaptor->fetch_by_email($email);
   $gfd = $GFD_adaptor->store($gfd, $user);
+
+  my $GFDAction_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseaseAction');
+  my $GFDAction = Bio::EnsEMBL::G2P::GenomicFeatureDiseaseAction->new(
+    -genomic_feature_disease_id => $gfd->dbID(),
+    -mutation_consequence_attrib => $mutation_consequence_attrib_id,
+    -allelic_requirement_attrib => $allelic_requirement_attrib_ids,
+  );
+  $GFDAction_adaptor->store($GFDAction, $user);
+
+  return $gfd;
+}
+
+sub add_by_name {
+  my ($self, $panel, $gene_symbol, $disease_name, $genotypes, $mutation_consequence, $confidence_value, $email) = @_;
+  my $registry = $self->app->defaults('registry');
+  my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
+  my $panel_id = $attribute_adaptor->attrib_id_for_type_value('g2p_panel', $panel); 
+  my $confidence_attrib_id = $attribute_adaptor->attrib_id_for_type_value('confidence_category', $confidence_value);
+  
+  my $genomic_feature_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeature');
+  my $genomic_feature = $genomic_feature_adaptor->fetch_by_gene_symbol($gene_symbol);
+  my $disease_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'Disease'); 
+  my $disease = $disease_adaptor->fetch_by_name($disease_name);
+
+  my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
+  my $user = $user_adaptor->fetch_by_email($email);
+
+  my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease');
+
+  my $gfd =  Bio::EnsEMBL::G2P::GenomicFeatureDisease->new(
+    -panel_attrib => $panel_id,
+    -disease_id => $disease->dbID,
+    -genomic_feature_id => $genomic_feature->dbID,
+    -confidence_category_attrib => $confidence_attrib_id,
+    -adaptor => $GFD_adaptor,
+  );
+  $gfd = $GFD_adaptor->store($gfd, $user);
+
+  my $allelic_requirement_attrib_ids = $self->get_allelic_requirement_attrib_ids_by_values($genotypes);
+  my $mutation_consequence_attrib_id = $self->get_mutation_consequence_attrib_id_by_value($mutation_consequence);
+
+  my $GFDAction_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseaseAction');
+  my $GFDAction = Bio::EnsEMBL::G2P::GenomicFeatureDiseaseAction->new(
+    -genomic_feature_disease_id => $gfd->dbID(),
+    -mutation_consequence_attrib => $mutation_consequence_attrib_id,
+    -allelic_requirement_attrib => $allelic_requirement_attrib_ids,
+  );
+  $GFDAction_adaptor->store($GFDAction, $user);
   return $gfd;
 }
 
@@ -405,7 +534,7 @@ sub delete {
   $GFD_adaptor->delete($GFD, $user);
 }
 
-sub get_default_GFD_category_list {
+sub get_confidence_values {
   my $self = shift;
   my $registry = $self->app->defaults('registry');
   my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
@@ -416,6 +545,35 @@ sub get_default_GFD_category_list {
     push @list, [$value => $id];
   }
   return \@list;
+}
+
+sub get_genotypes {
+  my $self = shift;
+  my $registry = $self->app->defaults('registry');
+  my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
+  my $attribs = $attribute_adaptor->get_attribs_by_type_value('allelic_requirement');
+  my @AR_tmpl = ();
+  foreach my $value (sort keys %$attribs) {
+    my $id = $attribs->{$value};
+    push @AR_tmpl, {
+      AR_attrib_id => $id,
+      AR_attrib_value => $value,
+    };
+  }
+  return \@AR_tmpl;
+}
+
+sub get_mutation_consequences {
+  my $self = shift;
+  my $registry = $self->app->defaults('registry');
+  my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
+  my $attribs = $attribute_adaptor->get_attribs_by_type_value('mutation_consequence');
+  my @MC_tmpl = ();
+  foreach my $value (sort keys %$attribs) {
+    my $id = $attribs->{$value};
+    push @MC_tmpl, [$value => $id];
+  }
+  return \@MC_tmpl;
 }
 
 sub _get_GFD_category_list {
@@ -519,9 +677,9 @@ sub _get_GFD_action_attributes {
   my $GFDAL_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicFeatureDiseaseActionLog');
   my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
 
-
   my $GFD_actions = $GFD->get_all_GenomicFeatureDiseaseActions();
   my @actions = ();
+
   foreach my $gfda (@$GFD_actions) {
     my @logs = ();
     if ($logged_in) {
