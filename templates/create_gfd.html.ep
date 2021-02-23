@@ -14,25 +14,49 @@
       </div>
     </div>
     <div class="form-group">
-      <label class="col-sm-2 control-label">Gene name</label>
+      <label class="col-sm-2 control-label">Gene symbol</label>
       <div class="col-sm-10">
-        <input id="query_gene_name" type="text" name="gene_name" placeholder="Select gene name" class="form-control">
+        <% if (my $gene_symbol = stash 'gene_symbol') { %>
+          <input id="query_gene_symbol" type="text" name="gene_symbol" value="<%= $gene_symbol %>" class="form-control">
+        <% } else { %>
+          <input id="query_gene_symbol" type="text" name="gene_symbol" placeholder="Select gene name" class="form-control">
+        <% } %>
       </div>
     </div>
     <div class="form-group">
       <label class="col-sm-2 control-label">Disease name</label>
       <div class="col-sm-10">
-        <input id="query_disease_name" type="text" name="disease_name" placeholder="Select disease name" class="form-control">
+        <% if (my $disease_name = stash 'disease_name') { %>
+          <input id="query_disease_name" type="text" name="disease_name" value="<%= $disease_name %>" class="form-control">
+        <% } else { %>
+          <input id="query_disease_name" type="text" name="disease_name" placeholder="Select disease name" class="form-control">
+        <% } %>
       </div>
     </div>
     <div class="form-group">
-      <label class="col-sm-2 control-label">Disease confidence</label>
+      <label class="col-sm-2 control-label">Confidence</label>
       <div class="col-sm-10">
-        <select class="form-control" name="category_attrib_id">
-          <% foreach my $category ( @{$GFD_category_list} ) { %>
-            <option value="<%= $category->[1] %>"><%= $category->[0] %></option>
+        <select class="form-control" name="confidence_attrib_id">
+          <% foreach my $confidence_value ( @{$confidence_values} ) { %>
+            <option value="<%= $confidence_value->[1] %>"><%= $confidence_value->[0] %></option>
           <% } %>
         </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Genotype</label>
+      <div class="col-sm-10">
+        <% foreach my $AR (@{$genotypes}) { %>
+          %= check_box allelic_requirement_attrib_id => $AR->{AR_attrib_id}
+          <%= $AR->{AR_attrib_value}%>
+          %= tag 'br'
+        <% } %>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Mutation consequence</label>
+      <div class="col-sm-10">
+        %= select_field mutation_consequence_attrib_id => $mutation_consequences
       </div>
     </div>
     <div class="form-group">
@@ -41,8 +65,67 @@
       </div>
     </div>
   %end
+  <div class="alert_add_gfd_form" role="alert">
+  </div>
+  <% if (my $existing_gfds = stash 'existing_gfds') { %>
+    <div class="panel panel-danger add_entry_anyway">
+      <div class="panel-heading">
+        <% if (my $message = stash 'message') { %>
+          <h5><%= $message %></h5>
+        <% } %>
+      </div>
+      <div class="panel-body">
+        <p>Existing entries in database:</p>
+      </div>
+
+      <table class="table table-bordered table-condensed">
+        <thead>
+        <tr>
+        <th scope="col">Gene symbol</th>
+        <th scope="col">Allelic requirement</th>
+        <th scope="col">Mutation consequence</th>
+        <th scope="col">Disease</th>
+        <th scope="col">Panel</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% foreach my $gfd (@{$existing_gfds}) { %> 
+        <tr>
+        <td><%= $gfd->{gene_symbol} %></td>
+        <td><%= $gfd->{allelic_requirement} %></td>
+        <td><%= $gfd->{mutation_consequence} %></td>
+        <td><%= $gfd->{disease_name} %></td>
+        <td>
+          %= form_for '/gene2phenotype/gfd' => begin
+            %= hidden_field dbID => $gfd->{gfd_id}
+            <input id="button" type="submit" value=<%= $gfd->{panel} %> class="btn btn-primary btn-sm"/>
+          % end
+        </td>
+        </tr>
+        <% } %>
+        </tbody> 
+      </table>
+      <% if (my $new_entry = stash 'new_entry') { %> 
+        <div class="panel-body">
+          <p>Entry to be added: <%= $new_entry->{entry_to_be_added} %></p>
+          <div class="align_buttons_left">
+            %= form_for '/gene2phenotype/gfd/add' => begin
+              %= hidden_field panel => $new_entry->{panel}
+              %= hidden_field gene_symbol => $new_entry->{gene_symbol}
+              %= hidden_field disease_name => $new_entry->{disease_name}
+              %= hidden_field genotypes_to_be_added => $new_entry->{genotypes_to_be_added}
+              %= hidden_field mutation_consequence_to_be_added => $new_entry->{mutation_consequence_to_be_added}
+              %= hidden_field confidence_value_to_be_added => $new_entry->{confidence_value_to_be_added}
+              %= hidden_field add_entry_anyway => 1
+              <input id="button" type="submit" class="btn btn-primary" value="Add"/>
+            %end
+          </div>
+          <div>
+            <input type="button" value="Discard" class="btn btn-primary discard_add_entry_anyway"/>
+          </div>
+       </div>
+      <% } %>
+    </div>  
+  <% } %>
 </div>
 %= include 'footer'
-~
-~
-~

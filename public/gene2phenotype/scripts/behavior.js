@@ -417,6 +417,15 @@ function __highlight(s, t) {
     dialogClass: "modal-dialog modal-lg" // Bootstrap classes for large modal 
   });
 
+  $(".discard_add_entry_anyway").click(function(){
+    $button = $(this);
+    $this_content = $button.closest(".add_entry_anyway");
+    $this_content.hide();
+  });
+
+
+
+
 });
 
 

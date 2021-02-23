@@ -2,98 +2,38 @@
 %= include 'search'
 
 <div class="container">
-  <% if ($search_results) { %>
-    <h3>Search results for <%= $search_term %></h3>
-  <% } else { %>
+  <% if ( ! defined $search_results) { %>
     <h3>No search results for <%= $search_term %></h3>
     <p>If you are expecting results please contact <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a>.</p>
-  <% } %>
-  <% if ($search_results->{gene_names}) { %>
-    <ul>
-      <li>
-        <div>
-          <h4>Genes:</h4>
-          <ul>
-            <% foreach my $gene (@{$search_results->{gene_names}}) { %>
-              <li>
-                <%== $gene->{gene_symbol} %>
-              </li>
-              <% if ($gene->{gfd_results}) { %>
-                <ul>
-                  <% foreach my $gfd (@{$gene->{gfd_results}}) { %>
-                    <li>
-                      %= form_for '/gene2phenotype/gfd' => (id => $gfd->{dbID}) => begin
-                        %= hidden_field search_type => $gfd->{search_type}
-                        %= hidden_field dbID => $gfd->{dbID}
-                        <%= link_to '#' => ( onclick => "document.getElementById($gfd->{dbID}).submit();") => begin %>
-                          <strong>Panel:</strong>
-                          <em><%== $gfd->{GFD_panel} %></em>
-                          <strong>Gene:</strong>
-                          <em><%== $gfd->{gene_symbol} %></em>
-                          <strong>Genotype:</strong>
-                          <em><%== $gfd->{genotype} %></em>
-                          <strong>Mechanism:</strong>
-                          <em><%== $gfd->{mechanism} %></em>
-                          <strong>Disease:</strong>
-                          <em><%== $gfd->{disease_name} %></em>
-                        <% end %>
-                      % end
-                    </li>
-                  <% } %>
-                </ul>
-              <% } %>
-            <% } %>
-          </ul>
-        </div>
-      </li>
-    </ul>
-  <% } %>
-  <% if ($search_results->{disease_names}) { %>
-    <ul>
-      <li>
-        <div>
-          <h4>Diseases:</h4>
-          <ul>
-            <% foreach my $disease (@{$search_results->{disease_names}}) { %>
-              <li>
-                <%== $disease->{display_disease_name} %>
-              </li>
-              <% if (@{$disease->{gfd_results}}) { %>
-                <ul>
-                  <% foreach my $gfd (@{$disease->{gfd_results}}) { %>
-                    <li>
-                      %= form_for '/gene2phenotype/gfd' => (id => $gfd->{dbID}) => begin
-                        %= hidden_field search_type => $gfd->{search_type}
-                        %= hidden_field dbID => $gfd->{dbID}
-                        <%= link_to '#' => ( onclick => "document.getElementById($gfd->{dbID}).submit();") => begin %>
-                          <strong>Panel:</strong>
-                          <em><%== $gfd->{GFD_panel} %></em>
-                          <strong>Gene:</strong>
-                          <em><%== $gfd->{gene_symbol} %></em>
-                          <strong>Genotype:</strong>
-                          <em><%== $gfd->{genotype} %></em>
-                          <strong>Mechanism:</strong>
-                          <em><%== $gfd->{mechanism} %></em>
-                          <strong>Disease:</strong>
-                          <em><%== $gfd->{disease_name} %></em>
-                        <% end %>
-                      % end
-                    </li>
-                  <% } %>
-                </ul>
-              <% } else { %>
-                <ul>
-                  <li>
-                    <p>The disease is currently not linked to a G2P entry. If you are expecting results please contact <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a>.</p>
-                  </li>
-                </ul>
-              <% } %>
-            <% } %>
-          </ul>
-        </div>
-      </li>
-    </ul>
+  <% } else { %>
+    <h3>Search results for <%= $search_term %></h3>
+    <table class="table table-bordered table-condensed">
+      <thead>
+        <tr>
+          <th scope="col">Gene symbol</th>
+          <th scope="col">Genotype</th>
+          <th scope="col">Mutation consequence</th>
+          <th scope="col">Disease</th>
+          <th scope="col">Panel</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% foreach my $gfd (sort {$a->{GFD_panel} cmp $b->{GFD_panel} || $a->{gene_symbol} cmp $b->{gene_symbol} || $a->{genotype} cmp $b->{genotype} || $a->{mechanism} cmp $b->{mechanism}}   @{$search_results->{gfd_results}}) { %>
+          <tr>
+            <td><%= $gfd->{gene_symbol} %></td>
+            <td><%= $gfd->{genotype} %></td>
+            <td><%= $gfd->{mechanism} %></td>
+            <td><%= $gfd->{disease_name} %></td>
+            <td>
+              %= form_for '/gene2phenotype/gfd' => (id => $gfd->{dbID}) => begin
+                %= hidden_field dbID => $gfd->{dbID}
+                <input id="button" type="submit" value=<%= $gfd->{GFD_panel} %> class="btn btn-primary btn-sm"/>
+              % end
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
   <% } %>
 </div>
-
 %= include 'footer'

@@ -1,5 +1,5 @@
 <div>
-  <h3><a class="anchor" name="phenotypes">Phenotypes</a><a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a></h3>
+  <h3>Phenotypes</h3>
   <p>
     <% my $link = "https://decipher.sanger.ac.uk/gene/" . $gene->{gene_symbol} . "#phenotypes"; %>
     <%= link_to $link => (target => '_blank') => begin %>Look up phenotypes associated with <%= $gfd->{gene_symbol} %> in Decipher <% end %>

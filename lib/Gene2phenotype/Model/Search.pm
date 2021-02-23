@@ -21,8 +21,8 @@ use Mojo::Base 'MojoX::Model';
 sub identify_search_type {
   my $self = shift;
   my $search_term = shift;
-  my $registry = $self->app->defaults('registry');
 
+  my $registry = $self->app->defaults('registry');
   my $gf_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeature'); 
 
   if ($gf_adaptor->fetch_by_gene_symbol($search_term) || $gf_adaptor->fetch_by_synonym($search_term)) {
@@ -54,40 +54,23 @@ sub fetch_all_by_substring {
 
   my @disease_names = ();
   my $diseases = $disease_adaptor->fetch_all_by_substring($search_term);
-
+  my @gfd_results = ();
   foreach my $disease ( sort { $a->name cmp $b->name } @$diseases) {
-    my $disease_name = $disease->name;
-    my $dbID = $disease->dbID;
-    $disease_name =~ s/$search_term/<b>$search_term<\/b>/gi;
     my $gfds = $gfd_adaptor->fetch_all_by_Disease_panels($disease, $search_panels);
-    @$gfds = sort { ( $a->panel cmp $b->panel ) || ( $a->get_GenomicFeature->gene_symbol cmp $b->get_GenomicFeature->gene_symbol ) } @$gfds;
-    my $gfd_results = $self->_get_gfd_results($gfds, $is_authorised);
-    push @disease_names, {display_disease_name => $disease_name, gfd_results => $gfd_results, search_type => 'disease', dbID => $dbID};
+    push @gfd_results, @{$self->_get_gfd_results($gfds, $is_authorised)};
 
   }
-  my @gene_names = ();
   my $genes = $gf_adaptor->fetch_all_by_substring($search_term);
   foreach my $gene ( sort { $a->gene_symbol cmp $b->gene_symbol } @$genes) {
-    my $gene_symbol = $gene->gene_symbol;
-    my $dbID = $gene->dbID;
-    $gene_symbol =~ s/$search_term/<b>$search_term<\/b>/gi;
     my $gfds = $gfd_adaptor->fetch_all_by_GenomicFeature_panels($gene, $search_panels);
-    @$gfds = sort { ( $a->panel cmp $b->panel ) || ( $a->get_Disease->name cmp $b->get_Disease->name ) } @$gfds;
-    my $gfd_results = $self->_get_gfd_results($gfds, $is_authorised);
-    push @gene_names, {gene_symbol => $gene_symbol, gfd_results => $gfd_results, search_type => 'gene_symbol', dbID => $dbID};
+    foreach my $gfd_result (@{$self->_get_gfd_results($gfds, $is_authorised)}) {
+      if (! grep {$gfd_result->{dbID} eq $_->{dbID}} @gfd_results) {
+        push @gfd_results, $gfd_result;
+      }
+    }
   }
+  return {gfd_results => \@gfd_results};
 
-  my $results = {};
-  
-  if (@disease_names) {
-    $results->{'disease_names'} = \@disease_names;
-  } 
-  
-  if (@gene_names) {
-    $results->{'gene_names'} = \@gene_names;
-  } 
-
-  return $results;
 }
 
 sub fetch_all_by_gene_symbol {
@@ -106,18 +89,9 @@ sub fetch_all_by_gene_symbol {
     $gene = $gf_adaptor->fetch_by_synonym($search_term);
   }
 
-  my @gene_names = ();
-  my $gene_symbol = $gene->gene_symbol;
-  my $dbID = $gene->dbID;
-
-  $gene_symbol =~ s/$search_term/<b>$search_term<\/b>/gi;
   my $gfds = $gfd_adaptor->fetch_all_by_GenomicFeature_panels($gene, $search_panels);
-  @$gfds = sort { ( $a->panel cmp $b->panel ) || ( $a->get_Disease->name cmp $b->get_Disease->name ) } @$gfds;
   my $gfd_results = $self->_get_gfd_results($gfds, $is_authorised);
-
-  push @gene_names, {gene_symbol => $gene_symbol, gfd_results => $gfd_results, search_type => 'gene_symbol', dbID => $dbID};
-
-  return {'gene_names' => \@gene_names};
+  return {gfd_results => $gfd_results};
 }
 
 sub fetch_all_lgms_by_gene_symbol {
@@ -163,18 +137,12 @@ sub fetch_all_by_disease_name {
   my $disease_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'disease');
   my $gfd_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease'); 
 
-  my @disease_names = ();
   my $disease = $disease_adaptor->fetch_by_name($search_term);
 
-  my $disease_name = $disease->name;
-  my $dbID = $disease->dbID;
-  $disease_name =~ s/$search_term/<b>$search_term<\/b>/gi;
   my $gfds = $gfd_adaptor->fetch_all_by_Disease_panels($disease, $search_panels);
-  @$gfds = sort { ( $a->panel cmp $b->panel ) || ( $a->get_GenomicFeature->gene_symbol cmp $b->get_GenomicFeature->gene_symbol ) } @$gfds;
   my $gfd_results = $self->_get_gfd_results($gfds, $is_authorised);
-  push @disease_names, {display_disease_name => $disease_name, gfd_results => $gfd_results, search_type => 'disease', dbID => $dbID};
 
-  return {'disease_names' => \@disease_names};
+  return {gfd_results => $gfd_results};
 }
 
 sub _get_gfd_results {
@@ -194,10 +162,14 @@ sub _get_gfd_results {
     my $panel = $gfd->panel;
     my $actions = $gfd->get_all_GenomicFeatureDiseaseActions;
 
-    foreach my $action (@$actions) {
-      my $allelic_requirement = $action->allelic_requirement || 'not specified';
-      my $mutation_consequence = $action->mutation_consequence || 'not specified';  
-      push @gfd_results, {gene_symbol => $gene_symbol, disease_name => $disease_name, genotype => $allelic_requirement, mechanism =>  $mutation_consequence, search_type => 'gfd', dbID => $dbID, GFD_panel => $panel};
+    if (scalar @$actions == 0) {
+      push @gfd_results, {gene_symbol => $gene_symbol, disease_name => $disease_name, genotype => 'not specified', mechanism => 'not specified', search_type => 'gfd', dbID => $dbID, GFD_panel => $panel};
+    } else {
+      foreach my $action (@$actions) {
+        my $allelic_requirement = $action->allelic_requirement || 'not specified';
+        my $mutation_consequence = $action->mutation_consequence || 'not specified';  
+        push @gfd_results, {gene_symbol => $gene_symbol, disease_name => $disease_name, genotype => $allelic_requirement, mechanism =>  $mutation_consequence, search_type => 'gfd', dbID => $dbID, GFD_panel => $panel};
+      }
     }
   }
   return \@gfd_results;

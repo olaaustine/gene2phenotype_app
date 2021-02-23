@@ -7,7 +7,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 http://www.apache.org/licenses/LICENSE-2.0
- 
+
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,10 +17,11 @@ limitations under the License.
 =cut
 package Gene2phenotype::Controller::GenomicFeatureDisease;
 use base qw(Gene2phenotype::Controller::BaseController);
-
+use strict;
+use warnings;
 sub show {
   my $self = shift;
-  my $model = $self->model('genomic_feature_disease');  
+  my $model = $self->model('genomic_feature_disease');
   my $disease_model = $self->model('disease');
   my $GF_model = $self->model('genomic_feature');
 
@@ -100,22 +101,35 @@ sub duplicate {
   $self->feedback_message($feedback);
   return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
-
+# show form
 sub create {
   my $self = shift;
   
   if ($self->session('logged_in')) {
+
     my $email = $self->session('email');
+
+    if (defined $self->param('gene_symbol')) {
+      $self->stash(gene_symbol => $self->param('gene_symbol'));
+    } else {
+      $self->stash(gene_symbol => undef);
+    }
 
     my $user_model = $self->model('user');
     my $user = $user_model->fetch_by_email($email);
-    my $user_model = $self->model('user');
     my @panels = split(',', $user->panel);
     $self->stash(panels => \@panels);
 
     my $gfd_model = $self->model('genomic_feature_disease');
-    my $GFD_category_list = $gfd_model->get_default_GFD_category_list;
-    $self->stash(GFD_category_list => $GFD_category_list);
+    my $confidence_values = $gfd_model->get_confidence_values;
+    $self->stash(confidence_values => $confidence_values);
+
+    my $genotypes = $gfd_model->get_genotypes;
+    $self->stash(genotypes => $genotypes);
+
+    my $mutation_consequences =  $gfd_model->get_mutation_consequences;
+    $self->stash(mutation_consequences => $mutation_consequences);
+
   }
 
   $self->render(template => 'create_gfd');
@@ -123,37 +137,108 @@ sub create {
 
 sub add {
   my $self = shift;
-  my $panel = $self->param('panel');
-  my $gene_name = $self->param('gene_name');
-  my $disease_name = $self->param('disease_name');
-  my $category_attrib_id = $self->param('category_attrib_id');
+  my $panel                          = $self->param('panel');
+  my $gene_symbol                    = $self->param('gene_symbol');
+  my $disease_name                   = $self->param('disease_name');
+  my $confidence_attrib_id           = $self->param('confidence_attrib_id');
+  my $allelic_requirement_attrib_ids = join(',', sort @{$self->every_param('allelic_requirement_attrib_id')});
+  my $mutation_consequence_attrib_id = $self->param('mutation_consequence_attrib_id');
+
   my $email = $self->session('email');
 
   my $model = $self->model('genomic_feature_disease');  
+
+  # user has confirmed to add new entry
+  if (defined $self->param('add_entry_anyway') && $self->param('add_entry_anyway') == 1) {
+    my $gfd = $model->add_by_name(
+      $self->param('panel'),
+      $self->param('gene_symbol'),
+      $self->param('disease_name'),
+      $self->param('genotypes_to_be_added'),
+      $self->param('mutation_consequence_to_be_added'),
+      $self->param('confidence_value_to_be_added'),
+      $email
+    );
+    my $GFD_id = $gfd->dbID;
+    $self->feedback_message('ADDED_GFD_SUC');
+    return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+  } 
+
   my $gf_model = $self->model('genomic_feature');
-  my $disease_model = $self->model('disease');
-
-  my $disease = $disease_model->fetch_by_name($disease_name);
-  if (!$disease) {
-    $disease = $disease_model->add($disease_name);
-  }
-
-  my $gf = $gf_model->fetch_by_gene_symbol($gene_name); 
+  my $gf = $gf_model->fetch_by_gene_symbol($gene_symbol); 
   if (!$gf) {
     $self->feedback_message('GF_NOT_IN_DB');
     return $self->redirect_to("/gene2phenotype/gfd/create");
   }
-  
-  my $gfd = $model->fetch_by_panel_GenomicFeature_Disease($panel, $gf, $disease);
 
-  if ($gfd) {
-    my $GFD_id = $gfd->dbID;
-    return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
-  } else {
-    $gfd = $model->add($panel, $gf, $disease, $category_attrib_id, $email);
-    my $GFD_id = $gfd->dbID;
-    return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+  my $disease_model = $self->model('disease');
+  my $disease = $disease_model->fetch_by_name($disease_name);
+  if (!$disease) {
+    $disease = $disease_model->add($disease_name);
   }
+  my $gfd = $model->fetch_by_panel_GenomicFeature_Disease($panel, $gf, $disease);
+  if ($gfd) {
+    my $actions = $gfd->get_all_GenomicFeatureDiseaseActions;
+    my $action = $actions->[0];
+    if ($action->allelic_requirement_attrib eq $allelic_requirement_attrib_ids && $action->mutation_consequence_attrib eq $mutation_consequence_attrib_id) {
+      # if entry already exists go to GFD page
+      # show message that entry was already in database
+      my $GFD_id = $gfd->dbID;
+      $self->feedback_message('GFD_IN_DB');
+      return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+    } else {
+      # entry with same gene symbol and disease name exists
+      $self->stash(message => 'Error: An entry with the same gene symbol and disease name already exists:');
+      $self->stash(
+        confidence_values => $model->get_confidence_values,
+        mutation_consequences =>  $model->get_mutation_consequences,
+        genotypes => $model->get_genotypes,
+        gene_symbol => $gene_symbol,
+        disease_name => $disease_name,
+        existing_gfds => [{
+          gfd_id => $gfd->dbID,
+          gene_symbol => $gfd->get_GenomicFeature->gene_symbol,
+          disease_name => $gfd->get_Disease->name,
+          allelic_requirement => $action->allelic_requirement,
+          mutation_consequence => $action->mutation_consequence,
+          panel => $gfd->panel,
+        }],
+      );
+      return $self->render(template => 'create_gfd');
+    }
+  }
+
+  my $existing_gfds = $model->fetch_all_existing_by_panel_LGM($panel, $gf, $allelic_requirement_attrib_ids, $mutation_consequence_attrib_id);
+  if (scalar @{$existing_gfds} > 0) {
+    my $genotypes_to_be_added = $model->get_allelic_requirement_by_attrib_ids($allelic_requirement_attrib_ids);
+    my $mutation_consequence_to_be_added = $model->get_mutation_consequence_by_attrib_id($mutation_consequence_attrib_id);
+    my $confidence_value_to_be_added = $model->get_confidence_value_by_attrib_id($confidence_attrib_id);
+
+    $self->stash(message => 'Warning: Entries with the same gene symbol, allelic requirement and mutation consequence already exist:');
+    $self->stash(
+      existing_gfds => $existing_gfds,
+      confidence_values => $model->get_confidence_values,
+      mutation_consequences =>  $model->get_mutation_consequences,
+      genotypes => $model->get_genotypes,
+      gene_symbol => $gene_symbol,
+      disease_name => $disease_name,
+      new_entry => {
+        entry_to_be_added => join('; ', $gene_symbol, $genotypes_to_be_added, $mutation_consequence_to_be_added, $disease_name, $confidence_value_to_be_added),
+        panel => $panel,
+        gene_symbol => $gene_symbol,
+        disease_name => $disease_name,
+        genotypes_to_be_added => $genotypes_to_be_added,
+        mutation_consequence_to_be_added => $mutation_consequence_to_be_added,
+        confidence_value_to_be_added => $confidence_value_to_be_added
+      }
+    );
+    return $self->render(template => 'create_gfd');
+  } 
+
+  $gfd = $model->add($panel, $gf, $disease, $allelic_requirement_attrib_ids, $mutation_consequence_attrib_id, $confidence_attrib_id, $email);
+  my $GFD_id = $gfd->dbID;
+  $self->feedback_message('ADDED_GFD_SUC');
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
 
 sub delete {

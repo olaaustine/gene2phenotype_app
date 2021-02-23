@@ -56,6 +56,8 @@ our %MESSAGES = (
   UPDATED_PHENOTYPES_SUC => {msg => 'Successfully updated the list of phenotypes.', type => 'success'},
   DATA_NOT_CHANGED => {msg => 'Data has not changed.', type => 'info'},
   GF_NOT_IN_DB => {msg => 'The gene is not stored in our database. Please choose a gene symbol using the autocomplete search or contact g2p-help@ebi.ac.uk', type => 'danger'},
+  GFD_IN_DB => {msg => 'The entry was already stored in the database.', type => 'info'},
+  ADDED_GFD_SUC => {msg => 'Successfully added new entry to the database.', type => 'success'},
   LOGIN_FOR_ACCOUNT_INFO => {msg => 'You need to login first to see your account details.', type => 'info'},
   SUCC_ADDED_PHENOTYPE => {msg => 'Successfully added XXX to the list of phenotypes.', type => 'success'},
   ERROR_PHENOTYPE_NOT_IN_DB => {msg => 'The phenotype XXX is not part of HPO. Please contact g2p-help@ebi.ac.uk for help.', type => 'danger'},

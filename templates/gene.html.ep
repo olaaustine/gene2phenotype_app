@@ -1,6 +1,5 @@
 <div>
-  <h3><a class="anchor" name="gene">Gene: <%= $gene->{gene_symbol} %></a><a title="Back to Top" href='#top'><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></a></h3>
-
+  <h3>Gene: <%= $gene->{gene_symbol} %></h3>
   <div id='location'>
     <input type=hidden id="gene_symbol" value="<%= $gene->{gene_symbol} %>"/>
     <dl>
