@@ -66,5 +66,17 @@
       </ul>
     </div>
   </nav>
-%= include 'alerts'  
+  <div class="alert alert-info container" role="alert">
+    <p><em>We need your help!</em></p>
+    <p>
+      If you’ve ever found our data helpful, please take our impact survey (15 min). Your replies will help keep the data flowing to the scientific community.
+    </p>
+    <p>
+    <form action="https://www.surveymonkey.co.uk/r/EMBL-EBI_Impact_DR">
+      <button type="submit" class="btn btn-info" style="float: right;">Take survey</button>
+    </form>
+    </p>
+  </div>
+  <div class="clear"></div>
+  %= include 'alerts'
 </div>
