@@ -6,13 +6,10 @@
       <dd><%= $gfd->{GFD_category} %></dd>
     </dl>
   </div>
-
-  <% foreach my $GFD_action (@{$gfd->{GFD_actions}}) { %>
-    <dl>
-      <dt>Allelic requirement</dt>
-      <dd><%= $GFD_action->{allelic_requirement} %></dd>
-      <dt>Mutation consequence summary</dt>
-      <dd><%= $GFD_action->{mutation_consequence_summary} %></dd>
-    </dl>
-  <% } %>
+  <dl>
+    <dt>Allelic requirement</dt>
+    <dd><%= $gfd->{allelic_requirement} %></dd>
+    <dt>Mutation consequence summary</dt>
+    <dd><%= $gfd->{mutation_consequence} %></dd>
+  </dl>
 </div>

@@ -216,7 +216,6 @@ sub startup {
   $r->get('/gene2phenotype/gfd/category/update')->to('genomic_feature_disease#update');
   $r->get('/gene2phenotype/gfd/organ/update')->to('genomic_feature_disease#update_organ_list');
   $r->get('/gene2phenotype/gfd/disease/update')->to('genomic_feature_disease#update_disease');
-  $r->get('/gene2phenotype/gfd/attributes/:action')->to(controller => 'genomic_feature_disease_attributes');
   $r->get('/gene2phenotype/gfd/phenotype/:action')->to(controller => 'genomic_feature_disease_phenotype');
   $r->get('/gene2phenotype/gfd/publication/:action')->to(controller => 'genomic_feature_disease_publication');
   $r->get('/gene2phenotype/gfd/comment/:action')->to(controller => 'genomic_feature_disease_comment');

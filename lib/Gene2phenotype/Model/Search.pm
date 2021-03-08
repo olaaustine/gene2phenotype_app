@@ -160,17 +160,9 @@ sub _get_gfd_results {
     my $disease_name = $disease->name;
     my $dbID = $gfd->dbID;
     my $panel = $gfd->panel;
-    my $actions = $gfd->get_all_GenomicFeatureDiseaseActions;
-
-    if (scalar @$actions == 0) {
-      push @gfd_results, {gene_symbol => $gene_symbol, disease_name => $disease_name, genotype => 'not specified', mechanism => 'not specified', search_type => 'gfd', dbID => $dbID, GFD_panel => $panel};
-    } else {
-      foreach my $action (@$actions) {
-        my $allelic_requirement = $action->allelic_requirement || 'not specified';
-        my $mutation_consequence = $action->mutation_consequence || 'not specified';  
-        push @gfd_results, {gene_symbol => $gene_symbol, disease_name => $disease_name, genotype => $allelic_requirement, mechanism =>  $mutation_consequence, search_type => 'gfd', dbID => $dbID, GFD_panel => $panel};
-      }
-    }
+    my $allelic_requirement = $gfd->allelic_requirement || 'not specified';
+    my $mutation_consequence = $gfd->mutation_consequence || 'not specified';  
+    push @gfd_results, {gene_symbol => $gene_symbol, disease_name => $disease_name, genotype => $allelic_requirement, mechanism =>  $mutation_consequence, search_type => 'gfd', dbID => $dbID, GFD_panel => $panel};
   }
   return \@gfd_results;
 }

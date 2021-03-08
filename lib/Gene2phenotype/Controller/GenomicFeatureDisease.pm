@@ -178,9 +178,7 @@ sub add {
   }
   my $gfd = $model->fetch_by_panel_GenomicFeature_Disease($panel, $gf, $disease);
   if ($gfd) {
-    my $actions = $gfd->get_all_GenomicFeatureDiseaseActions;
-    my $action = $actions->[0];
-    if ($action->allelic_requirement_attrib eq $allelic_requirement_attrib_ids && $action->mutation_consequence_attrib eq $mutation_consequence_attrib_id) {
+    if ($gfd->allelic_requirement_attrib eq $allelic_requirement_attrib_ids && $gfd->mutation_consequence_attrib eq $mutation_consequence_attrib_id) {
       # if entry already exists go to GFD page
       # show message that entry was already in database
       my $GFD_id = $gfd->dbID;
@@ -199,8 +197,8 @@ sub add {
           gfd_id => $gfd->dbID,
           gene_symbol => $gfd->get_GenomicFeature->gene_symbol,
           disease_name => $gfd->get_Disease->name,
-          allelic_requirement => $action->allelic_requirement,
-          mutation_consequence => $action->mutation_consequence,
+          allelic_requirement => $gfd->allelic_requirement,
+          mutation_consequence => $gfd->mutation_consequence,
           panel => $gfd->panel,
         }],
       );
