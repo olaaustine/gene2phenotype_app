@@ -206,9 +206,6 @@ sub startup {
   $r->post('/gene2phenotype/login')->to('login#on_user_login');
   $r->post('/gene2phenotype/reset')->to('login#reset_pwd');
 
-  $r->get('/gene2phenotype/lgm')->to('locus_genotype_mechanism#show');
-  $r->get('/gene2phenotype/lgm_panel_disease')->to('lgm_panel_disease#show');
-
   $r->get('/gene2phenotype/gfd')->to('genomic_feature_disease#show');
 
 # :action=add, delete, update, add_comment, delete_comment

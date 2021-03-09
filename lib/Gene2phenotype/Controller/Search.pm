@@ -60,16 +60,7 @@ sub results {
     $search_results = undef;
   }
 
-#  my $lgm_search_results;
-#  if ($search_type eq 'gene_symbol') {
-#    $lgm_search_results = $model->fetch_all_lgms_by_gene_symbol($search_term, \@search_panels, $is_authorised);
-#  } elsif ($search_type eq 'disease_name') {
-#    $lgm_search_results = $model->fetch_all_lgms_by_disease_name($search_term, \@search_panels, $is_authorised);
-#  } 
-
-#  $self->stash(lgm_search_results => $lgm_search_results);
   $self->stash(search_results => $search_results);
-
   $self->stash(search_term => $search_term);
   $self->session(last_url => "/gene2phenotype/search?panel=$panel&search_term=$search_term");
 
