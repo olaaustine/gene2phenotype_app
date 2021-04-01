@@ -19,11 +19,12 @@ package Gene2phenotype::Controller::GenomicFeatureDisease;
 use base qw(Gene2phenotype::Controller::BaseController);
 use strict;
 use warnings;
+
 sub show {
   my $self = shift;
   my $model = $self->model('genomic_feature_disease');
   my $disease_model = $self->model('disease');
-  my $GF_model = $self->model('genomic_feature');
+  my $genomic_feature_model = $self->model('genomic_feature');
 
   my $dbID = $self->param('dbID') || $self->param('GFD_id');
 
@@ -44,37 +45,13 @@ sub show {
 
   $self->stash(gfd => $gfd);
 
-  my $panel_can_be_edited = 0;
-  if ($self->session('logged_in')) {
-    my $current_panel = $gfd->{panel};
-    my @panels = @{$self->session('panels')};
-    if (grep {$panel eq $_} @panels) {
-      $panel_can_be_edited = 1;
-      my @duplicate_to_panels = ();
-      foreach my $panel (@panels) {
-        if ($panel ne $current_panel) {
-          push @duplicate_to_panels, $panel;
-        }
-      } 
-      if (scalar @duplicate_to_panels > 0) {
-        $self->stash(duplicate => 1);
-        $self->stash(duplicate_to => \@duplicate_to_panels);
-      } else {
-        $self->stash(duplicate => 0);
-        $self->stash(duplicate_to => []);
-      }
-    } else {
-      $self->stash(duplicate => 0);
-      $self->stash(duplicate_to => []);
-    }
-  } 
 
   my $disease_id = $gfd->{disease_id};
   my $disease_attribs = $disease_model->fetch_by_dbID($disease_id);
   $self->stash(disease => $disease_attribs);
 
   my $gene_id = $gfd->{gene_id};
-  my $gene_attribs = $GF_model->fetch_by_dbID($gene_id);
+  my $gene_attribs = $genomic_feature_model->fetch_by_dbID($gene_id);
   $self->stash(gene => $gene_attribs);
 
   $self->session(last_url => "/gene2phenotype/gfd?GFD_id=$dbID");
@@ -86,21 +63,6 @@ sub show {
   }
 }
 
-sub duplicate {
-  my $self = shift;        
-  my $panel = $self->param('panel');
-  my $data = $self->every_param('duplicate_data_id');
-  my $GFD_id = $self->param('GFD_id');
-  my $model = $self->model('genomic_feature_disease');  
-  my $email = $self->session('email');
-
-  my $result = $model->duplicate($GFD_id, $panel, $data, $email);
-  my $feedback = $result->[1];
-  my $gfd = $result->[0];
-  $GFD_id = $gfd->dbID;
-  $self->feedback_message($feedback);
-  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
-}
 # show form
 sub create {
   my $self = shift;
@@ -121,6 +83,8 @@ sub create {
     $self->stash(panels => \@panels);
 
     my $gfd_model = $self->model('genomic_feature_disease');
+
+
     my $confidence_values = $gfd_model->get_confidence_values;
     $self->stash(confidence_values => $confidence_values);
 
