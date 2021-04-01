@@ -23,7 +23,7 @@ sub identify_search_type {
   my $search_term = shift;
 
   my $registry = $self->app->defaults('registry');
-  my $gf_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeature'); 
+  my $gf_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeature');
 
   if ($gf_adaptor->fetch_by_gene_symbol($search_term) || $gf_adaptor->fetch_by_synonym($search_term)) {
     return 'gene_symbol';
@@ -125,10 +125,10 @@ sub _get_gfd_results {
     my $disease = $gfd->get_Disease;
     my $disease_name = $disease->name;
     my $dbID = $gfd->dbID;
-    my $panel = $gfd->panel;
+    my $panels = $gfd->panels;
     my $allelic_requirement = $gfd->allelic_requirement || 'not specified';
     my $mutation_consequence = $gfd->mutation_consequence || 'not specified';  
-    push @gfd_results, {gene_symbol => $gene_symbol, disease_name => $disease_name, genotype => $allelic_requirement, mechanism =>  $mutation_consequence, search_type => 'gfd', dbID => $dbID, GFD_panel => $panel};
+    push @gfd_results, { gene_symbol => $gene_symbol, disease_name => $disease_name, genotype => $allelic_requirement, mechanism =>  $mutation_consequence, search_type => 'gfd', dbID => $dbID, GFD_panels => $panels};
   }
   return \@gfd_results;
 }
