@@ -24,15 +24,15 @@ sub fetch_by_dbID {
   my $logged_in = shift;
 
   my $registry = $self->app->defaults('registry');
-  my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease');
-  my $GFD = $GFD_adaptor->fetch_by_dbID($dbID);
+  my $gfd_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease');
+  my $gfd = $gfd_adaptor->fetch_by_dbID($dbID);
 
-  my $GFDL_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturediseaselog');
+  my $gfdl_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturediseaselog');
   my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
 
   my @logs = ();
   if ($logged_in) {
-    my $GFD_logs = $GFDL_adaptor->fetch_all_by_GenomicFeatureDisease($GFD);  
+    my $gfd_logs = $gfdl_adaptor->fetch_all_by_GenomicFeatureDisease($gfd);
     foreach my $log (@$GFD_logs) {
       my $created = $log->created;
       my $action = $log->action;
@@ -43,39 +43,35 @@ sub fetch_by_dbID {
       push @logs, {created => $created, user => $user_name, confidence_category => $confidence_category, action => $action};
     }
   }
+  
+  my $gfd_panels = $self->get_gfd_panels($gfd);
 
-  my $panel = $GFD->panel;
-  my $authorised = $GFD->is_visible;
-  my $gene_symbol = $GFD->get_GenomicFeature->gene_symbol;
-  my $gene_id = $GFD->get_GenomicFeature->dbID;
+  my $gene_symbol = $gfd->get_GenomicFeature->gene_symbol;
+  my $gene_id = $gfd->get_GenomicFeature->dbID;
 
-  my $disease_name = $GFD->get_Disease->name; 
-  my $disease_id = $GFD->get_Disease->dbID;
+  my $disease_name = $gfd->get_Disease->name; 
+  my $disease_id = $gfd->get_Disease->dbID;
 
-  my $disease_name_synonyms = $self->_get_disease_name_synonyms($GFD);
+  my $disease_name_synonyms = $self->get_disease_name_synonyms($gfd);
 
   my $disease_ontology_accessions = []; 
 
-  my $GFD_comments = $self->_get_GFD_comments($GFD);
+  my $allelic_requirement = $gfd->allelic_requirement;
+  my $allelic_requirement_list = $self->get_allelic_requirement_list($gfd, $logged_in);
 
-  my $GFD_category = $self->_get_GFD_category($GFD);
-  my $GFD_category_list = $self->_get_GFD_category_list($GFD);
+  my $mutation_consequence = $gfd->mutation_consequence;
+  my $mutation_consequence_list = $self->get_mutation_consequence_list($gfd, $logged_in);
 
-  my $allelic_requirement = $GFD->allelic_requirement;
-  my $allelic_requirement_list = $self->get_allelic_requirement_list($GFD, $logged_in);
-  my $mutation_consequence = $GFD->mutation_consequence;
-  my $mutation_consequence_list = $self->get_mutation_consequence_list($GFD, $logged_in);
-
-  my $publications = $self->_get_publications($GFD);
-  my $phenotypes = $self->_get_phenotypes($GFD);
-  my $phenotype_ids_list = $self->get_phenotype_ids_list($GFD);
-  my $organs = $self->_get_organs($GFD); 
-  my $edit_organs = $self->_get_edit_organs($GFD, $organs, $panel); 
-
-  my $gf_statistics = $self->_get_GF_statistics($GFD);
+  my $comments = $self->get_comments($gfd);
+  my $publications = $self->get_publications($gfd);
+  my $phenotypes = $self->get_phenotypes($gfd);
+  my $phenotype_ids_list = $self->get_phenotype_ids_list($gfd);
+  my $organs = $self->get_organs($gfd); 
+  my $edit_organs = $self->get_edit_organs($gfd, $organs, $panel); 
+  my $gf_statistics = $self->get_GF_statistics($gfd);
 
   return {
-    panel => $panel,
+    gfd_panels => $gfd_panels,
     gene_symbol => $gene_symbol,
     gene_id => $gene_id,
     disease_name => $disease_name,
@@ -83,14 +79,12 @@ sub fetch_by_dbID {
     disease_name_synonyms => $disease_name_synonyms,
     ontology_accessions => $disease_ontology_accessions,
     authorised => $authorised,
-    GFD_id => $dbID,
-    GFD_category => $GFD_category,
-    GFD_category_list => $GFD_category_list,
+    gfd_id => $dbID,
     allelic_requirement => $allelic_requirement,
     allelic_requirement_list => $allelic_requirement_list,
     mutation_consequence => $mutation_consequence,
     mutation_consequence_list => $mutation_consequence_list,
-    GFD_comments => $GFD_comments,
+    comments => $comments,
     publications => $publications,
     phenotypes => $phenotypes,
     phenotype_ids_list => $phenotype_ids_list,
@@ -144,7 +138,6 @@ sub fetch_all_duplicated_LGM_entries_by_panel {
   my $merge_list = $GFD_adaptor->_get_all_duplicated_LGM_entries_by_panel($panel);
   return $merge_list;
 }
-
 
 sub get_allelic_requirement_by_attrib_ids {
   my $self = shift;
@@ -583,24 +576,21 @@ sub _get_disease_ontology_accessions {
   return \@ontology_accessions_tmpl;
 }
 
-sub _get_publications {
+sub get_publications {
   my $self = shift;
-  my $GFD = shift;
+  my $gfd = shift;
   my @publications = ();
 
   my $registry = $self->app->defaults('registry');
   my $phenotype_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'phenotype');
-  my $GFD_phenotype_adaptor =  $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseasePhenotype');
+  my $gfd_phenotype_adaptor =  $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseasePhenotype');
 
-  my $GFD_publications = $GFD->get_all_GFDPublications;
-  foreach my $GFD_publication (sort {$a->get_Publication->title cmp $b->get_Publication->title} @$GFD_publications) {
-    my $publication = $GFD_publication->get_Publication;
-    my @GFD_phenotype_ids = map {$_->phenotype_id} @{$GFD_phenotype_adaptor->fetch_all_by_GenomicFeatureDisease($GFD)};
-
-    my $comments = $GFD_publication->get_all_GFDPublicationComments;
-    my @comments_tmpl = ();
-    foreach my $comment (@$comments) {
-      push @comments_tmpl, {
+  my $gfd_publications = $gfd->get_all_GFDPublications;
+  foreach my $gfd_publication (sort {$a->get_Publication->title cmp $b->get_Publication->title} @$gfd_publications) {
+    my $publication = $gfd_publication->get_Publication;
+    my @comments = ();
+    foreach my $comment (@{$gfd_publication->get_all_GFDPublicationComments;}) {
+      push @comments, {
         user => $comment->get_User()->username,
         date => $comment->created,
         comment_text => $comment->comment_text,
@@ -616,7 +606,7 @@ sub _get_publications {
     $title .= " ($source)" if ($source);
 
     push @publications, {
-      comments => \@comments_tmpl,
+      comments => \@comments,
       title => $title,
       pmid => $pmid,
       GFD_publication_id => $GFD_publication->dbID,
@@ -626,12 +616,11 @@ sub _get_publications {
   return \@publications;
 }
 
-sub _get_GFD_comments {
+sub get_comments {
   my $self = shift;
   my $GFD = shift;
   my @comments = ();
-  my $GFD_comments = $GFD->get_all_GFDComments;  
-  foreach my $comment (@$GFD_comments) {
+  foreach my $comment (@{$GFD->get_all_GFDComments}) {
     push @comments, {
       user => $comment->get_User()->username,
       date => $comment->created,
@@ -643,7 +632,7 @@ sub _get_GFD_comments {
   return \@comments;
 }
 
-sub _get_phenotypes {
+sub get_phenotypes {
   my $self = shift;
   my $GFD = shift;
 
@@ -653,10 +642,9 @@ sub _get_phenotypes {
     my $phenotype = $GFD_phenotype->get_Phenotype;
     my $stable_id = $phenotype->stable_id;
     my $name = $phenotype->name;
-    my $comments = $GFD_phenotype->get_all_GFDPhenotypeComments;
-    my @comments_tmpl = ();
-    foreach my $comment (@$comments) {
-      push @comments_tmpl, {
+    my @comments = ();
+    foreach my $comment (@{$GFD_phenotype->get_all_GFDPhenotypeComments}) {
+      push @comments, {
         user => $comment->get_User()->username,
         date => $comment->created,
         comment_text => $comment->comment_text,
@@ -666,7 +654,7 @@ sub _get_phenotypes {
     }
 
     push @phenotypes, {
-      comments => \@comments_tmpl,
+      comments => \@comments,
       stable_id => $stable_id,
       name => $name,
       GFD_phenotype_id => $GFD_phenotype->dbID,
@@ -676,7 +664,7 @@ sub _get_phenotypes {
   return \@phenotypes;
 }
 
-sub _get_organs {
+sub get_organs {
   my $self = shift;
   my $GFD = shift;
   my @organ_list = ();
@@ -688,7 +676,7 @@ sub _get_organs {
   return \@organ_list;
 }
 
-sub _get_edit_organs {
+sub get_edit_organs {
   my $self = shift;
   my $GFD = shift;  
   my $organ_list = shift;
@@ -828,5 +816,32 @@ sub update_visibility {
   $GFD->is_visible($is_visible);
   $GFD_adaptor->update($GFD, $user); 
 }
+
+sub get_gfd_panels {
+  my $self = shift;
+  my $GFD = shift;
+
+  my $registry = $self->app->defaults('registry');
+  my $GFD_panel_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseasePanel');
+
+  my $gfd_panels = $gfd_panel_adaptor->fetch_all_by_GenomicFeatureDisease($gfd);
+
+
+  my @gfd_panels = (); 
+
+  foreach my $gfd_panel (@$gfd_panels) {
+    my $confidence_category = $gfd_panel->confidence_category;
+    my $panel = $gfd_panel->panel;
+    my $is_visible = $gfd_panel->is_visible;
+    my @logs = ();  
+    push @gfd_panels, {
+      panel => $panel,
+      confidence_category => $confidence_category,
+      logs => \@logs,
+    }
+  }
+  return \@gfd_panels;  
+}
+
 
 1;
