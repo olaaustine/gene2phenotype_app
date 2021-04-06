@@ -91,7 +91,7 @@ sub startup {
     my $panel_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'panel');
     my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
 
-    my @panels = map { $_->name } @{$panel_adaptor->fetch_all_visible_Panels};
+    my @panels = map { $_->name } @{$panel_adaptor->fetch_all_visible};
     my @authorised_panels = (); # all visible and only visible by curator
     my $logged_in = $c->session('logged_in');
     if ($logged_in) {
@@ -216,11 +216,14 @@ sub startup {
   $r->get('/gene2phenotype/gfd/phenotype/:action')->to(controller => 'genomic_feature_disease_phenotype');
   $r->get('/gene2phenotype/gfd/publication/:action')->to(controller => 'genomic_feature_disease_publication');
   $r->get('/gene2phenotype/gfd/comment/:action')->to(controller => 'genomic_feature_disease_comment');
-  $r->get('/gene2phenotype/gfd/create')->to('genomic_feature_disease#create');
+  $r->get('/gene2phenotype/gfd/show_add_new_entry_form')->to('genomic_feature_disease#show_add_new_entry_form');
   $r->get('/gene2phenotype/gfd/add')->to('genomic_feature_disease#add');
   $r->get('/gene2phenotype/gfd/delete')->to('genomic_feature_disease#delete');
   $r->get('/gene2phenotype/gfd/duplicate')->to('genomic_feature_disease#duplicate');
   $r->get('/gene2phenotype/gfd/merge_duplicated_LGM')->to('genomic_feature_disease#merge_all_duplicated_LGM_by_gene_by_panel');
+
+  $r->get('/gene2phenotype/gfd_panel/add')->to('genomic_feature_disease_panel#add');
+
 
   $r->get('/gene2phenotype/gene')->to('genomic_feature#show');
   $r->get('/gene2phenotype/disease')->to('disease#show');
