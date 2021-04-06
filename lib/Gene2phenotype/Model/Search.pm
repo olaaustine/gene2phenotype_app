@@ -123,7 +123,14 @@ sub _get_gfd_results {
     my $panels = $gfd->panels;
     my $allelic_requirement = $gfd->allelic_requirement || 'not specified';
     my $mutation_consequence = $gfd->mutation_consequence || 'not specified';  
-    push @gfd_results, { gene_symbol => $gene_symbol, disease_name => $disease_name, genotype => $allelic_requirement, mechanism =>  $mutation_consequence, search_type => 'gfd', dbID => $dbID, GFD_panels => $panels};
+    push @gfd_results, {
+      gene_symbol => $gene_symbol,
+      disease_name => $disease_name,
+      genotype => $allelic_requirement,
+      mechanism => $mutation_consequence,
+      search_type => 'gfd',
+      dbID => $dbID,
+      panels => $panels};
   }
   return \@gfd_results;
 }
