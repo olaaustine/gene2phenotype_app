@@ -49,7 +49,7 @@
         <% } %>
       </tbody>
     </table>
-      %= form_for '/gene2phenotype/gfd/create' => begin
+      %= form_for '/gene2phenotype/gfd/show_add_new_entry_form' => begin
         <% if (scalar keys %$gene_symbols == 1 ) { %>
           %= hidden_field gene_symbol => (keys %$gene_symbols)[0]
         <% } %>
