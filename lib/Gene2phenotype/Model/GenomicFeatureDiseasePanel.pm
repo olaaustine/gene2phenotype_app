@@ -24,7 +24,6 @@ sub add {
   my $panel = shift;
   my $confidence_value = shift;
   my $email = shift;
-
   my $registry = $self->app->defaults('registry');
   my $GFD_panel_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseasePanel');
   my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
@@ -32,7 +31,7 @@ sub add {
   my $gfd_panel =  Bio::EnsEMBL::G2P::GenomicFeatureDiseasePanel->new(
     -genomic_feature_disease_id => $gfd_id,
     -panel => $panel,
-    -confidence_value => $confidence_value,
+    -confidence_category => $confidence_value,
     -adaptor => $GFD_panel_adaptor,
   );
   my $user = $user_adaptor->fetch_by_email($email);
