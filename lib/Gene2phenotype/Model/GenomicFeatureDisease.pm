@@ -22,10 +22,13 @@ sub fetch_by_dbID {
   my $self = shift;
   my $dbID = shift;
   my $logged_in = shift;
+  my $authorised_panels = shift;
+  my $user_panels = shift;
 
   my $registry = $self->app->defaults('registry');
   my $gfd_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDisease');
-  my $gfd = $gfd_adaptor->fetch_by_dbID($dbID);
+  
+  my $gfd = $gfd_adaptor->fetch_by_dbID($dbID, $authorised_panels, $logged_in);
 
   my $GFD_log_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseaseLog');
   my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
@@ -39,12 +42,11 @@ sub fetch_by_dbID {
       my $user_id = $log->user_id;  
       my $user = $user_adaptor->fetch_by_dbID($user_id);
       my $user_name = $user->username;
-      my $confidence_category = $log->confidence_category;
-      push @logs, {created => $created, user => $user_name, confidence_category => $confidence_category, action => $action};
+      push @logs, {created => $created, user => $user_name, confidence_category => '', action => $action};
     }
   }
   
-  my $gfd_panels = $self->get_gfd_panels($gfd);
+  my $gfd_panels = $self->get_gfd_panels($gfd, $user_panels);
 
   my $gene_symbol = $gfd->get_GenomicFeature->gene_symbol;
   my $gene_id = $gfd->get_GenomicFeature->dbID;
@@ -257,18 +259,16 @@ sub get_mutation_consequences {
   return \@MC_tmpl;
 }
 
-sub _get_GFD_category_list {
+sub _get_confidence_category_list {
   my $self = shift;
-  my $GFD = shift;
-  my $GFD_category = $GFD->confidence_category;
-  my $GFD_id = $GFD->dbID;
+  my $confidence_category = shift;
   my $registry = $self->app->defaults('registry');
   my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
   my $attribs = $attribute_adaptor->get_attribs_by_type_value('confidence_category');
   my @list = ();
   foreach my $value (sort keys %$attribs) {
     my $id = $attribs->{$value};
-    my $is_selected =  ($value eq $GFD_category) ? 'selected' : '';
+    my $is_selected = ($value eq $confidence_category) ? 'selected' : '';
     if ($is_selected) {
       push @list, [$value => $id, selected => $is_selected];
     } else {
@@ -276,13 +276,6 @@ sub _get_GFD_category_list {
     }
   }
   return \@list;
-}
-
-sub _get_GFD_category {
-  my $self = shift;
-  my $GFD = shift;
-  my $category = $GFD->confidence_category || 'Not assigned';
-  return $category;
 }
 
 sub get_disease_name_synonyms {
@@ -612,6 +605,7 @@ sub update_visibility {
 sub get_gfd_panels {
   my $self = shift;
   my $GFD = shift;
+  my $user_panels = shift;
 
   my $registry = $self->app->defaults('registry');
   my $GFD_panel_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseasePanel');
@@ -624,11 +618,16 @@ sub get_gfd_panels {
     my $confidence_category = $gfd_panel->confidence_category;
     my $panel = $gfd_panel->panel;
     my $is_visible = $gfd_panel->is_visible;
-    my @logs = ();  
+    my $user_can_edit = grep {$panel eq $_} @{$user_panels};
+    my $confidence_category_list = $self->_get_confidence_category_list($confidence_category);
     push @gfd_panels, {
+      GFD_id => $GFD->dbID,
+      GFD_panel_id => $gfd_panel->dbID,
       panel => $panel,
+      is_visible => $gfd_panel->is_visible,
+      user_can_edit => $user_can_edit,
       confidence_category => $confidence_category,
-      logs => \@logs,
+      confidence_category_list => $confidence_category_list,
     }
   }
   return \@gfd_panels;  
