@@ -28,6 +28,8 @@ sub add {
   my $confidence_attrib_id           = $self->param('confidence_attrib_id');
   my $allelic_requirement_attrib_ids = join(',', sort @{$self->every_param('allelic_requirement_attrib_id')});
   my $mutation_consequence_attrib_id = $self->param('mutation_consequence_attrib_id');
+
+  # Check if logged in
  
   my $email = $self->session('email');
   my $gfd_model = $self->model('genomic_feature_disease');  
@@ -170,15 +172,33 @@ sub _get_existing_gfds {
   return \@existing_gfds;
 }
 
-sub delete {
-  my $self = shift;
-}
-
-sub update {
-  my $self = shift;
-}
-
 sub update_visibility {
+  my $self = shift;
+  my $GFD_id = $self->param('GFD_id');
+  my $GFD_panel_id = $self->param('GFD_panel_id');
+  my $visibility = $self->param('visibility'); #restricted, authorised 
+  my $model = $self->model('genomic_feature_disease_panel');  
+  my $email = $self->session('email');
+  $model->update_visibility($email, $GFD_panel_id, $visibility);
+  $self->session(last_url => "/gene2phenotype/gfd?GFD_id=$GFD_id");
+  $self->feedback_message('UPDATED_VISIBILITY_STATUS_SUC');
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+}
+
+sub update_confidence_category {
+  my $self = shift;
+  my $category_attrib_id = $self->param('category_attrib_id'); 
+  my $GFD_id = $self->param('GFD_id');
+  my $GFD_panel_id = $self->param('GFD_panel_id');
+  my $model = $self->model('genomic_feature_disease_panel');  
+  my $email = $self->session('email');
+  $model->update_confidence_category($email, $GFD_panel_id, $category_attrib_id);
+  $self->session(last_url => "/gene2phenotype/gfd?GFD_id=$GFD_id");
+  $self->feedback_message('UPDATED_CONFIDENCE_CATEGORY_SUC');
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+}
+
+sub delete {
   my $self = shift;
 }
 
