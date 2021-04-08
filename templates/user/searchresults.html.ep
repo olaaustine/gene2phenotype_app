@@ -16,8 +16,8 @@
           <th scope="col">Genotype</th>
           <th scope="col">Mutation consequence</th>
           <th scope="col">Disease</th>
-          <th scope="col">Panel</th>
-          <th scope="col">Delete</th>
+          <th scope="col">Panels</th>
+          <th scope="col">Go to page</th>
         </tr>
       </thead>
       <tbody>
@@ -28,22 +28,12 @@
             <td><%= $gfd->{genotype} %></td>
             <td><%= $gfd->{mechanism} %></td>
             <td><%= $gfd->{disease_name} %></td>
+            <td><%= join(',', sort @{$gfd->{panels}}) %></td>
             <td>
               %= form_for '/gene2phenotype/gfd' => (id => $gfd->{dbID}) => begin
                 %= hidden_field dbID => $gfd->{dbID}
-                <input id="button" type="submit" value=<%= $gfd->{GFD_panel} %> class="btn btn-primary btn-sm"/>
+                <input id="button" type="submit" value="Go to page" class="btn btn-primary btn-sm"/>
               % end
-            </td>
-            <td>
-              <% if ($logged_in) {
-                my $gfd_panel = $gfd->{GFD_panel};
-                if (grep( /^$gfd_panel$/, @$panels )) { %>
-                  %= form_for '/gene2phenotype/gfd/delete' => begin
-                    <input id="button" type="submit" value="Delete" class="btn btn-primary btn-sm confirm"/>
-                    %= hidden_field dbID => $gfd->{dbID}
-                  %end
-                 <% }
-               } %>
             </td>
           </tr>
         <% } %>
