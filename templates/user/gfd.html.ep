@@ -2,27 +2,35 @@
 %= include 'search'
 <div class="container">
 
-  <h3 class="title">Panel: <span class="text-primary"><i><%= $gfd->{panel} %></i></span> Gene: <span class="text-primary"><i><%= $gfd->{gene_symbol} %></i></span> Disease: <span class="text-primary"><i><%= $gfd->{disease_name} %></i></span></h3>
+  <h3 class="title">Gene: <span class="text-primary"><i><%= $gfd->{gene_symbol} %></i></span> Disease: <span class="text-primary"><i><%= $gfd->{disease_name} %></i></span></h3>
   <div class="clear"></div>
-
-  <div class="form-group visibility">
-    %= form_for '/gene2phenotype/gfd/authorised/update' => begin
-      <select name="visibility">
-        <TMPL_IF NAME="authorised">
-        <% if ($gfd->{authorised}) { %>
-          <option value="authorised" selected>Authorised. Visible to all users.</option>
-          <option value="restricted">Restricted. Visible to editors only.</option>
-        <% } else { %>
-          <option value="authorised">Authorised. Visible to all users.</option>
-          <option value="restricted" selected>Restricted. Visible to editors only.</option>
-        <% } %>
-      </select>
-      <div class="align_buttons_right">
-        %= hidden_field GFD_id => $gfd->{GFD_id}
-        <input id="button" type="submit" value="Update" class="btn btn-primary btn-sm"/>
-      </div>
-    %end
+  <div class="show_db_content">
+    <dl>
+      <dt>Allelic requirement</dt>
+      <dd><%= $gfd->{allelic_requirement} %></dd>
+      <dt>Mutation consequence summary</dt>
+      <dd><%= $gfd->{mutation_consequence} %></dd>
+    </dl>
   </div>
+
+  <% if (@{$gfd->{logs}}) { %>
+    <div class="log_table">
+    <table class="table table-striped table-bordered table-condensed">
+      <tr>
+        <th>Created</th>
+        <th>User</th>
+        <th>Action</th>
+      </tr>
+      <% foreach my $log (@{$gfd->{logs}}) { %>
+        <tr>
+          <td><%= $log->{created} %></td>
+          <td><%= $log->{user} %></td>
+          <td><%= $log->{action} %></td>
+        </tr>
+      <% } %>
+    </table>
+    </div>
+  <% } %>
 
   %= include 'user/gfd_attributes'
   %= include 'gene'
