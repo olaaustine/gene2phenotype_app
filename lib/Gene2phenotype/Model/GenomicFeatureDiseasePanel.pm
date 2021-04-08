@@ -39,4 +39,34 @@ sub add {
   return $gfd_panel;
 }
 
+sub update_visibility {
+  my $self = shift;
+  my $email = shift;
+  my $GFD_panel_id = shift;
+  my $visibility = shift;
+  my $registry = $self->app->defaults('registry');
+  my $GFD_panel_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseasePanel');
+  my $GFD_panel = $GFD_panel_adaptor->fetch_by_dbID($GFD_panel_id);
+  my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
+  my $user = $user_adaptor->fetch_by_email($email);
+  my $is_visible = $visibility eq 'authorised' ? 1 : 0;
+  $GFD_panel->is_visible($is_visible);
+  $GFD_panel_adaptor->update($GFD_panel, $user);
+}
+
+sub update_confidence_category {
+  my $self = shift;
+  my $email = shift;
+  my $GFD_panel_id = shift;
+  my $category_attrib_id = shift;
+  my $registry = $self->app->defaults('registry');
+  my $GFD_panel_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseasePanel');
+  my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
+  my $user = $user_adaptor->fetch_by_email($email);
+  my $GFD_panel = $GFD_panel_adaptor->fetch_by_dbID($GFD_panel_id);
+  $GFD_panel->confidence_category_attrib($category_attrib_id);
+  $GFD_panel_adaptor->update($GFD_panel, $user); 
+} 
+
+
 1;
