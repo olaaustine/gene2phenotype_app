@@ -31,18 +31,19 @@ sub show {
   if (!$dbID) {
     return $self->render(template => 'not_found');
   }
-
-  my $logged_in = $self->session('logged_in'); 
-  my $gfd = $model->fetch_by_dbID($dbID, $logged_in); 
-
-  # Is panel visible and can it be viewed by the curator?  
+  my $gfd;
   my $authorised_panels = $self->stash('authorised_panels');
-  #my $panel = $gfd->{panel};
-
-  #if (!grep {$panel eq $_} @$authorised_panels) {
-  #  return $self->redirect_to("/gene2phenotype/");
-  #}
-
+  my $logged_in = 0;
+  if ($self->session('logged_in')) {
+    my $user_panels = $self->stash('user_panels');
+    $logged_in = 1;
+    $gfd = $model->fetch_by_dbID($dbID, $logged_in, $authorised_panels, $user_panels);
+  } else {
+    $gfd = $model->fetch_by_dbID($dbID, $logged_in, $authorised_panels);
+  }
+  if (!defined $gfd) {
+    return $self->redirect_to("/gene2phenotype/");
+  }
   $self->stash(gfd => $gfd);
 
   my $disease_id = $gfd->{disease_id};
