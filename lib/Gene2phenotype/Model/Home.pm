@@ -40,7 +40,7 @@ sub fetch_updates {
   my $only_visible_entries = ($logged_in) ? 0 : 1;
   foreach my $panel_name (@$authorised_panels) {
     next if ($panel_name eq 'ALL');
-    my $updates = $GFD_panel_log_adaptor->fetch_latest_updates($panel_name, 10, $only_visible_entries);
+    my $updates = $GFD_panel_log_adaptor->fetch_all_by_most_recent($panel_name, 10, $only_visible_entries);
     push @results, { panel => $panel_name, updates => $self->format_updates($updates)};
   }
   return \@results;
