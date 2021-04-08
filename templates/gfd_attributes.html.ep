@@ -1,15 +1,20 @@
 <div>
-  <div class="clear"></div>
-  <div id="confidence_category">
-    <dl>
-      <dt>Disease confidence</dt>
-      <dd><%= $gfd->{GFD_category} %></dd>
-    </dl>
+  <div class="log_table">
+    <table class="table table-bordered table-condensed">
+      <thead>
+        <tr>
+          <th scope="col">Panel</th>
+          <th scope="col">Confidence category</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% foreach my $gfd_panel (@{$gfd->{gfd_panels}}) { %>
+          <tr>
+            <td><%= $gfd_panel->{panel} %></td>
+            <td><%= $gfd_panel->{confidence_category} %></td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
   </div>
-  <dl>
-    <dt>Allelic requirement</dt>
-    <dd><%= $gfd->{allelic_requirement} %></dd>
-    <dt>Mutation consequence summary</dt>
-    <dd><%= $gfd->{mutation_consequence} %></dd>
-  </dl>
 </div>
