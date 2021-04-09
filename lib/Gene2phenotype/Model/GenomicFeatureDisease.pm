@@ -80,6 +80,7 @@ sub fetch_by_dbID {
     disease_id => $disease_id,
     disease_name_synonyms => $disease_name_synonyms,
     ontology_accessions => $disease_ontology_accessions,
+    GFD_id => $dbID,
     gfd_id => $dbID,
     allelic_requirement => $allelic_requirement,
     allelic_requirement_list => $allelic_requirement_list,
