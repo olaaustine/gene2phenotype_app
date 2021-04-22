@@ -222,11 +222,11 @@ sub get_confidence_values {
   my $self = shift;
   my $registry = $self->app->defaults('registry');
   my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
-  my $attribs = $attribute_adaptor->get_attribs_by_type_value('confidence_category');
+  my $confidence_categories = $attribute_adaptor->get_values_by_type('confidence_category');
   my @list = ();
-  foreach my $value (sort keys %$attribs) {
-    my $id = $attribs->{$value};
-    push @list, [$value => $id];
+  foreach my $confidence_category (sort keys %$confidence_categories) {
+    my $attrib = $confidence_categories->{$confidence_category};
+    push @list, [$confidence_category => $attrib];
   }
   return \@list;
 }
@@ -235,13 +235,13 @@ sub get_allelic_requirements {
   my $self = shift;
   my $registry = $self->app->defaults('registry');
   my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
-  my $attribs = $attribute_adaptor->get_attribs_by_type_value('allelic_requirement');
+  my $allelic_requirements = $attribute_adaptor->get_values_by_type('allelic_requirement');
   my @AR_tmpl = ();
-  foreach my $value (sort keys %$attribs) {
-    my $id = $attribs->{$value};
+  foreach my $allelic_requirement (sort keys %$allelic_requirements) {
+    my $attrib = $allelic_requirements->{$allelic_requirement};
     push @AR_tmpl, {
-      AR_attrib_id => $id,
-      AR_attrib_value => $value,
+      AR_attrib_id => $attrib,
+      AR_attrib_value => $allelic_requirement,
     };
   }
   return \@AR_tmpl;
@@ -251,29 +251,29 @@ sub get_mutation_consequences {
   my $self = shift;
   my $registry = $self->app->defaults('registry');
   my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
-  my $attribs = $attribute_adaptor->get_attribs_by_type_value('mutation_consequence');
+  my $mutation_consequences = $attribute_adaptor->get_values_by_type('mutation_consequence');
   my @MC_tmpl = ();
-  foreach my $value (sort keys %$attribs) {
-    my $id = $attribs->{$value};
-    push @MC_tmpl, [$value => $id];
+  foreach my $mutation_consequence (sort keys %$mutation_consequences) {
+    my $attrib = $mutation_consequences->{$mutation_consequence};
+    push @MC_tmpl, [$mutation_consequence => $attrib];
   }
   return \@MC_tmpl;
 }
 
 sub _get_confidence_category_list {
   my $self = shift;
-  my $confidence_category = shift;
+  my $selected_confidence_category = shift;
   my $registry = $self->app->defaults('registry');
   my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
-  my $attribs = $attribute_adaptor->get_attribs_by_type_value('confidence_category');
+  my $confidence_categories = $attribute_adaptor->get_values_by_type('confidence_category');
   my @list = ();
-  foreach my $value (sort keys %$attribs) {
-    my $id = $attribs->{$value};
-    my $is_selected = ($value eq $confidence_category) ? 'selected' : '';
+  foreach my $confidence_category (sort keys %$confidence_categories) { 
+    my $attrib = $confidence_categories->{$confidence_category};
+    my $is_selected = ($confidence_category eq $selected_confidence_category) ? 'selected' : '';
     if ($is_selected) {
-      push @list, [$value => $id, selected => $is_selected];
+      push @list, [$confidence_category => $attrib, selected => $is_selected];
     } else {
-      push @list, [$value => $id];
+      push @list, [$confidence_category => $attrib];
     }
   }
   return \@list;
@@ -299,13 +299,13 @@ sub get_allelic_requirement_list {
   my @allelic_requirements = split(',', $GFD->allelic_requirement);
   my $registry = $self->app->defaults('registry');
   my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
-  my $attribs = $attribute_adaptor->get_attribs_by_type_value('allelic_requirement');
+  my $allelic_requirement_value_to_attrib = $attribute_adaptor->get_values_by_type('allelic_requirement');
   my @allelic_requirement_list = ();
-  foreach my $value (sort keys %$attribs) {
-    my $id = $attribs->{$value};
+  foreach my $value (sort keys %$allelic_requirement_value_to_attrib) {
+    my $attrib = $allelic_requirement_value_to_attrib->{$value};
     my $checked = (grep $_ eq $value, @allelic_requirements) ? 'checked' : '';
     push @allelic_requirement_list, {
-      attrib_id => $id,
+      attrib_id => $attrib,
       attrib_value => $value,
       checked => $checked,
     };
@@ -319,15 +319,15 @@ sub get_mutation_consequence_list {
   my $mutation_consequence = $GFD->mutation_consequence;
   my $registry = $self->app->defaults('registry');
   my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
-  my $attribs = $attribute_adaptor->get_attribs_by_type_value('mutation_consequence');
+  my $mutation_consequence_value_to_attrib = $attribute_adaptor->get_values_by_type('mutation_consequence');
   my @mutation_consequence_list = ();
-  foreach my $value (sort keys %$attribs) {
-    my $id = $attribs->{$value};
+  foreach my $value (sort keys %$mutation_consequence_value_to_attrib) {
+    my $attrib = $mutation_consequence_value_to_attrib->{$value};
     my $selected = ($value eq $mutation_consequence) ? 'selected' : undef;
     if ($selected) {
-      push @mutation_consequence_list, [$value => $id, selected => $selected];
+      push @mutation_consequence_list, [$value => $attrib, selected => $selected];
     } else {
-      push @mutation_consequence_list, [$value => $id];
+      push @mutation_consequence_list, [$value => $attrib];
     }
   }
   return \@mutation_consequence_list;
