@@ -111,10 +111,10 @@ sub startup {
     } 
 
     my @panel_imgs = ();
-    my $attribs = $attribute_adaptor->get_attribs_by_type_value('g2p_panel');
-    foreach my $value (sort keys %$attribs) {
-      if (grep {$value eq $_} @visible_panels) {
-        push @panel_imgs, [$value => $value,];
+    my $g2p_panels = $attribute_adaptor->get_values_by_type('g2p_panel');
+    foreach my $g2p_panel (sort keys %$g2p_panels) {
+      if (grep {$g2p_panel eq $_} @visible_panels) {
+        push @panel_imgs, [$g2p_panel => $g2p_panel];
       }
     }
     $c->stash(panel_imgs => \@panel_imgs);
