@@ -120,7 +120,7 @@ sub _get_gfd_results {
     my $disease = $gfd->get_Disease;
     my $disease_name = $disease->name;
     my $dbID = $gfd->dbID;
-    my $panels = $gfd->panels;
+    my $panels = join(',', sort @{$gfd->panels});
     my $allelic_requirement = $gfd->allelic_requirement || 'not specified';
     my $mutation_consequence = $gfd->mutation_consequence || 'not specified';  
     push @gfd_results, {
