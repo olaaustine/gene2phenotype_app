@@ -36,12 +36,14 @@ sub add {
   my $gfd_panel_model = $self->model('genomic_feature_disease_panel');
 
   if (defined $self->param('add_existing_entry_to_panel') && $self->param('add_existing_entry_to_panel') == 1) {
-    $self->add_gfd_to_panel($self->param('gfd_id'));
+    my $gfd_id = $self->param('gfd_id');
+    $self->add_gfd_to_panel($gfd_id);
   } 
  
   if (defined $self->param('create_new_gfd') && $self->param('create_new_gfd') == 1) {
     my $gfd = $self->create_gfd();
-    $self->add_gfd_to_panel($gfd->dbID);
+    my $gfd_id = $gfd->dbID;
+    $self->add_gfd_to_panel($gfd_id);
   } 
 
   my $gf_model = $self->model('genomic_feature');
@@ -151,6 +153,7 @@ sub add_gfd_to_panel {
     $email
   );
   $self->feedback_message('ADDED_GFD_SUC');
+
   return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$gfd_id");
 }
 
