@@ -19,13 +19,13 @@
         </tr>
       </thead>
       <tbody>
-        <% foreach my $gfd (sort {$a->{GFD_panel} cmp $b->{GFD_panel} || $a->{gene_symbol} cmp $b->{gene_symbol} || $a->{genotype} cmp $b->{genotype} || $a->{mechanism} cmp $b->{mechanism}}   @{$search_results->{gfd_results}}) { %>
+        <% foreach my $gfd (sort {$a->{panels} cmp $b->{panels} || $a->{gene_symbol} cmp $b->{gene_symbol} || $a->{genotype} cmp $b->{genotype} || $a->{mechanism} cmp $b->{mechanism}} @{$search_results->{gfd_results}}) { %>
           <tr>
             <td><%= $gfd->{gene_symbol} %></td>
             <td><%= $gfd->{genotype} %></td>
             <td><%= $gfd->{mechanism} %></td>
             <td><%= $gfd->{disease_name} %></td>
-            <td><%= join(',', sort @{$gfd->{panels}}) %></td>
+            <td><%= $gfd->{panels} %></td>
             <td>
               %= form_for '/gene2phenotype/gfd' => (id => $gfd->{dbID}) => begin
                 %= hidden_field dbID => $gfd->{dbID}
