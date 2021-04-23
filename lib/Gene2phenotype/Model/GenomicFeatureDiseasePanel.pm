@@ -68,5 +68,16 @@ sub update_confidence_category {
   $GFD_panel_adaptor->update($GFD_panel, $user); 
 } 
 
+sub delete {
+  my $self = shift;
+  my $email = shift;
+  my $GFD_panel_id = shift;
+  my $registry = $self->app->defaults('registry');
+  my $GFD_panel_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseasePanel');
+  my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
+  my $user = $user_adaptor->fetch_by_email($email);
+  my $GFD_panel = $GFD_panel_adaptor->fetch_by_dbID($GFD_panel_id);
+  $GFD_panel_adaptor->delete($GFD_panel, $user); 
+}
 
 1;
