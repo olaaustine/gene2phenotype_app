@@ -38,12 +38,14 @@ sub add {
   if (defined $self->param('add_existing_entry_to_panel') && $self->param('add_existing_entry_to_panel') == 1) {
     my $gfd_id = $self->param('gfd_id');
     $self->add_gfd_to_panel($gfd_id);
+    return;
   } 
  
   if (defined $self->param('create_new_gfd') && $self->param('create_new_gfd') == 1) {
     my $gfd = $self->create_gfd();
     my $gfd_id = $gfd->dbID;
     $self->add_gfd_to_panel($gfd_id);
+    return;
   } 
 
   my $gf_model = $self->model('genomic_feature');
@@ -123,6 +125,7 @@ sub add {
     # Create new entry
     my $gfd = $self->create_gfd();
     $self->add_gfd_to_panel($gfd->dbID);
+    return;
   }
 }
 
@@ -154,7 +157,7 @@ sub add_gfd_to_panel {
   );
   $self->feedback_message('ADDED_GFD_SUC');
 
-  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$gfd_id");
+  $self->redirect_to("/gene2phenotype/gfd?GFD_id=$gfd_id");
 }
 
 sub _get_existing_gfds {
@@ -203,6 +206,13 @@ sub update_confidence_category {
 
 sub delete {
   my $self = shift;
+  my $GFD_id = $self->param('GFD_id');
+  my $GFD_panel_id = $self->param('GFD_panel_id');
+  my $model = $self->model('genomic_feature_disease_panel');
+  my $email = $self->session('email');
+  $model->delete($email, $GFD_panel_id);
+  $self->feedback_message('DELETED_GFD_PANEL_SUC');
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
 
 1;
