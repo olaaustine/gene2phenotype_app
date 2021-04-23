@@ -43,7 +43,13 @@
                   </div>
                 %end
               </td>
-              <td>Delete entry from panel</td>
+              <td>
+                %= form_for '/gene2phenotype/gfd_panel/delete' => begin
+                  %= hidden_field GFD_id => $gfd_panel->{GFD_id}
+                  %= hidden_field GFD_panel_id => $gfd_panel->{GFD_panel_id}
+                  <input id="button" type="submit" value="Delete" class="btn btn-primary btn-sm confirm"/>
+                %end
+              </td>
             <% } else {  %>
               <td>$gfd_panel->{confidence_value}</td>
               <td></td>
