@@ -97,30 +97,6 @@ sub show_add_new_entry_form {
   $self->render(template => 'add_new_entry');
 }
 
-sub delete {
-  my $self = shift;
-  my $GFD_id = $self->param('dbID');
-  my $model = $self->model('genomic_feature_disease');  
-  my $email = $self->session('email');
-
-  $model->delete($email, $GFD_id);
-  my $last_url = $self->session('last_url');
-  $self->feedback_message('DELETED_GFD_SUC');
-  return $self->redirect_to($last_url);
-}
-
-sub update {
-  my $self = shift;
-  my $category_attrib_id = $self->param('category_attrib_id'); 
-  my $GFD_id = $self->param('GFD_id');
-  my $model = $self->model('genomic_feature_disease');  
-  my $email = $self->session('email');
-  $model->update_GFD_category($email, $GFD_id, $category_attrib_id);
-  $self->session(last_url => "/gene2phenotype/gfd?GFD_id=$GFD_id");
-  $self->feedback_message('UPDATED_CONFIDENCE_CATEGORY_SUC');
-  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
-}
-
 sub update_organ_list {
   my $self = shift;
   my $GFD_id = $self->param('GFD_id');
