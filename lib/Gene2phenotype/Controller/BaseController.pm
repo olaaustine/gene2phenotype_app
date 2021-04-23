@@ -49,6 +49,7 @@ our %MESSAGES = (
   ADDED_COMMENT_SUC => { msg => 'Successfully added a new comment.', type => 'success'},
   EMPTY_COMMENT => { msg => 'Comment is empty and has not been added.', type => 'info'},
   DELETED_GFD_SUC => { msg => 'Successfully deleted gene disease pair', type => 'success'},
+  DELETED_GFD_PANEL_SUC => { msg => 'Successfully deleted gene disease pair from panel.', type => 'success'},
   DELETED_COMMENT_SUC => { msg => 'Successfully deleted the comment.', type => 'success'},
   UPDATED_PHENOTYPES_SUC => {msg => 'Successfully updated the list of phenotypes.', type => 'success'},
   DATA_NOT_CHANGED => {msg => 'Data has not changed.', type => 'info'},
