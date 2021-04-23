@@ -226,6 +226,7 @@ sub startup {
   $r->get('/gene2phenotype/gfd/merge_duplicated_LGM')->to('genomic_feature_disease#merge_all_duplicated_LGM_by_gene_by_panel');
 
   $r->get('/gene2phenotype/gfd_panel/add')->to('genomic_feature_disease_panel#add');
+  $r->get('/gene2phenotype/gfd_panel/delete')->to('genomic_feature_disease_panel#delete');
   $r->get('/gene2phenotype/gfd_panel/authorised/update')->to('genomic_feature_disease_panel#update_visibility');
   $r->get('/gene2phenotype/gfd_panel/confidence_category/update')->to('genomic_feature_disease_panel#update_confidence_category');
 
