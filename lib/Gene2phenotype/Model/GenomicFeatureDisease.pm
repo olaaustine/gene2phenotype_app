@@ -29,6 +29,9 @@ sub fetch_by_dbID {
   my $gfd_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDisease');
   
   my $gfd = $gfd_adaptor->fetch_by_dbID($dbID, $authorised_panels, $logged_in);
+  if (!defined $gfd) {
+    return undef;
+  }
 
   my $GFD_log_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseaseLog');
   my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
