@@ -49,7 +49,7 @@ sub fetch_by_dbID {
     }
   }
   
-  my $gfd_panels = $self->get_gfd_panels($gfd, $user_panels);
+  my $gfd_panels = $self->get_gfd_panels($gfd, $authorised_panels, $user_panels, $logged_in);
 
   my $gene_symbol = $gfd->get_GenomicFeature->gene_symbol;
   my $gene_id = $gfd->get_GenomicFeature->dbID;
@@ -609,7 +609,9 @@ sub update_visibility {
 sub get_gfd_panels {
   my $self = shift;
   my $GFD = shift;
+  my $authorised_panels = shift;
   my $user_panels = shift;
+  my $logged_in = shift;
 
   my $registry = $self->app->defaults('registry');
   my $GFD_panel_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseasePanel');
@@ -619,10 +621,14 @@ sub get_gfd_panels {
   my @gfd_panels = (); 
 
   foreach my $gfd_panel (@$gfd_panels) {
-    my $confidence_category = $gfd_panel->confidence_category;
     my $panel = $gfd_panel->panel;
-    my $is_visible = $gfd_panel->is_visible;
+    # If the user is not logged in we can only show results from panels that are public
+    if (!$logged_in) {
+      next if (!grep {$panel eq $_} @{$authorised_panels});
+    }
     my $user_can_edit = grep {$panel eq $_} @{$user_panels};
+    my $confidence_category = $gfd_panel->confidence_category;
+    my $is_visible = $gfd_panel->is_visible;
     my $confidence_category_list = $self->_get_confidence_category_list($confidence_category);
     push @gfd_panels, {
       GFD_id => $GFD->dbID,
