@@ -64,68 +64,41 @@ sub add {
   my $gfds = $gfd_model->fetch_all_by_GenomicFeature_constraints($gf, {
     'mutation_consequence_attrib' => $mutation_consequence_attrib_id,
     'allelic_requirement_attrib' => $allelic_requirement_attrib_ids,
-    'disease_id' => $disease->dbID,
   });
-
-  if (scalar @$gfds > 0) {
-    foreach my $gfd (@$gfds) {
-      # If entry already in panel, go to gfd page
-      if (grep {$target_panel eq $_} @{$gfd->panels}) {
-        my $GFD_id = $gfd->dbID;
-        $self->feedback_message('GFD_IN_DB');
-        return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");   
-      } 
-    }
-    # Otherwise show user existing data and let user choose which entry to add to the panel
-    my $existing_gfds = _get_existing_gfds($gfds);
-    my $confidence_value_to_be_added = $gfd_model->get_value('confidence_category', $confidence_attrib_id);
-    $self->stash(message => 'Warning: Entry already exists in a different panel.');
-    $self->stash(
-      existing_gfds                => $existing_gfds,
-      confidence_value_to_be_added => $confidence_value_to_be_added,
-      confidence_values            => $gfd_model->get_confidence_values,
-      mutation_consequences        => $gfd_model->get_mutation_consequences,
-      allelic_requirements         => $gfd_model->get_allelic_requirements,
-      gene_symbol                  => $gene_symbol,
-      disease_name                 => $disease_name,
-      panel                        => $target_panel
-    );
-    return $self->render(template => 'add_new_entry');
-  }
-
-  # Find existing entries with the same gene_symbol, allelic_requirement and mutation_consequence  
-  $gfds = $gfd_model->fetch_all_by_GenomicFeature_constraints($gf, {
-    'mutation_consequence_attrib' => $mutation_consequence_attrib_id,
-    'allelic_requirement_attrib' => $allelic_requirement_attrib_ids,
-  });
-  if (scalar @$gfds > 0 ) {
-    my $existing_gfds = _get_existing_gfds($gfds);
-    my $allelic_requirement_to_be_added = $gfd_model->get_value('allelic_requirement', $allelic_requirement_attrib_ids);
-    my $mutation_consequence_to_be_added = $gfd_model->get_value('mutation_consequence', $mutation_consequence_attrib_id);
-    my $confidence_value_to_be_added = $gfd_model->get_value('confidence_category', $confidence_attrib_id);
-    $self->stash(message => 'Warning: Entries with the same gene symbol, allelic requirement and mutation consequence already exist:');
-    $self->stash(
-      existing_gfds => $existing_gfds,
-      new_gfd => {
-        mutation_consequence_to_be_added =>  $mutation_consequence_to_be_added,
-        allelic_requirement_to_be_added => $allelic_requirement_to_be_added,
+  if (scalar @$gfds == 0) {
+    my $gfd = $self->create_gfd();
+    my $gfd_id = $gfd->dbID;
+    $self->add_gfd_to_panel($gfd_id);
+    return;
+  } else {
+    my $existing_gfds = _get_existing_gfds($gfds, $disease->dbID, $target_panel);
+    if ($existing_gfds->{same_disease_target_panel}) {
+      my $gfd = $existing_gfds->{same_disease_target_panel};
+      my $gfd_id = $gfd->dbID;
+      $self->feedback_message('GFD_IN_DB');
+      return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$gfd_id");   
+    } else {
+      my $allelic_requirement_to_be_added = $gfd_model->get_value('allelic_requirement', $allelic_requirement_attrib_ids);
+      my $mutation_consequence_to_be_added = $gfd_model->get_value('mutation_consequence', $mutation_consequence_attrib_id);
+      my $confidence_value_to_be_added = $gfd_model->get_value('confidence_category', $confidence_attrib_id);
+      $self->stash(
+        existing_gfds => $existing_gfds,
+        new_gfd => {
+          mutation_consequence_to_be_added =>  $mutation_consequence_to_be_added,
+          allelic_requirement_to_be_added => $allelic_requirement_to_be_added,
+          gene_symbol => $gene_symbol,
+          disease_name => $disease_name,
+        },
+        confidence_value_to_be_added => $confidence_value_to_be_added,
+        confidence_values => $gfd_model->get_confidence_values,
+        mutation_consequences =>  $gfd_model->get_mutation_consequences,
+        allelic_requirements => $gfd_model->get_allelic_requirements,
         gene_symbol => $gene_symbol,
         disease_name => $disease_name,
-      },
-      confidence_value_to_be_added => $confidence_value_to_be_added,
-      confidence_values => $gfd_model->get_confidence_values,
-      mutation_consequences =>  $gfd_model->get_mutation_consequences,
-      allelic_requirements => $gfd_model->get_allelic_requirements,
-      gene_symbol => $gene_symbol,
-      disease_name => $disease_name,
-      panel => $target_panel
-    );
-    return $self->render(template => 'add_new_entry');
-  } else {
-    # Create new entry
-    my $gfd = $self->create_gfd();
-    $self->add_gfd_to_panel($gfd->dbID);
-    return;
+        panel => $target_panel
+      );
+      return $self->render(template => 'add_new_entry');
+    }
   }
 }
 
@@ -162,10 +135,19 @@ sub add_gfd_to_panel {
 
 sub _get_existing_gfds {
   my $gfds = shift;
-  my @existing_gfds = ();
+  my $new_disease_id = shift;
+  my $target_panel = shift;
+  # Identify:
+  # same disease and target panel
+  # same disease and non-target panel
+  # different disease and target panel
+  # different disease and non-target panel
+  my $existing_gfds;
   foreach my $gfd (@$gfds) {
     my @disease_name_synonyms = map {$_->get_Disease->name } @{$gfd->get_all_GFDDiseaseSynonyms};
-    push @existing_gfds, {
+    my $is_target_panel = grep {$target_panel eq $_} @{$gfd->panels};
+    my $disease_id = $gfd->get_Disease->dbID;
+    my $exisiting_gfd = {
       mutation_consequence =>  $gfd->mutation_consequence,
       allelic_requirement => $gfd->allelic_requirement,
       gene_symbol => $gfd->get_GenomicFeature->gene_symbol,
@@ -174,8 +156,17 @@ sub _get_existing_gfds {
       panels => $gfd->panels,
       gfd_id => $gfd->dbID,
     };
+    if ($disease_id == $new_disease_id && $is_target_panel) {
+      $existing_gfds->{same_disease_target_panel} = $gfd;
+    } elsif ($disease_id == $new_disease_id && !$is_target_panel) {
+      push @{$existing_gfds->{same_disease_non_target_panel}}, $exisiting_gfd;
+    } elsif ($disease_id != $new_disease_id && $is_target_panel) {
+      push @{$existing_gfds->{different_disease_target_panel}}, $exisiting_gfd;
+    } else {
+      push @{$existing_gfds->{different_disease_non_target_panel}}, $exisiting_gfd;
+    }
   }
-  return \@existing_gfds;
+  return $existing_gfds;
 }
 
 sub update_visibility {
