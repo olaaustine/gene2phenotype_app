@@ -51,7 +51,7 @@
                 %end
               </td>
             <% } else {  %>
-              <td>$gfd_panel->{confidence_value}</td>
+              <td><%= $gfd_panel->{confidence_category} %></td>
               <td></td>
               <td></td>
             <% } %>
