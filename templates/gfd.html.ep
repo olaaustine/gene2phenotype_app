@@ -1,8 +1,18 @@
 %= include 'header'
 %= include 'search'
 <div class="container">
-  <h3 class="title">Panel: <span class="text-primary"><i><%= $gfd->{panel} %></i></span> Gene: <span class="text-primary"><i><%= $gfd->{gene_symbol} %></i></span> Disease: <span class="text-primary"><i><%= $gfd->{disease_name} %></i></span></h3>
+  <h3 class="title">Gene: <span class="text-primary"><i><%= $gfd->{gene_symbol} %></i></span> Disease: <span class="text-primary"><i><%= $gfd->{disease_name} %></i></span></h3>
   <div class="clear"></div>
+  <div class="show_db_content">
+    <dl>
+      <dt>Allelic requirement</dt>
+      <dd><%= $gfd->{allelic_requirement} %></dd>
+      <dt>Mutation consequence summary</dt>
+      <dd><%= $gfd->{mutation_consequence} %></dd>
+    </dl>
+  </div>
+  <div class="clear"></div>
+
   %= include 'gfd_attributes'
   %= include 'gene'
   %= include 'statistics'

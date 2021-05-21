@@ -1,63 +1,65 @@
 <div>
   <div class="clear"></div>
-
-  <div id="confidence_category">
-    <div class="show_db_content">
-      <div class="display_attributes">
-        <dl>
-          <dt>Disease confidence</dt>
-          <dd><%= $gfd->{GFD_category} %></dd>
-        </dl>
-      </div> <!--End display attributes-->
-      <div class="show_toggle_view_button">
-        <input type="button" name="show_edit_content" value="Edit" class="btn btn-primary btn-sm edit"/>
-      </div>
-      <div class="clear"></div>
-    </div> <!--End show_db_content-->
-    <div class="show_edit_content">
-      <h4>Edit disease confidence:</h4>
-      %= form_for '/gene2phenotype/gfd/category/update' => begin
-        <div class="form-group">
-          <label>Disease confidence: </label>
-          %= select_field category_attrib_id => $gfd->{GFD_category_list} 
-        </div>
-        <div class="align_buttons_right">
-          %= hidden_field GFD_id => $gfd->{GFD_id}
-          %= submit_button 'Save', class => 'btn btn-primary btn-sm', id => 'button'
-          <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
-        </div>
-      % end
-    </div> <!--End show edit content-->
-
-    <% if (@{$gfd->{logs}}) { %>
-      <div class="log_table">
-      <table class="table table-striped table-bordered table-condensed">
+  <div>
+    <table class="table table-bordered table-condensed">
+      <thead>
         <tr>
-          <th>Created</th>
-          <th>User</th>
-          <th>Disease confidence</th>
-          <th>Action</th>
+          <th scope="col">Panel</th>
+          <th scope="col">Confidence category</th>
+          <th scope="col">Visibility</th>
+          <th scope="col">Delete</th>
         </tr>
-        <% foreach my $log (@{$gfd->{logs}}) { %>
+      </thead>
+      <tbody>
+        <% foreach my $gfd_panel (@{$gfd->{gfd_panels}}) { %>
           <tr>
-            <td><%= $log->{created} %></td>
-            <td><%= $log->{user} %></td>
-            <td><%= $log->{confidence_category} %></td>
-            <td><%= $log->{action} %></td>
+            <td><%= $gfd_panel->{panel} %></td>
+            <% if ($gfd_panel->{user_can_edit}) { %>
+              <td>
+                %= form_for '/gene2phenotype/gfd_panel/confidence_category/update' => begin
+                  %= select_field category_attrib_id => $gfd_panel->{confidence_category_list} 
+                  <div class="align_buttons_right">
+                    %= hidden_field GFD_id => $gfd_panel->{GFD_id}
+                    %= hidden_field GFD_panel_id => $gfd_panel->{GFD_panel_id}
+                    %= submit_button 'Update', class => 'btn btn-primary btn-sm', id => 'button'
+                  </div>
+                % end
+              </td>
+              <td>
+                %= form_for '/gene2phenotype/gfd_panel/authorised/update' => begin
+                  <select name="visibility">
+                    <% if ($gfd_panel->{is_visible}) { %>
+                      <option value="authorised" selected>Authorised. Visible to all users.</option>
+                      <option value="restricted">Restricted. Visible to editors only.</option>
+                    <% } else { %>
+                      <option value="authorised">Authorised. Visible to all users.</option>
+                      <option value="restricted" selected>Restricted. Visible to editors only.</option>
+                    <% } %>
+                  </select>
+                  <div class="align_buttons_right">
+                    %= hidden_field GFD_id => $gfd_panel->{GFD_id}
+                    %= hidden_field GFD_panel_id => $gfd_panel->{GFD_panel_id}
+                    <input id="button" type="submit" value="Update" class="btn btn-primary btn-sm"/>
+                  </div>
+                %end
+              </td>
+              <td>
+                %= form_for '/gene2phenotype/gfd_panel/delete' => begin
+                  %= hidden_field GFD_id => $gfd_panel->{GFD_id}
+                  %= hidden_field GFD_panel_id => $gfd_panel->{GFD_panel_id}
+                  <input id="button" type="submit" value="Delete" class="btn btn-primary btn-sm confirm"/>
+                %end
+              </td>
+            <% } else {  %>
+              <td><%= $gfd_panel->{confidence_category} %></td>
+              <td></td>
+              <td></td>
+            <% } %>
           </tr>
         <% } %>
-      </table>  
-      </div>
-    <% } %>
-  </div> <!--End confidence category-->
+      </tbody>
+    </table>
 
-  <div class="show_db_content">
-    <dl>
-      <dt>Allelic requirement</dt>
-      <dd><%= $gfd->{allelic_requirement} %></dd>
-      <dt>Mutation consequence summary</dt>
-      <dd><%= $gfd->{mutation_consequence} %></dd>
-    </dl>
-  </div>
+  </div> <!--End confidence category-->
 
 </div> <!--End-->

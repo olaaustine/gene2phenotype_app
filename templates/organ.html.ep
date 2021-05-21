@@ -8,7 +8,7 @@
         <% } %>
       </ul>
 
-      <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>
+      <% if ($logged_in) { %>
         <div class="show_toggle_view_button">
           <input type="button" name="show_edit_content" value="Edit Organ Specificity List" class="btn btn-primary btn-sm edit"/>
         </div>

@@ -1,0 +1,206 @@
+%= include 'header'
+%= include 'search'
+<div class="container">
+  <h3>Add new gene-disease:</h3>
+  %= form_for '/gene2phenotype/gfd_panel/add' => (class => 'form-horizontal', id => 'add_gfd_form') => begin
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Gene symbol</label>
+      <div class="col-sm-10">
+        <% if (my $gene_symbol = stash 'gene_symbol') { %>
+          <input id="query_gene_symbol" type="text" name="gene_symbol" value="<%= $gene_symbol %>" class="form-control">
+        <% } else { %>
+          <input id="query_gene_symbol" type="text" name="gene_symbol" placeholder="Select gene name" class="form-control">
+        <% } %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Disease name</label>
+      <div class="col-sm-10">
+        <% if (my $disease_name = stash 'disease_name') { %>
+          <input id="query_disease_name" type="text" name="disease_name" value="<%= $disease_name %>" class="form-control">
+        <% } else { %>
+          <input id="query_disease_name" type="text" name="disease_name" placeholder="Select disease name" class="form-control">
+        <% } %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Allelic requirement</label>
+      <div class="col-sm-10">
+        <% foreach my $AR (@{$allelic_requirements}) { %>
+          %= check_box allelic_requirement_attrib_id => $AR->{AR_attrib_id}
+          <%= $AR->{AR_attrib_value}%>
+          %= tag 'br'
+        <% } %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Mutation consequence</label>
+      <div class="col-sm-10">
+        %= select_field mutation_consequence_attrib_id => $mutation_consequences
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Panel </label>
+      <div class="col-sm-10">
+        <select class="form-control" name="panel">
+          <% foreach my $panel ( @{$panels} ) { %>
+            <option value="<%= $panel %>"><%= $panel %></option>
+          <% } %>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Confidence</label>
+      <div class="col-sm-10">
+        <select class="form-control" name="confidence_attrib_id">
+          <% foreach my $confidence_value ( @{$confidence_values} ) { %>
+            <option value="<%= $confidence_value->[1] %>"><%= $confidence_value->[0] %></option>
+          <% } %>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <input id="button" type="submit" value="Add" class="btn btn-primary btn-sm"/>
+      </div>
+    </div>
+  %end
+
+  <div class="alert_add_gfd_form" role="alert">
+  </div>
+
+  <% if (my $existing_gfds = stash 'existing_gfds') { %>
+    <div class="panel panel-danger add_entry_anyway">
+      <% if (defined $existing_gfds->{different_disease_target_panel} && scalar @{$existing_gfds->{different_disease_target_panel}} > 0) { %>
+        <div class="panel-body">
+          <h3>Entries with same gene symbol, allelic requirement and mutation consequence in the <%= $panel %> panel:</h3>
+        </div>
+        <table class="table table-bordered table-condensed">
+          <thead>
+          <tr>
+            <th scope="col">Gene symbol</th>
+            <th scope="col">Allelic requirement</th>
+            <th scope="col">Mutation consequence</th>
+            <th scope="col">Disease</th>
+            <th scope="col">Disease synonyms</th>
+            <th scope="col">Panels</th>
+            <th scope="col">Go to page</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% foreach my $gfd (@{$existing_gfds->{different_disease_target_panel}}) { %> 
+            <tr>
+              <td><%= $gfd->{gene_symbol} %></td>
+              <td><%= $gfd->{allelic_requirement} %></td>
+              <td><%= $gfd->{mutation_consequence} %></td>
+              <td><%= $gfd->{disease_name} %></td>
+              <td><%= join(',', @{$gfd->{disease_name_synonyms}}) %></td>
+              <td><%= join(',', @{$gfd->{panels}}) %></td>
+              <td>
+                %= form_for '/gene2phenotype/gfd' => (id => $gfd->{gfd_id}) => begin
+                  %= hidden_field dbID => $gfd->{gfd_id}
+                  <input id="button" type="submit" value="Go to page" class="btn btn-primary btn-sm"/>
+                % end
+              </td>
+            </tr>
+          <% } %>
+          </tbody> 
+        </table>
+      <% } %>
+
+      <% if (defined $existing_gfds->{different_disease_non_target_panel} && scalar @{$existing_gfds->{different_disease_non_target_panel}} > 0) { %>
+        <div class="panel-body">
+          <h3>Entries with the same same gene symbol, allelic requirement and mutation consequence that can be added to the <%= $panel %> panel:</h3>
+        </div>
+        <table class="table table-bordered table-condensed">
+          <thead>
+          <tr>
+            <th scope="col">Gene symbol</th>
+            <th scope="col">Allelic requirement</th>
+            <th scope="col">Mutation consequence</th>
+            <th scope="col">Disease</th>
+            <th scope="col">Disease synonyms</th>
+            <th scope="col">Panels</th>
+            <th scope="col">Add</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% foreach my $gfd (@{$existing_gfds->{different_disease_non_target_panel}}) { %> 
+            <tr>
+              <td><%= $gfd->{gene_symbol} %></td>
+              <td><%= $gfd->{allelic_requirement} %></td>
+              <td><%= $gfd->{mutation_consequence} %></td>
+              <td><%= $gfd->{disease_name} %></td>
+              <td><%= join(',', @{$gfd->{disease_name_synonyms}}) %></td>
+              <td><%= join(',', @{$gfd->{panels}}) %></td>
+              <td>
+                %= form_for '/gene2phenotype/gfd_panel/add' => begin
+                  %= hidden_field add_existing_entry_to_panel => 1
+                  %= hidden_field gfd_id => $gfd->{gfd_id}
+                  <% if (my $confidence_value_to_be_added = stash 'confidence_value_to_be_added') { %>
+                    %= hidden_field confidence_value_to_be_added => $confidence_value_to_be_added
+                  <% } %>
+                  %= hidden_field panel => $panel
+                  <input id="button" type="submit" value="Add to <%= $panel %> panel" class="btn btn-primary btn-sm"/>
+                % end
+              </td>
+            </tr>
+          <% } %>
+          </tbody> 
+        </table>
+      <% } %>
+      <% if (my $new_gfd = stash 'new_gfd') { %>
+        <div class="panel-body">
+          <h3>Create a new entry and add it to the <%= $panel %> panel:</h3>
+        </div>
+        <table class="table table-bordered table-condensed">
+          <thead>
+          <tr>
+            <th scope="col">Gene symbol</th>
+            <th scope="col">Allelic requirement</th>
+            <th scope="col">Mutation consequence</th>
+            <th scope="col">Disease</th>
+            <th scope="col">Confidence value</th>
+            <th scope="col">Add</th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><%= $new_gfd->{gene_symbol} %></td>
+              <td><%= $new_gfd->{allelic_requirement_to_be_added} %></td>
+              <td><%= $new_gfd->{mutation_consequence_to_be_added} %></td>
+              <td><%= $new_gfd->{disease_name} %></td>
+              <td>
+                <% if (my $confidence_value_to_be_added = stash 'confidence_value_to_be_added') { %>
+                  <%= $confidence_value_to_be_added %>
+                <% } %>
+              </td>
+              <td>
+                %= form_for '/gene2phenotype/gfd_panel/add' => begin
+                  %= hidden_field create_new_gfd => 1
+                  %= hidden_field gene_symbol => $new_gfd->{gene_symbol}
+                  %= hidden_field disease_name => $new_gfd->{disease_name}
+                  %= hidden_field allelic_requirement_to_be_added => $new_gfd->{allelic_requirement_to_be_added}
+                  %= hidden_field mutation_consequence_to_be_added => $new_gfd->{mutation_consequence_to_be_added}
+                  <% if (my $confidence_value_to_be_added = stash 'confidence_value_to_be_added') { %>
+                    %= hidden_field confidence_value_to_be_added => $confidence_value_to_be_added
+                  <% } %>
+                  %= hidden_field panel => $panel
+                  <input id="button" type="submit" value="Add to <%= $panel %> panel" class="btn btn-primary btn-sm"/>
+                % end
+              </td>
+            </tr>
+          </tbody> 
+        </table>
+      <% } %>
+    </div>  
+  <% } %>
+</div>
+%= include 'footer'

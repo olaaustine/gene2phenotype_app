@@ -23,7 +23,7 @@ sub identify_search_type {
   my $search_term = shift;
 
   my $registry = $self->app->defaults('registry');
-  my $gf_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeature'); 
+  my $gf_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeature');
 
   if ($gf_adaptor->fetch_by_gene_symbol($search_term) || $gf_adaptor->fetch_by_synonym($search_term)) {
     return 'gene_symbol';
@@ -56,14 +56,14 @@ sub fetch_all_by_substring {
   my $diseases = $disease_adaptor->fetch_all_by_substring($search_term);
   my @gfd_results = ();
   foreach my $disease ( sort { $a->name cmp $b->name } @$diseases) {
-    my $gfds = $gfd_adaptor->fetch_all_by_Disease_panels($disease, $search_panels);
-    push @gfd_results, @{$self->_get_gfd_results($gfds, $is_authorised)};
+    my $gfds = $gfd_adaptor->fetch_all_by_Disease_panels($disease, $search_panels, $is_authorised);
+    push @gfd_results, @{$self->_get_gfd_results($gfds)};
 
   }
   my $genes = $gf_adaptor->fetch_all_by_substring($search_term);
   foreach my $gene ( sort { $a->gene_symbol cmp $b->gene_symbol } @$genes) {
-    my $gfds = $gfd_adaptor->fetch_all_by_GenomicFeature_panels($gene, $search_panels);
-    foreach my $gfd_result (@{$self->_get_gfd_results($gfds, $is_authorised)}) {
+    my $gfds = $gfd_adaptor->fetch_all_by_GenomicFeature_panels($gene, $search_panels, $is_authorised);
+    foreach my $gfd_result (@{$self->_get_gfd_results($gfds)}) {
       if (! grep {$gfd_result->{dbID} eq $_->{dbID}} @gfd_results) {
         push @gfd_results, $gfd_result;
       }
@@ -78,9 +78,8 @@ sub fetch_all_by_gene_symbol {
   my $search_term = shift;
   my $search_panels = shift;
   my $is_authorised = shift;
-  my $registry = $self->app->defaults('registry');
-  my $disease_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'disease');
 
+  my $registry = $self->app->defaults('registry');
   my $gfd_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease'); 
   my $gf_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeature'); 
  
@@ -89,8 +88,8 @@ sub fetch_all_by_gene_symbol {
     $gene = $gf_adaptor->fetch_by_synonym($search_term);
   }
 
-  my $gfds = $gfd_adaptor->fetch_all_by_GenomicFeature_panels($gene, $search_panels);
-  my $gfd_results = $self->_get_gfd_results($gfds, $is_authorised);
+  my $gfds = $gfd_adaptor->fetch_all_by_GenomicFeature_panels($gene, $search_panels, $is_authorised);
+  my $gfd_results = $self->_get_gfd_results($gfds);
   return {gfd_results => $gfd_results};
 }
 
@@ -105,8 +104,8 @@ sub fetch_all_by_disease_name {
 
   my $disease = $disease_adaptor->fetch_by_name($search_term);
 
-  my $gfds = $gfd_adaptor->fetch_all_by_Disease_panels($disease, $search_panels);
-  my $gfd_results = $self->_get_gfd_results($gfds, $is_authorised);
+  my $gfds = $gfd_adaptor->fetch_all_by_Disease_panels($disease, $search_panels, $is_authorised);
+  my $gfd_results = $self->_get_gfd_results($gfds);
 
   return {gfd_results => $gfd_results};
 }
@@ -114,21 +113,24 @@ sub fetch_all_by_disease_name {
 sub _get_gfd_results {
   my $self = shift;
   my $gfds = shift;
-  my $is_authorised = shift;
   my @gfd_results = ();
   foreach my $gfd (@$gfds) {
-    if (!$gfd->is_visible) {
-      next if (!$is_authorised);
-    }
     my $genomic_feature = $gfd->get_GenomicFeature;
     my $gene_symbol = $genomic_feature->gene_symbol;
     my $disease = $gfd->get_Disease;
     my $disease_name = $disease->name;
     my $dbID = $gfd->dbID;
-    my $panel = $gfd->panel;
+    my $panels = join(',', sort @{$gfd->panels});
     my $allelic_requirement = $gfd->allelic_requirement || 'not specified';
     my $mutation_consequence = $gfd->mutation_consequence || 'not specified';  
-    push @gfd_results, {gene_symbol => $gene_symbol, disease_name => $disease_name, genotype => $allelic_requirement, mechanism =>  $mutation_consequence, search_type => 'gfd', dbID => $dbID, GFD_panel => $panel};
+    push @gfd_results, {
+      gene_symbol => $gene_symbol,
+      disease_name => $disease_name,
+      genotype => $allelic_requirement,
+      mechanism => $mutation_consequence,
+      search_type => 'gfd',
+      dbID => $dbID,
+      panels => $panels};
   }
   return \@gfd_results;
 }

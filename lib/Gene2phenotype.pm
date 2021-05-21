@@ -91,32 +91,37 @@ sub startup {
     my $panel_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'panel');
     my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
 
-    my @panels = map { $_->name } @{$panel_adaptor->fetch_all_visible_Panels};
-    my @authorised_panels = (); # all visible and only visible by curator
+    my @visible_panels = map { $_->name } @{$panel_adaptor->fetch_all_visible};
+    my @user_panels = (); # all panels that can be changed by the user
     my $logged_in = $c->session('logged_in');
     if ($logged_in) {
       my $email = $c->session('email');
       my $user = $user_adaptor->fetch_by_email($email);
-      @authorised_panels = split(',', $user->panel);
-      foreach my $panel (@authorised_panels) {
-        if (!grep{$_ eq $panel} @panels) {
-          push @panels, $panel;
+      @user_panels = split(',', $user->panel);
+      foreach my $panel (@user_panels) {
+        if (!grep {$_ eq $panel} @visible_panels) {
+          push @visible_panels, $panel;
         }
       }
     }
-    if (scalar @panels > 1) {
-      push @panels, 'ALL';
-    }
+    # Add option to search ALL panels
+    # ALL will only include panels that are allowed to be seen by the user 
+    if (scalar @visible_panels > 1) {
+      push @visible_panels, 'ALL';
+    } 
 
     my @panel_imgs = ();
-    my $attribs = $attribute_adaptor->get_attribs_by_type_value('g2p_panel');
-    foreach my $value (sort keys %$attribs) {
-      if (grep {$value eq $_} @panels) {
-        push @panel_imgs, [$value => $value,];
+    my $g2p_panels = $attribute_adaptor->get_values_by_type('g2p_panel');
+    foreach my $g2p_panel (sort keys %$g2p_panels) {
+      if (grep {$g2p_panel eq $_} @visible_panels) {
+        push @panel_imgs, [$g2p_panel => $g2p_panel];
       }
     }
     $c->stash(panel_imgs => \@panel_imgs);
-    $c->stash(authorised_panels => \@panels);
+    $c->stash(authorised_panels => \@visible_panels);
+    $c->stash(user_panels => \@user_panels);
+    $c->stash(visible_panels => \@visible_panels);
+
   });
 
 
@@ -209,18 +214,21 @@ sub startup {
   $r->get('/gene2phenotype/gfd')->to('genomic_feature_disease#show');
 
 # :action=add, delete, update, add_comment, delete_comment
-  $r->get('/gene2phenotype/gfd/authorised/update')->to('genomic_feature_disease#update_visibility');
-  $r->get('/gene2phenotype/gfd/category/update')->to('genomic_feature_disease#update');
   $r->get('/gene2phenotype/gfd/organ/update')->to('genomic_feature_disease#update_organ_list');
   $r->get('/gene2phenotype/gfd/disease/update')->to('genomic_feature_disease#update_disease');
   $r->get('/gene2phenotype/gfd/phenotype/:action')->to(controller => 'genomic_feature_disease_phenotype');
   $r->get('/gene2phenotype/gfd/publication/:action')->to(controller => 'genomic_feature_disease_publication');
   $r->get('/gene2phenotype/gfd/comment/:action')->to(controller => 'genomic_feature_disease_comment');
-  $r->get('/gene2phenotype/gfd/create')->to('genomic_feature_disease#create');
+  $r->get('/gene2phenotype/gfd/show_add_new_entry_form')->to('genomic_feature_disease#show_add_new_entry_form');
   $r->get('/gene2phenotype/gfd/add')->to('genomic_feature_disease#add');
   $r->get('/gene2phenotype/gfd/delete')->to('genomic_feature_disease#delete');
   $r->get('/gene2phenotype/gfd/duplicate')->to('genomic_feature_disease#duplicate');
   $r->get('/gene2phenotype/gfd/merge_duplicated_LGM')->to('genomic_feature_disease#merge_all_duplicated_LGM_by_gene_by_panel');
+
+  $r->get('/gene2phenotype/gfd_panel/add')->to('genomic_feature_disease_panel#add');
+  $r->get('/gene2phenotype/gfd_panel/delete')->to('genomic_feature_disease_panel#delete');
+  $r->get('/gene2phenotype/gfd_panel/authorised/update')->to('genomic_feature_disease_panel#update_visibility');
+  $r->get('/gene2phenotype/gfd_panel/confidence_category/update')->to('genomic_feature_disease_panel#update_confidence_category');
 
   $r->get('/gene2phenotype/gene')->to('genomic_feature#show');
   $r->get('/gene2phenotype/disease')->to('disease#show');
