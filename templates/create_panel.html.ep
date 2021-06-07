@@ -1,33 +1,76 @@
 %= include 'header'
 <div class="container">
   <h3>Create your own panel</h3>
-  <p>In G2P, each dataset is focused on a disease grouping or defined category of clinical presentation that is of relevance to the clinical diagnosis of Mendelian disease. For a dataset to be publicly released it must be comprehensive, up-to-date and have a plan for future active curation.
-If you would like to start creating your own panel using the gene2phenotype website please contact us <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a> and we will add the new panel and user accounts to our site. You can populate a new panel in three different ways. You can provide us a file which contains the new gene disease entities and we will load those entities into the database which will be available for editing through the website after loading. Please encode your gene disease entities in the same way as we do for our data dumps of existing panels available from our download page. Not all fields need to be available for an entry to be loaded into the database. The minimal information available must be gene symbol and disease name. Everything else can be entered using the gene2phenotype website. Another way of populating a new panel is to copy entities from existing panels into your own panel. You first search for an existing gene disease pair and then go to the duplicate entry section where you can select which attributes of the existing gene disease pair you would like to copy into your own panel. Confirm your selection by clicking the duplicate button. The gene disease pair will appear in your panel and you can edit the new entry without changing anything in the original gene disease pair. Finally, you can also add a new entry by first searching the gene2phenotype website with the gene symbol of your gene of interest. Search works with autocomplete. All Ensembl genes are preloaded with their HGNC symbol. We also store previously assigned HGNC symbols. If you cannot find your gene of interest, please contact <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a>.
-The main entities which can be curated for a gene disease pair are: disease confidence, disease mechanism which is pair consisting of allelic requirement and mutation consequence, publications, phenotypes and organ specificity.
-Once you started curating your panel you can download the annotations and use it as input for the VEP G2P plugin. If you already annotate an existing panel with PanelApp it is also possible to use the file version of your PanelApp panel and use it as input for the VEP G2P plugin.</p>
-  <h3>Curator views</h3>
-  <h4>Duplicate entries</h4>
-  Curators can populate a new panel by coping entities from existing panels into their own panel. Curators first search for an existing gene disease pair and then go to the duplicate entry section.
-  %= image '/gene2phenotype/images/duplicate.png', alt => 'duplicate', width => '100%'
-  <ol>
-    <li>Select to which panel the existing gene disease pair should be copied.</li>
-    <li>Select which attributes of the existing gene disease pair you would like to copy.</li>
-    <li>Confirm your selection by clicking the duplicate button.</li>
-  </ol>
+  <p>
+    In G2P, each dataset is focused on a disease grouping or defined category of clinical presentation that is of relevance to the clinical diagnosis of Mendelian disease. For a dataset to be publicly released it must be comprehensive, up-to-date and have a plan for future active curation. If you would like to start creating your own panel using the gene2phenotype website please contact us <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a> and we will add the new panel and user accounts to our site. After the user account has been set up and the panels which can be updated are configured there are two ways of creating and populating a panel.
+  </p> 
 
-  Each entry in each dataset links a gene or locus, via a disease mechanism, to a disease. As a curator you can enter a new gene disease pair and edit its attributes.  
-  <h4>Gene-Disease pair confidence</h4>
-  %= image '/gene2phenotype/images/disease_confidence.png', alt => 'diease_confidence', width => '100%'
-  <ol>
-    <li>A confidence attribute – confirmed, probable or possible – is assigned to indicate how likely it is that the gene is implicated in the cause of disease.</li>
-    <li>Any edits will be documented with the date, curator name and applied edit.</li>
-  </ol>
-  <h4>Gene-Disease Attributes: Allelic requirement and mutation consequence</h4>
-  %= image '/gene2phenotype/images/AR_MC.png', alt => 'ar_mc', width => '100%'
-  <ol>
-    <li>A disease mechanism is defined as both an allelic requirement (mode of inheritance, for example biallelic or monoallelic) and a mutation consequence (mode of pathogenicity, for example activating or loss of function).</li>
-    <li>Any edits will be documented with the date, curator name and applied edit.</li>
-  </ol>
+  <p>
+Firstly, you can provide us a file which contains the new gene disease entities, and we will load those entities into the database which will be available for editing through the website after loading. Please encode your gene disease entities in the same way as we do for our data dumps of existing panels available from our download page. Not all fields need to be available for an entry to be loaded into the database. The minimal information available must be gene symbol, allelic requirement, mutation consequence, disease name and gene disease association confidence value. Everything else can be entered using the gene2phenotype website.
+  </p>
+  <p>
+Secondly, you can use the web interface for adding a new entry to a panel by first searching the gene2phenotype website with the gene symbol of your gene of interest. Search works with autocomplete. All Ensembl genes are preloaded with their HGNC symbol. We also store previously assigned HGNC symbols. If you cannot find your gene of interest, please contact <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a>.
+The main entities which can be curated for a gene disease pair are: disease confidence, disease mechanism which is pair consisting of allelic requirement and mutation consequence, publications, phenotypes and organ specificity.
+  </p>
+  <p>
+Once you started curating your panel you can download the annotations and use it as input for the VEP G2P plugin. If you already annotate an existing panel with PanelApp it is also possible to use the file version of your PanelApp panel and use it as input for the VEP G2P plugin.
+  </p>
+
+  <h3>Curator views</h3>
+  <h4>Create a new entry</h4>
+    An entry describes a gene disease association which is characterized by the allelic requirement and mutation consequence. We want to reduce the existence of duplicated data in the database as much as possible. Therefore, entries that are the same across panels are annotated together. When entering a new entry, the following information must be provided:
+    <ul>
+      <li>Gene symbol</li>
+      <li>Disease name</li>
+      <li>Allelic requirement</li>
+      <li>Mutation consequence</li>
+      <li>Target panel</li>
+      <li>Gene disease association confidence</li>
+    </ul>
+
+  <div class="panel panel-default">
+    <figure>
+      %= image '/gene2phenotype/images/enter_new_entry.png', alt => 'enter_new_entry', width => '100%'
+      <figcaption>Interface for entering a new gene disease association.</figcaption>
+    </figure>
+  </div>
+
+
+  <p>
+    Bevor creating a new entry, we will check if there is already an entry with the same gene symbol, allelic requirement and mutation consequence in the database. Depending on the outcome of the search result the user can choose from several options which are described in a flowchart and encompass:
+    <ul>
+      <li>The entry is already in the database, but with a different disease name.
+        <ul>
+          <li>The user needs to decide now if the existing entry represents the new association. If it does and is already in the target panel, the user can now go to the existing entry. If it does but is not in the target panel, the user can add the existing entry to the target panel and then curate the existing entry together with curators from other panels</li>
+        </ul> 
+      </li>
+      <li>The entry is already in the database, with the same disease name, but in a different panel.
+        <ul>
+          <li>The user adds the existing entry to the target panel.</li> 
+        </ul>
+      </li>
+      <li>The entry doesn’t exist, and we create a new entry in the target panel.</li>
+    </ul>
+  </p>
+
+  <div class="panel panel-default">
+    <figure>
+      %= image '/gene2phenotype/images/enter_new_entry_flowchart.png', alt => 'enter_new_entry_flowchart', width => '100%'
+      <figcaption>Flowchart describing how a potential new entry is compared against existing entries in the database to decide if the potential new entry needs to be created or if it already exists and can be added to the target panel or is already present in the target panel.</figcaption>
+    </figure>
+  </div>
+
+  <h4>Panel specific curation</h4>
+  <p>
+  An entry can belong to several panels. The panel specific curators have permissions to add an entry to a panel and set the confidence category, visibility status and finally can delete an entry from the panel. The confidence category – confirmed, probable or possible – is assigned to indicate how likely it is that the gene is implicated in the cause of disease. The visibility setting decides if the entry can be seen as part of the panel by users that are not logged in on the website.
+  </p>
+  <div class="panel panel-default">
+    <figure>
+      %= image '/gene2phenotype/images/panel_specific.png', alt => 'diease_confidence', width => '100%'
+      <figcaption>Panel specific curation. The entry GJA1, Hallermann-Streiff Syndrome, biallelic, all missense/in frame is curated in three panels: DD, Eye and Skin. Confidence category and  visibility updates and the option to delete the entry from the panel are panel specific and can only be performed by curtors with panel specific edit permissions. </figcaption>
+    </figure>
+  </div>
+
   <h4>Publications</h4>
   %= image '/gene2phenotype/images/publication.png', alt => 'publication', width => '100%'
   <ol>
