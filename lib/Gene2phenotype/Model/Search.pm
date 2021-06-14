@@ -15,8 +15,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
  
 =cut
+
 package Gene2phenotype::Model::Search;
 use Mojo::Base 'MojoX::Model';
+
+=head2 identify_search_type
+
+  Arg [1]    : String $search_term
+  Description: Based on the search term identifies the search type.
+  Returntype : String which describes the search type: gene_symbol, disease_name, contains_search_term or no_entry_in_db. 
+  Exceptions : None
+  Caller     : Gene2phenotype::Controller::Search::results 
+  Status     : Stable
+
+=cut
 
 sub identify_search_type {
   my $self = shift;
@@ -40,6 +52,48 @@ sub identify_search_type {
 
   return 'no_entry_in_db';
 }
+
+=head2 fetch_all_by_substring
+
+  Arg [1]    : String $search_term
+  Arg [2]    : Arrayref of panels $search_panels for which to return search results
+  Arg [3]    : Boolean $is_authorised - indicates if user is logged in.
+  Description: This is search by substring and we use the methods Bio::EnsEMBL::G2P::DBSQL::GenomicFeatureAdaptor::fetch_all_by_substring and
+               Bio::EnsEMBL::G2P::DBSQL::DiseaseAdaptor::fetch_all_by_substring to get all gene symbols and disease names which
+               contain the given search term. With the set of gene symbols we use Bio::EnsEMBL::G2P::DBSQL::GenomicFeatureDiseaseAdaptor::fetch_all_by_GenomicFeature_panels
+               to get all GenomicFeatureDiseases by gene symbol and Bio::EnsEMBL::G2P::DBSQL::GenomicFeatureDiseaseAdaptor::fetch_all_by_Disease_panels
+               to get all GenomicFeatureDiseases by disease name.   
+               We create a search result hash for each GenomicFeatureDisease.
+  Returntype : Hashref with one key gfd_results which holds an arrayref of
+               hashref results where each hashref represents a GenomicFeatureDisease
+               search result: 
+                   {
+                      'gfd_results' => [
+                                         {
+                                           'mechanism' => 'loss of function',
+                                           'dbID' => 916,
+                                           'panels' => 'DD',
+                                           'genotype' => 'monoallelic',
+                                           'gene_symbol' => 'CRYBA1',
+                                           'disease_name' => 'CATARACT CONGENITAL ZONULAR WITH SUTURAL OPACITIES',
+                                           'search_type' => 'gfd'
+                                         },
+                                         {
+                                           'mechanism' => 'loss of function',
+                                           'dbID' => 2505,
+                                           'panels' => 'Eye',
+                                           'genotype' => 'monoallelic',
+                                           'gene_symbol' => 'CRYBA1',
+                                           'disease_name' => 'CATARACT 10, MULTIPLE TYPES',
+                                           'search_type' => 'gfd'
+                                         }
+                                       ]
+                    };
+  Exceptions : None
+  Caller     : Gene2phenotype::Controller::Search::results 
+  Status     : Stable
+
+=cut
 
 sub fetch_all_by_substring {
   my $self = shift;
@@ -73,6 +127,46 @@ sub fetch_all_by_substring {
 
 }
 
+=head2 fetch_all_by_gene_symbol
+
+  Arg [1]    : String $search_term
+  Arg [2]    : Arrayref of panels $search_panels for which to return search results
+  Arg [3]    : Boolean $is_authorised - indicates if user is logged in.
+  Description: This is a exact search by gene symbol and we use the method Bio::EnsEMBL::G2P::DBSQL::GenomicFeatureAdaptor::fetch_by_gene_symbol to get
+               the GenomicFeature for the gene symbol search term. We use Bio::EnsEMBL::G2P::DBSQL::GenomicFeatureDiseaseAdaptor::fetch_all_by_GenomicFeature_panels
+               to get all GenomicFeatureDiseases by GenomicFeature. 
+               We create a search result hash for each GenomicFeatureDisease.
+  Returntype : Hashref with one key gfd_results which holds an arrayref of
+               hashref results where each hashref represents a GenomicFeatureDisease
+               search result: 
+                   {
+                      'gfd_results' => [
+                                         {
+                                           'mechanism' => 'loss of function',
+                                           'dbID' => 916,
+                                           'panels' => 'DD',
+                                           'genotype' => 'monoallelic',
+                                           'gene_symbol' => 'CRYBA1',
+                                           'disease_name' => 'CATARACT CONGENITAL ZONULAR WITH SUTURAL OPACITIES',
+                                           'search_type' => 'gfd'
+                                         },
+                                         {
+                                           'mechanism' => 'loss of function',
+                                           'dbID' => 2505,
+                                           'panels' => 'Eye',
+                                           'genotype' => 'monoallelic',
+                                           'gene_symbol' => 'CRYBA1',
+                                           'disease_name' => 'CATARACT 10, MULTIPLE TYPES',
+                                           'search_type' => 'gfd'
+                                         }
+                                       ]
+                    };
+  Exceptions : None
+  Caller     : Gene2phenotype::Controller::Search::results 
+  Status     : Stable
+
+=cut
+
 sub fetch_all_by_gene_symbol {
   my $self = shift;
   my $search_term = shift;
@@ -93,6 +187,46 @@ sub fetch_all_by_gene_symbol {
   return {gfd_results => $gfd_results};
 }
 
+=head2 fetch_all_by_disease_name
+
+  Arg [1]    : String $search_term
+  Arg [2]    : Arrayref of panels $search_panels for which to return search results
+  Arg [3]    : Boolean $is_authorised - indicates if user is logged in.
+  Description: This is a exact search by disease name and we use the method Bio::EnsEMBL::G2P::DBSQL::DiseaseNameAdaptor::fetch_by_name to get
+               the Disease for the disease name search term. We use Bio::EnsEMBL::G2P::DBSQL::GenomicFeatureDiseaseAdaptor::fetch_all_by_Disease_panels
+               to get all GenomicFeatureDiseases by Disease. 
+               We create a search result hash for each GenomicFeatureDisease.
+  Returntype : Hashref with one key gfd_results which holds an arrayref of
+               hashref results where each hashref represents a GenomicFeatureDisease
+               search result: 
+                   {
+                      'gfd_results' => [
+                                         {
+                                           'mechanism' => 'loss of function',
+                                           'dbID' => 916,
+                                           'panels' => 'DD',
+                                           'genotype' => 'monoallelic',
+                                           'gene_symbol' => 'CRYBA1',
+                                           'disease_name' => 'CATARACT CONGENITAL ZONULAR WITH SUTURAL OPACITIES',
+                                           'search_type' => 'gfd'
+                                         },
+                                         {
+                                           'mechanism' => 'loss of function',
+                                           'dbID' => 2505,
+                                           'panels' => 'Eye',
+                                           'genotype' => 'monoallelic',
+                                           'gene_symbol' => 'CRYBA1',
+                                           'disease_name' => 'CATARACT 10, MULTIPLE TYPES',
+                                           'search_type' => 'gfd'
+                                         }
+                                       ]
+                    };
+  Exceptions : None
+  Caller     : Gene2phenotype::Controller::Search::results 
+  Status     : Stable
+
+=cut
+
 sub fetch_all_by_disease_name {
   my $self = shift;
   my $search_term = shift;
@@ -109,6 +243,37 @@ sub fetch_all_by_disease_name {
 
   return {gfd_results => $gfd_results};
 }
+
+=head2 _get_gfd_results
+
+  Arg [1]    : Arrayref of GenomicFeatureDisease $gfds
+  Description: Creates a hasref with key properties of a GenomicFeatureDisease
+  Returntype : Arrayref of hashref where each hasref represents key attributes of a GenomicFeatureDisease 
+                  [
+                     {
+                       'mechanism' => 'loss of function',
+                       'dbID' => 916,
+                       'panels' => 'DD',
+                       'genotype' => 'monoallelic',
+                       'gene_symbol' => 'CRYBA1',
+                       'disease_name' => 'CATARACT CONGENITAL ZONULAR WITH SUTURAL OPACITIES',
+                       'search_type' => 'gfd'
+                     },
+                     {
+                       'mechanism' => 'loss of function',
+                       'dbID' => 2505,
+                       'panels' => 'Eye',
+                       'genotype' => 'monoallelic',
+                       'gene_symbol' => 'CRYBA1',
+                       'disease_name' => 'CATARACT 10, MULTIPLE TYPES',
+                       'search_type' => 'gfd'
+                     }
+                   ];
+  Exceptions : None
+  Caller     : fetch_all_by_disease_name, fetch_all_by_gene_symbol, fetch_all_by_substring
+  Status     : Stable
+
+=cut
 
 sub _get_gfd_results {
   my $self = shift;
