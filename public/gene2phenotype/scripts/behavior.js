@@ -114,25 +114,6 @@ function __highlight(s, t) {
         }
     });
   }
-//    $.ajax({
-//      url: "/gene2phenotype/ajax/gene_location",
-//      dataType: "json",
-//      type: "get",
-//      data: {
-//        gene_symbol : gene_symbol,
-//      },
-//      success: function(data, textStatus, jqXHR) {
-//        console.log(textStatus);
-//        var gene_location = data.gene_location;
-//        $("#gene_location").append(gene_location);
-//      },
-//      error: function(jqXHR, textStatus, errorThrown){
-//        console.log(jqXHR);
-//        console.log(textStatus);
-//        console.log(errorThrown);
-//      }
-//    });
-//  }
 
   $("#edit_pwd_link").click(function(){
     $("#update_pwd").show();
@@ -178,7 +159,6 @@ function __highlight(s, t) {
       minLength: 4,
       highlight: true,
       search: function(e,ui){
-//        console.log($(this).data("ui-autocomplete").menu.bindings.length);
         $(this).data("ui-autocomplete").menu.bindings = $();
       },
     }).data("ui-autocomplete")._renderItem = function( ul, item ) {
