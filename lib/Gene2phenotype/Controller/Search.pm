@@ -15,8 +15,29 @@ See the License for the specific language governing permissions and
 limitations under the License.
  
 =cut
+
 package Gene2phenotype::Controller::Search;
 use base qw(Gene2phenotype::Controller::BaseController);
+
+=head2 results
+
+  Description: Returns search results that match a given search string.
+               The different search types that are supported are search for exact match of gene symbol or disease name or partial match of gene symbol or
+               disease name.
+               First, the search type is identified with Gene2phenotype::Model::Search::identify_search_type. Then, based on the search type we fetch all
+               search results with Gene2phenotype::Model::Search::fetch_all_by_gene_symbol, fetch_all_by_disease_name or fetch_all_by_substring.
+  Returntype : Depending on the login status, the results are directed to
+               template user/searchresults when logged in and
+               template searchresults when not logged in. 
+  Exceptions : If nothing is provided as search_term we redirect to the homepage /gene2phenotype/. 
+  Caller     : Template: search.html.ep 
+               Request: GET /gene2phenotype/search 
+               Params:
+                   search_term - String that has been entered as input 
+                   panel - The selected panel for which to return the search results
+  Status     : Stable
+
+=cut
 
 sub results {
   my $self = shift;
