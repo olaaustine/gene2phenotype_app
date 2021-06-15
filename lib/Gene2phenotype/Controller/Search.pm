@@ -22,11 +22,11 @@ use base qw(Gene2phenotype::Controller::BaseController);
 =head2 results
 
   Description: Returns search results that match a given search term. Each search result is a GenomicFeatureDisease
-               where either the gene symbol or the disease name matche the search term. The match can be exact or partial.
+               where either the gene symbol or the disease name match the search term. The match can be exact or partial.
                First, the search type (exact or partial) is identified with Gene2phenotype::Model::Search::identify_search_type.
                Then, based on the search type we fetch all search results with Gene2phenotype::Model::Search::fetch_all_by_gene_symbol,
                fetch_all_by_disease_name or fetch_all_by_substring.
-               Based on the login status of the user we control the search results. If the user is not logged in we only return
+               Based on the login status of the user we control how the search results are presented. If the user is not logged in we only return
                results for panels that can be viewed publicly and for panels that can be viewed publicly we only return
                GenomicFeatureDiseases that have been set to visible.
   Returntype : Hashref: Example search result for exact match by gene symbol:
