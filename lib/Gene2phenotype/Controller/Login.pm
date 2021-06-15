@@ -60,10 +60,10 @@ sub on_user_login {
 
 
 =head2 on_user_logout
-  Description: Updates the session with  the logged_in flag set to 0, resets
+  Description: Updates the session with the logged_in flag set to 0, resets
                panels that can be curated to an empty list and also triggers
                the expiry of the session.
-  Returntype : Redirect to the last page visited by the user before going to the login page
+  Returntype : Redirect to the last page visited by the user before logging out
                or if that page wasn't stored redirect to the homepage.
   Exceptions : None
   Caller     : Template: header.html.ep
@@ -128,9 +128,12 @@ sub send_recover_pwd_mail {
   Description: Sends the user to the page for resetting the password.
                The page will have set the email address of the user and
                have the code stored as a hidden variable.
-  Returntype : Redirects to template login/reset_password
+  Returntype : Redirects to template login/reset_password for resetting
+               the password.
   Exceptions : None
   Caller     : Request: POST /gene2phenotype/login/recovery/reset
+                        The request comes from the URL that has been
+                        sent to the user.
                Params: code that was generated in send_recover_pwd_mail
   Status     : Stable
 =cut
