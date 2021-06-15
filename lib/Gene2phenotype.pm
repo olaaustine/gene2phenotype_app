@@ -25,21 +25,16 @@ use File::Path;
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::G2P::Utils::Downloads qw(download_data);
 use JSON;
-use Data::Dumper;
 
 # This method will run once at server start
 sub startup {
   my $self = shift;
-
-# $self->secrets
-# $self->app->sessions->cookie_name('moblo');
   $self->sessions->default_expiration(3600);
 
   my $config = $self->plugin('Config' => {file => $self->app->home .'/etc/gene2phenotype.conf'});
   my $password_file = $config->{password_file};
   my $downloads_dir = $config->{downloads_dir};
   my $registry_file = $config->{registry};
-  my $public_folder = $config->{public_folder};
   my $passphrase = $config->{passphrase};
   $self->defaults(http_proxy => $config->{http_proxy});
   $self->defaults(proxy => $config->{proxy});
@@ -48,15 +43,6 @@ sub startup {
 
   $self->app->secrets([$passphrase]);
 
-#  my $static = $self->app->static();
-#  push @{$static->paths}, $public_folder;
-
-  $self->plugin('CGI' => {
-    before => sub {
-      my $c = shift;
-      $c->req->url->query->param(registry_file => $registry_file);
-    },
-  });
   $self->plugin('RemoteAddr');
   $self->plugin('Model');
   $self->plugin('RenderFile');
@@ -122,15 +108,6 @@ sub startup {
     $c->stash(user_panels => \@user_panels);
     $c->stash(visible_panels => \@visible_panels);
 
-  });
-
-
-# redirect from old page:
-  $r->get('/gene2phenotype/redirect')->to(template => 'redirect');
-
-  $r->get('/gene2phenotype/gene2phenotype-webcode/*' => sub {
-    my $c = shift;
-    return $c->redirect_to('/gene2phenotype/redirect');
   });
 
   $r->get('/gene2phenotype')->to('home#show');
@@ -222,8 +199,6 @@ sub startup {
   $r->get('/gene2phenotype/gfd/show_add_new_entry_form')->to('genomic_feature_disease#show_add_new_entry_form');
   $r->get('/gene2phenotype/gfd/add')->to('genomic_feature_disease#add');
   $r->get('/gene2phenotype/gfd/delete')->to('genomic_feature_disease#delete');
-  $r->get('/gene2phenotype/gfd/duplicate')->to('genomic_feature_disease#duplicate');
-  $r->get('/gene2phenotype/gfd/merge_duplicated_LGM')->to('genomic_feature_disease#merge_all_duplicated_LGM_by_gene_by_panel');
 
   $r->get('/gene2phenotype/gfd_panel/add')->to('genomic_feature_disease_panel#add');
   $r->get('/gene2phenotype/gfd_panel/delete')->to('genomic_feature_disease_panel#delete');
@@ -237,105 +212,6 @@ sub startup {
   $r->get('/gene2phenotype/search')->to('search#results');
 
   $r->get('/gene2phenotype/ajax/publication')->to('publication#get_description');
-
-  $r->get('/gene2phenotype/ajax/gene_location' => sub {
-    my $c = shift;
-    my $gene_symbol = $c->param('gene_symbol');    
-    my $http = HTTP::Tiny->new();
-    my $request = "http://rest.ensembl.org/lookup/symbol/homo_sapiens/$gene_symbol";
-    my $response = $http->get($request, {
-      headers => { 'Content-type' => 'application/json' }
-    });
-    if (!$response->{success}) {
-      $c->render(json => {});
-      return;  
-    }
-    my $hash = decode_json($response->{content});
-    my $assembly_name = $hash->{assembly_name};
-    my $seq_region_name = $hash->{seq_region_name};
-    my $start = $hash->{start};
-    my $end = $hash->{end};
-    my $strand = $hash->{strand};
-    if ($strand == 1) {
-      $strand = 'forward strand';
-    } else {
-      $strand = 'reverse strand';
-    }
-    my $location = "$assembly_name $seq_region_name $start-$end $strand";
-    $c->render(json => {gene_location => $location});  
-  }); 
-
-  $r->get('/gene2phenotype/ajax/populate_onotology_tree' => sub {
-    my $c = shift;
-    my $type = 'search';
-    if ($c->param('type')) {
-      $type = $c->param('type');
-    }
-
-    my ($id, $GFD_id, $phenotype_name);
-
-    if ($type eq 'search') {
-      $phenotype_name = $c->param('str');
-    }
-
-    if ($type eq 'expand') {
-      $id = $c->param('id');
-      $GFD_id = $c->param('GFD_id');
-    }
-
-    my $registry = $c->app->defaults('registry');
-
-    my @phenotype_ids = ();
-
-    my $ontology = $registry->get_adaptor( 'Multi', 'Ontology', 'OntologyTerm' );
-    my $ontology_name = 'HPO';
-    my @terms = ();
-    my @query_output = ();
-
-    if ($type eq 'expand') {
-      my $GFD_adaptor = $registry->get_adaptor('homo_sapiens', 'gene2phenotype', 'genomicfeaturedisease');
-      my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
-      my $GFDPhenotypes = $GFD->get_all_GFDPhenotypes;
-      foreach my $GFDPhenotype (@$GFDPhenotypes) {
-        push @phenotype_ids, $GFDPhenotype->{phenotype_id};
-      }
-      if ("$id" eq '#') {
-        @terms = @{$ontology->fetch_all_roots($ontology_name)};
-      } else {
-        my $parent_term = $ontology->fetch_by_dbID($id);
-        @terms = @{$ontology->fetch_all_by_parent_term($parent_term)};
-      }
-      foreach my $term (@terms) {
-        my @children = @{$term->children};
-        push @query_output, {
-          id => $term->dbID,
-          text => $term->name,
-          children => (scalar @children > 0) ? \1 : \0,
-          state => {selected => (grep {$_ == $term->dbID} @phenotype_ids) ? \1 : \0},
-        };
-      }
-    }
-
-    if ($type eq 'search') {
-      my $terms = $ontology->fetch_all_by_name($phenotype_name);
-      foreach my $term (@$terms) {
-        my $is_root = $term->is_root;
-        if ($is_root) {
-          push @query_output, $term->dbID;
-        } else {
-          while (!$is_root) {
-            my @parents = @{$term->parents};
-            my $parent = $parents[0];
-            push @query_output, $term->dbID;
-            $term = $parents[0];
-            $is_root = $term->is_root;
-          }
-          push @query_output, $term->dbID;
-        }
-      }
-    }
-    $c->render(json => \@query_output);  
-  });
 
   $r->get('/gene2phenotype/ajax/autocomplete' => sub {
     my $c = shift;
@@ -371,12 +247,6 @@ sub startup {
   $r->get('/gene2phenotype/ajax/phenotype/add')->to('genomic_feature_disease_phenotype#add');
   $r->get('/gene2phenotype/ajax/phenotype/delete_from_tree')->to('genomic_feature_disease_phenotype#delete_from_tree');
 
-  $r->get('/cgi-bin/#script_name/*path_info' => {path_info => ''}, sub {
-    my $c = shift;
-    my $script_name = $c->stash('script_name');
-    my $home =  $c->app->home;
-    $c->cgi->run( script => "$home/cgi-bin/$script_name");
-  });
   $r->get('/gene2phenotype/downloads')->to(template => 'downloads');
   $r->get('/gene2phenotype/about')->to(template => 'about');
   $r->get('/gene2phenotype/g2p_vep_plugin')->to(template => 'g2p_vep_plugin');
