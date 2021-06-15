@@ -15,9 +15,28 @@ See the License for the specific language governing permissions and
 limitations under the License.
  
 =cut
+
 package Gene2phenotype::Controller::Login;
 use Digest::MD5 qw/md5_hex/;
 use base qw(Gene2phenotype::Controller::BaseController);
+
+
+=head2 on_user_login
+  Description: Gets email and password arguments and uses the authenticate method to check if
+               the password is correct for the given user. After authentication we update the
+               session with the logged_in flag set to 1, session expiration time, user email
+               and all panels that can be curated by the user.
+  Returntype : Redirect to the last page visited by the user before going to the login page
+               or if that page wasn't stored redirect to the homepage.
+  Exceptions : If the authentication fails, we show an error message and redirect the user
+               back to the login page.
+  Caller     : Template: login/login.html.ep
+               Request: POST /gene2phenotype/login
+               Params:
+                   email - The user's email address entered into the login form
+                   password - The user's password entered into the login form
+  Status     : Stable
+=cut
 
 sub on_user_login {
   my $self = shift;
@@ -39,6 +58,19 @@ sub on_user_login {
   return $self->redirect_to('/gene2phenotype/login');
 }
 
+
+=head2 on_user_logout
+  Description: Updates the session with  the logged_in flag set to 0, resets
+               panels that can be curated to an empty list and also triggers
+               the expiry of the session.
+  Returntype : Redirect to the last page visited by the user before going to the login page
+               or if that page wasn't stored redirect to the homepage.
+  Exceptions : None
+  Caller     : Template: header.html.ep
+               Request: GET /gene2phenotype/logout
+  Status     : Stable
+=cut
+
 sub on_user_logout {
   my $self = shift;
   $self->session(logged_in => 0);
@@ -52,6 +84,23 @@ sub is_logged_in {
   my $self = shift;
   return 1 if $self->session('logged_in');
 }
+
+=head2 send_recover_pwd_mail
+  Description: Creates a URL which is sent to the user's email address. The URL contains
+               a code which is later used for verification. The code is a md5 digest in
+               hexadecimal form calculated from a timestamp. The code is stored as part
+               of the session. This guarantees that only the user of that session can
+               follow the link and reset the password. If someonelse would get hold of
+               the link, they could not update the password because the code couldn't
+               be varified.
+  Returntype : Show a message that the email has been sent and then redirect to the
+               homepage.
+  Exceptions : None
+  Caller     : Template: login/recovery.html.ep
+               Request: POST /gene2phenotype/login/recovery/mail
+               Params: email - The user's email address
+  Status     : Stable
+=cut
 
 sub send_recover_pwd_mail {
   my $self = shift;
@@ -75,6 +124,17 @@ sub send_recover_pwd_mail {
 
 }
 
+=head2 validate_pwd_recovery
+  Description: Sends the user to the page for resetting the password.
+               The page will have set the email address of the user and
+               have the code stored as a hidden variable.
+  Returntype : Redirects to template login/reset_password
+  Exceptions : None
+  Caller     : Request: POST /gene2phenotype/login/recovery/reset
+               Params: code that was generated in send_recover_pwd_mail
+  Status     : Stable
+=cut
+
 sub validate_pwd_recovery {
   my $self = shift;
   my $code = $self->param('code');
@@ -82,6 +142,18 @@ sub validate_pwd_recovery {
   $self->render(template => 'login/reset_password', email => $email, authcode => "$code");
 }
 
+=head2 account_info
+  Description: Retrieves the email from the session and then using the email
+               gets user specific information including all panels that can be edited
+               by the user. The information is shown on the account info page.
+  Returntype : If the user is logged in then we redirect to the login/account_info.
+               And if the user is not logged in we show a message telling the user
+               to login first and redirect to the homepage.
+  Exceptions : None
+  Caller     : Template header.html.ep
+               Request: GET /gene2phenotype/account
+  Status     : Stable
+=cut
 
 sub account_info {
   my $self = shift;
