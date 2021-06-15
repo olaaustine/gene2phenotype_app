@@ -124,6 +124,8 @@ sub startup {
   });
 
   $r->get('/gene2phenotype/account')->to('login#account_info');
+
+  # Called by login/account_info.html.ep
   $r->post('/gene2phenotype/account/update' => sub {
     my $c = shift;
     my $auth = new Apache::Htpasswd({ passwdFile => $password_file, ReadOnly => 0, UseMD5 => 1,});
@@ -155,6 +157,8 @@ sub startup {
   $r->get('/gene2phenotype/login/recovery')->to(template => 'login/recovery');
   $r->post('/gene2phenotype/login/recovery/mail')->to('login#send_recover_pwd_mail');
   $r->get('/gene2phenotype/login/recovery/reset')->to('login#validate_pwd_recovery');
+
+  # Called by login/reset_password.html.ep
   $r->post('/gene2phenotype/login/recovery/update' => sub {
     my $c = shift;
     my $auth = new Apache::Htpasswd({ passwdFile => $password_file, ReadOnly => 0, UseMD5 => 1,});

@@ -15,8 +15,56 @@ See the License for the specific language governing permissions and
 limitations under the License.
  
 =cut
+
 package Gene2phenotype::Controller::Search;
 use base qw(Gene2phenotype::Controller::BaseController);
+
+=head2 results
+
+  Description: Returns search results that match a given search term. Each search result is a GenomicFeatureDisease
+               where either the gene symbol or the disease name match the search term. The match can be exact or partial.
+               First, the search type (exact or partial) is identified with Gene2phenotype::Model::Search::identify_search_type.
+               Then, based on the search type we fetch all search results with Gene2phenotype::Model::Search::fetch_all_by_gene_symbol,
+               fetch_all_by_disease_name or fetch_all_by_substring.
+               Based on the login status of the user we control how the search results are presented. If the user is not logged in we only return
+               results for panels that can be viewed publicly and for panels that can be viewed publicly we only return
+               GenomicFeatureDiseases that have been set to visible.
+  Returntype : Hashref: Example search result for exact match by gene symbol:
+                  {
+                      'gfd_results' => [
+                                         {
+                                           'mechanism' => 'loss of function',
+                                           'dbID' => 916,
+                                           'panels' => 'DD',
+                                           'genotype' => 'monoallelic',
+                                           'gene_symbol' => 'CRYBA1',
+                                           'disease_name' => 'CATARACT CONGENITAL ZONULAR WITH SUTURAL OPACITIES',
+                                           'search_type' => 'gfd'
+                                         },
+                                         {
+                                           'mechanism' => 'loss of function',
+                                           'dbID' => 2505,
+                                           'panels' => 'Eye',
+                                           'genotype' => 'monoallelic',
+                                           'gene_symbol' => 'CRYBA1',
+                                           'disease_name' => 'CATARACT 10, MULTIPLE TYPES',
+                                           'search_type' => 'gfd'
+                                         }
+                                       ]
+                    };
+               Depending on the login status, the results are directed to
+               template user/searchresults when logged in and
+               template searchresults when not logged in.
+                
+  Exceptions : If nothing is provided as search_term we redirect to the homepage /gene2phenotype/. 
+  Caller     : Template: search.html.ep 
+               Request: GET /gene2phenotype/search 
+               Params:
+                   search_term - String that has been entered as input 
+                   panel - The selected panel for which to return the search results
+  Status     : Stable
+
+=cut
 
 sub results {
   my $self = shift;
