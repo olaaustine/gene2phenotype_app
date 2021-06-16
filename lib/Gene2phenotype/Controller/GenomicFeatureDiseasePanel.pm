@@ -15,13 +15,36 @@ See the License for the specific language governing permissions and
 limitations under the License.
  
 =cut
+
 package Gene2phenotype::Controller::GenomicFeatureDiseasePanel;
 use base qw(Gene2phenotype::Controller::BaseController);
 use strict;
 use warnings;
 
+=head2 add
+  Description:
+  Returntype :
+  Exceptions : None
+  Caller     : Template: add_new_entry.html.ep
+               Request: GET /gene2phenotype/gfd_panel/add
+               Params:
+                   panel - Add new entry to this panel
+                   gene_symbol - Gene symbol representing gene in the GFD
+                   disease_name - Disease name representing the disease in the GFD
+                   confidence_attrib_id - Confidence valur for the GFD
+                   allelic_requirement_attrib_id - Allelic requirement of the GFD. Can be more than one.
+                   mutation_consequence_attrib_id - Mutation consequence of the GFD
+                   add_existing_entry_to_panel - This is set to 1 if the GFD is already in the database
+                                                 and should be added to the specified panel.
+                   gfd_id - Database id of the exisiting GFD.
+                   create_new_gfd - This is set to 1 if we need to create a new GFD first before adding
+                                    it to the panel.
+  Status     : Stable
+=cut
+
 sub add {
   my $self = shift;
+
   my $target_panel                   = $self->param('panel');
   my $gene_symbol                    = $self->param('gene_symbol');
   my $disease_name                   = $self->param('disease_name');
@@ -29,8 +52,6 @@ sub add {
   my $allelic_requirement_attrib_ids = join(',', sort @{$self->every_param('allelic_requirement_attrib_id')});
   my $mutation_consequence_attrib_id = $self->param('mutation_consequence_attrib_id');
 
-  # Check if logged in
- 
   my $email = $self->session('email');
   my $gfd_model = $self->model('genomic_feature_disease');  
   my $gfd_panel_model = $self->model('genomic_feature_disease_panel');
@@ -106,11 +127,23 @@ sub create_gfd {
   my $self = shift;
   my $email = $self->session('email');
   my $gfd_model = $self->model('genomic_feature_disease');  
+
+  my $allelic_requirement = $self->param('allelic_requirement_to_be_added');
+  if (!defined $allelic_requirement) {
+    my $allelic_requirement_attrib_ids = join(',', sort @{$self->every_param('allelic_requirement_attrib_id')});
+    $allelic_requirement = $gfd_model->get_value('allelic_requirement', $allelic_requirement_attrib_ids);
+  }
+  my $mutation_consequence = $self->param('mutation_consequence_to_be_added');
+  if (!defined $mutation_consequence) {
+    my $mutation_consequence_attrib_id = $self->param('mutation_consequence_attrib_id');
+    $mutation_consequence = $gfd_model->get_value('mutation_consequence', $mutation_consequence_attrib_id);
+  }
+
   my $gfd = $gfd_model->add(
     $self->param('gene_symbol'),
     $self->param('disease_name'),
-    $self->param('allelic_requirement_to_be_added'),
-    $self->param('mutation_consequence_to_be_added'),
+    $allelic_requirement,
+    $mutation_consequence,
     $email
   );
   return $gfd;
@@ -121,11 +154,18 @@ sub add_gfd_to_panel {
   my $gfd_id = shift;
   my $email = $self->session('email');
   my $gfd_panel_model = $self->model('genomic_feature_disease_panel');
+  my $gfd_model = $self->model('genomic_feature_disease');
+
+  my $confidence_value = $self->param('confidence_value_to_be_added');
+  if (!defined $confidence_value) {
+    my $confidence_attrib_id = $self->param('confidence_attrib_id');
+    $confidence_value = $gfd_model->get_value('confidence_category', $confidence_attrib_id);
+  }
 
   my $gfd_panel = $gfd_panel_model->add(
     $gfd_id,
     $self->param('panel'),
-    $self->param('confidence_value_to_be_added'),
+    $confidence_value,
     $email
   );
   $self->feedback_message('ADDED_GFD_SUC');
