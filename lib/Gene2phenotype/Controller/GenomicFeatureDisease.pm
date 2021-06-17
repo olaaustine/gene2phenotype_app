@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
  
 =cut
+
 package Gene2phenotype::Controller::GenomicFeatureDisease;
 use base qw(Gene2phenotype::Controller::BaseController);
 use strict;
@@ -62,6 +63,18 @@ sub show {
     $self->render(template => 'gfd');
   }
 }
+
+=head2 show_add_new_entry_form
+  Description: Setup the form for creating a new entry. Get all possible values for:
+               confidence values, allelic requirement and mutation consequence.
+               Get list of all panels that can be curated by the user. The user will
+               only be able to create a new entry on one of those panels.
+  Returntype : If the user is logged in then redirect to template add_new_entry.html.ep
+  Exceptions : None
+  Caller     : Template: user/searchresults.html.ep
+               Request: GET /gene2phenotype/gfd/show_add_new_entry_form
+  Status     : Stable
+=cut
 
 sub show_add_new_entry_form {
   my $self = shift;
