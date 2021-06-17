@@ -32,10 +32,11 @@ sub no_publication {
     my @panels = split(',', $user->panel);
     my @results = ();    
     foreach my $panel (@panels) {
-      my $gfds = $gfd_model->fetch_all_by_panel_without_publication($panel);
+# OUTDATED
+#      my $gfds = $gfd_model->fetch_all_by_panel_without_publication($panel);
       push @results, {
         panel => $panel,
-        gfds => $gfds,
+        gfds => [],
       };
     }
     $self->stash( gfds_no_publication => \@results);
@@ -59,7 +60,10 @@ sub show_all_duplicated_LGM_by_panel {
     my @panels = split(',', $user->panel);
     my @results = ();    
     foreach my $panel (@panels) {
-      my $merge_list = $gfd_model->fetch_all_duplicated_LGM_entries_by_panel($panel);
+# OUTDATED
+#      my $merge_list = $gfd_model->fetch_all_duplicated_LGM_entries_by_panel($panel);
+      my $merge_list = [];
+
       push @results, {
         panel => $panel,
         merge_list => $merge_list,
@@ -107,10 +111,11 @@ sub restricted {
     my @panels = split(',', $user->panel);
     my @results = ();    
     foreach my $panel (@panels) {
-      my $gfds = $gfd_model->fetch_all_by_panel_restricted($panel);
+# OUTDATED
+#      my $gfds = $gfd_model->fetch_all_by_panel_restricted($panel);
       push @results, {
         panel => $panel,
-        gfds => $gfds,
+        gfds => [],
       };
     }
     $self->stash( gfds_restricted => \@results);
