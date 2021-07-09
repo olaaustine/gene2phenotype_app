@@ -18,18 +18,16 @@
     %end
   </div> <!--End show edit content-->
 
-  <% foreach my $comment (@{$gfd->{GFD_comments}}) { %>
+  <% foreach my $comment (@{$gfd->{comments}}) { %>
     <div class="comment">
       <div class="align_left"><p><%= $comment->{comment_text} %> (<%= $comment->{user} %> <%= $comment->{date} %>)</p></div>
-      <% if ($logged_in && grep(/^$gfd->{panel}$/, @$panels)) { %>
-        <div class="align_right">
-         %= form_for '/gene2phenotype/gfd/comment/delete' => begin
-          %= hidden_field GFD_comment_id => $comment->{GFD_comment_id}
-          %= hidden_field GFD_id => $gfd->{GFD_id}
-          <input id="button" type="submit" value="Delete Comment" class="btn btn-primary btn-sm confirm"/>
-          %end
-        </div>
-      <% } %>
+      <div class="align_right">
+       %= form_for '/gene2phenotype/gfd/comment/delete' => begin
+        %= hidden_field GFD_comment_id => $comment->{GFD_comment_id}
+        %= hidden_field GFD_id => $gfd->{GFD_id}
+        <input id="button" type="submit" value="Delete Comment" class="btn btn-primary btn-sm confirm"/>
+        %end
+      </div>
     </div>
     <div class="clear"></div>
   <% } %>

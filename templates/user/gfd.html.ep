@@ -43,7 +43,7 @@
     </dl>
   <% } %>
   %= include 'disease'
-  %= include 'comments'
+  %= include 'user/comments'
   %= include 'user/publication'
   %= include 'user/phenotype'
   %= include 'organ'
