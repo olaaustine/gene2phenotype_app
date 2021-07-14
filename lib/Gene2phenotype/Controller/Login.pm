@@ -127,7 +127,7 @@ sub send_recover_pwd_mail {
     $self->flash(message => "An email with instructions for how to reset your email has been sent to $email", alert_class => 'alert-info');
   }
   else {
-    $self->flash(message => "No account registered with email $email", alert_class => 'alert-danger');
+    $self->flash(message => "No account registered with email $email. Please contact g2p-help\@ebi.ac.uk for help.", alert_class => 'alert-danger');
   }
 
   return $self->redirect_to('/gene2phenotype');
