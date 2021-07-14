@@ -106,6 +106,9 @@ sub send_recover_pwd_mail {
   my $self = shift;
   my $email = $self->param('email');
 
+  my $model = $self->model('user');
+  my $user = $model->fetch_by_email($email);
+
   my $autologin_code = md5_hex( time + rand(time) );
 
   my $url = $self->url_for('/gene2phenotype/login/recovery/reset')->query(code => $autologin_code)->to_abs;
@@ -114,14 +117,20 @@ sub send_recover_pwd_mail {
   $self->session(code => $autologin_code);
   $self->session(send_recover_email_mail => 1);
 
-  $self->mail(
-    to      => $email,
-    subject => 'Reset your password for gene2phenotype website',
-    data    => $url,
-  );
-  $self->flash(message => "An email with instructions for how to reset your email has been sent to $email", alert_class => 'alert-info');
-  return $self->redirect_to('/gene2phenotype');
+  if($user) {
+    $self->mail(
+      to      => $email,
+      subject => 'Reset your password for gene2phenotype website',
+      data    => $url,
+    );
 
+    $self->flash(message => "An email with instructions for how to reset your email has been sent to $email", alert_class => 'alert-info');
+  }
+  else {
+    $self->flash(message => "No account registered with email $email. Please contact g2p-help\@ebi.ac.uk for help.", alert_class => 'alert-danger');
+  }
+
+  return $self->redirect_to('/gene2phenotype');
 }
 
 =head2 validate_pwd_recovery
