@@ -66,6 +66,7 @@ sub fetch_by_dbID {
 
   my $mutation_consequence = $gfd->mutation_consequence;
   my $mutation_consequence_list = $self->get_mutation_consequence_list($gfd, $logged_in);
+  my $restricted_mutation = $gfd->restricted_mutation_set; 
 
   my $comments = $self->get_comments($gfd);
   my $publications = $self->get_publications($gfd);
@@ -89,6 +90,7 @@ sub fetch_by_dbID {
     allelic_requirement_list => $allelic_requirement_list,
     mutation_consequence => $mutation_consequence,
     mutation_consequence_list => $mutation_consequence_list,
+    restricted_mutation => $restricted_mutation,
     comments => $comments,
     publications => $publications,
     phenotypes => $phenotypes,
