@@ -10,6 +10,9 @@
       <dt>Mutation consequence summary</dt>
       <dd><%= $gfd->{mutation_consequence} %></dd>
     </dl>
+     %if ($gfd->{restricted_mutation} == 1){
+    <p><span class="label label-info">Restricted repertoire of mutations</span> </p>
+    % }
   </div>
   <div class="clear"></div>
 
