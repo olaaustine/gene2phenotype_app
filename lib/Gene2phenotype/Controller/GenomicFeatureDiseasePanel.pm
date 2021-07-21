@@ -79,6 +79,7 @@ sub add {
   my $email = $self->session('email');
   my $gfd_model = $self->model('genomic_feature_disease');  
   my $gfd_panel_model = $self->model('genomic_feature_disease_panel');
+  my $user_model = $self->model('user');
 
   if (defined $self->param('add_existing_entry_to_panel') && $self->param('add_existing_entry_to_panel') == 1) {
     my $gfd_id = $self->param('gfd_id');
@@ -135,10 +136,12 @@ sub add {
       my $allelic_requirement_to_be_added = $gfd_model->get_value('allelic_requirement', $allelic_requirement_attrib_ids);
       my $mutation_consequence_to_be_added = $gfd_model->get_value('mutation_consequence', $mutation_consequence_attrib_id);
       my $confidence_value_to_be_added = $gfd_model->get_value('confidence_category', $confidence_attrib_id);
+      my $user = $user_model->fetch_by_email($email);
+      my @panels = split(',', $user->panel);
       $self->stash(
         existing_gfds => $existing_gfds,
         new_gfd => {
-          mutation_consequence_to_be_added =>  $mutation_consequence_to_be_added,
+          mutation_consequence_to_be_added => $mutation_consequence_to_be_added,
           allelic_requirement_to_be_added => $allelic_requirement_to_be_added,
           gene_symbol => $gene_symbol,
           disease_name => $disease_name,
@@ -146,10 +149,13 @@ sub add {
         confidence_value_to_be_added => $confidence_value_to_be_added,
         confidence_values => $gfd_model->get_confidence_values,
         mutation_consequences =>  $gfd_model->get_mutation_consequences,
+        mutation_consequence_to_be_added => $mutation_consequence_to_be_added,
         allelic_requirements => $gfd_model->get_allelic_requirements,
+        allelic_requirement_to_be_added => $allelic_requirement_to_be_added,
         gene_symbol => $gene_symbol,
         disease_name => $disease_name,
-        panel => $target_panel
+        panel => $target_panel,
+        panels => \@panels
       );
       return $self->render(template => 'add_new_entry');
     }
