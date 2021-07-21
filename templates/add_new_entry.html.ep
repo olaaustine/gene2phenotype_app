@@ -30,8 +30,16 @@
       <label class="col-sm-2 control-label">Allelic requirement</label>
       <div class="col-sm-10">
         <% foreach my $AR (@{$allelic_requirements}) { %>
-          %= check_box allelic_requirement_attrib_id => $AR->{AR_attrib_id}
-          <%= $AR->{AR_attrib_value}%>
+          <% if (my $allelic_requirement_to_be_added = stash 'allelic_requirement_to_be_added') { %>
+            <% if ( grep { $AR->{AR_attrib_value} eq $_ } split(',', $allelic_requirement_to_be_added)) { %>
+              %= check_box allelic_requirement_attrib_id => $AR->{AR_attrib_id}, checked => 1
+            <% } else { %>
+              %= check_box allelic_requirement_attrib_id => $AR->{AR_attrib_id}
+            <% } %>
+          <% } else { %>
+            %= check_box allelic_requirement_attrib_id => $AR->{AR_attrib_id}
+          <% } %>
+          <%= $AR->{AR_attrib_value} %>
           %= tag 'br'
         <% } %>
       </div>
@@ -40,7 +48,19 @@
     <div class="form-group">
       <label class="col-sm-2 control-label">Mutation consequence</label>
       <div class="col-sm-10">
-        %= select_field mutation_consequence_attrib_id => $mutation_consequences
+        <select class="form-control" name="mutation_consequence_attrib_id">
+          <% foreach my $mutation_consequence ( @{$mutation_consequences} ) { %>
+            <% if (my $mutation_consequence_to_be_added = stash 'mutation_consequence_to_be_added') { %>
+              <% if ( $mutation_consequence_to_be_added eq $mutation_consequence->[0]) { %>
+                <option selected="selected" value="<%= $mutation_consequence->[1] %>"><%= $mutation_consequence->[0] %></option>
+              <% } else { %>
+                <option value="<%= $mutation_consequence->[1] %>"><%= $mutation_consequence->[0] %></option>
+              <% } %>
+            <% } else { %>
+              <option value="<%= $mutation_consequence->[1] %>"><%= $mutation_consequence->[0] %></option>
+            <% } %>
+          <% } %>
+        </select>
       </div>
     </div>
 
@@ -49,7 +69,15 @@
       <div class="col-sm-10">
         <select class="form-control" name="panel">
           <% foreach my $panel ( @{$panels} ) { %>
-            <option value="<%= $panel %>"><%= $panel %></option>
+            <% if (my $target_panel = stash 'panel') { %>
+              <% if ( $target_panel eq $panel) { %>
+                <option selected="selected" value="<%= $panel %>"><%= $panel %></option>
+              <% } else { %>
+                <option value="<%= $panel %>"><%= $panel %></option>
+              <% } %>
+            <% } else { %>
+              <option value="<%= $panel %>"><%= $panel %></option>
+            <% } %>
           <% } %>
         </select>
       </div>
@@ -60,7 +88,15 @@
       <div class="col-sm-10">
         <select class="form-control" name="confidence_attrib_id">
           <% foreach my $confidence_value ( @{$confidence_values} ) { %>
-            <option value="<%= $confidence_value->[1] %>"><%= $confidence_value->[0] %></option>
+            <% if (my $confidence_value_to_be_added = stash 'confidence_value_to_be_added') { %>
+              <% if ( $confidence_value_to_be_added eq $confidence_value->[0]) { %>
+                <option selected="selected" value="<%= $confidence_value->[1] %>"><%= $confidence_value->[0] %></option>
+              <% } else { %>
+                <option value="<%= $confidence_value->[1] %>"><%= $confidence_value->[0] %></option>
+              <% } %>
+            <% } else { %>
+              <option value="<%= $confidence_value->[1] %>"><%= $confidence_value->[0] %></option>
+            <% } %>
           <% } %>
         </select>
       </div>
@@ -112,6 +148,48 @@
             </tr>
           <% } %>
           </tbody> 
+        </table>
+      <% } %>
+
+      <% if (defined $existing_gfds->{same_disease_non_target_panel} && scalar @{$existing_gfds->{same_disease_non_target_panel}} > 0) { %>
+        <div class="panel-body">
+          <h3>Entries with the same same gene symbol, allelic requirement and mutation consequence and disease name that can be added to the <%= $panel %> panel:</h3>
+        </div>
+        <table class="table table-bordered table-condensed">
+          <thead>
+          <tr>
+            <th scope="col">Gene symbol</th>
+            <th scope="col">Allelic requirement</th>
+            <th scope="col">Mutation consequence</th>
+            <th scope="col">Disease</th>
+            <th scope="col">Disease synonyms</th>
+            <th scope="col">Panels</th>
+            <th scope="col">Add</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% foreach my $gfd (@{$existing_gfds->{same_disease_non_target_panel}}) { %>
+            <tr>
+              <td><%= $gfd->{gene_symbol} %></td>
+              <td><%= $gfd->{allelic_requirement} %></td>
+              <td><%= $gfd->{mutation_consequence} %></td>
+              <td><%= $gfd->{disease_name} %></td>
+              <td><%= join(',', @{$gfd->{disease_name_synonyms}}) %></td>
+              <td><%= join(',', @{$gfd->{panels}}) %></td>
+              <td>
+                %= form_for '/gene2phenotype/gfd_panel/add' => begin
+                  %= hidden_field add_existing_entry_to_panel => 1
+                  %= hidden_field gfd_id => $gfd->{gfd_id}
+                  <% if (my $confidence_value_to_be_added = stash 'confidence_value_to_be_added') { %>
+                    %= hidden_field confidence_value_to_be_added => $confidence_value_to_be_added
+                  <% } %>
+                  %= hidden_field panel => $panel
+                  <input id="button" type="submit" value="Add to <%= $panel %> panel" class="btn btn-primary btn-sm"/>
+                % end
+              </td>
+            </tr>
+          <% } %>
+          </tbody>
         </table>
       <% } %>
 

@@ -1,8 +1,8 @@
 =head1 LICENSE
- 
+
 See the NOTICE file distributed with this work for additional information
 regarding copyright ownership.
- 
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -13,7 +13,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
- 
+
 =cut
 
 package Gene2phenotype::Controller::GenomicFeatureDiseasePanel;
@@ -22,23 +22,47 @@ use strict;
 use warnings;
 
 =head2 add
-  Description:
+  Description: Add a GenomicFeatureDisease to a panel in the G2P database.
+               Based on the user input we check if we already store an
+               entry in the database that fits the description and can be annotated
+               rather than creating a new entry. If that is the case the user
+               will be presented with all exisiting entries based on the same
+               gene symbol, allelic requirement and mutation consequence and
+               the user can then make a final decision on how to proceed:
+               - choose to add an exisiting GFD to the target panel
+               - create a new GFD and add to the target panel
+               If there are no GFDs that already fit the user input
+               a new GFD is created, added to the target panel and the user
+               is directed to the new page.
   Returntype :
   Exceptions : None
   Caller     : Template: add_new_entry.html.ep
                Request: GET /gene2phenotype/gfd_panel/add
                Params:
-                   panel - Add new entry to this panel
-                   gene_symbol - Gene symbol representing gene in the GFD
-                   disease_name - Disease name representing the disease in the GFD
-                   confidence_attrib_id - Confidence valur for the GFD
-                   allelic_requirement_attrib_id - Allelic requirement of the GFD. Can be more than one.
-                   mutation_consequence_attrib_id - Mutation consequence of the GFD
-                   add_existing_entry_to_panel - This is set to 1 if the GFD is already in the database
-                                                 and should be added to the specified panel.
-                   gfd_id - Database id of the exisiting GFD.
-                   create_new_gfd - This is set to 1 if we need to create a new GFD first before adding
-                                    it to the panel.
+                   Add button:
+                     panel                          - Add new entry to this panel
+                     gene_symbol                    - Gene symbol representing gene in the GFD
+                     disease_name                   - Disease name representing the disease in the GFD
+                     confidence_attrib_id           - Confidence attrib for the GFDPanel
+                     allelic_requirement_attrib_id  - Allelic requirement attrib of the GFD. Can be more than one.
+                     mutation_consequence_attrib_id - Mutation consequence attrib of the GFD
+
+                   Add exisiting GFD to target panel button:
+                     add_existing_entry_to_panel  - This is set to 1 if the GFD is already in the database
+                                                    and should be added to the specified panel.
+                     gfd_id                       - Database id of the exisiting GFD.
+                     confidence_value_to_be_added - Confidence value for the GFDPanel
+                     panel                        - Add new entry to this panel
+
+                   Create new GFD and add to target panel button:
+                     create_new_gfd                   - This is set to 1 if we need to create a new GFD first before adding
+                                                        it to the panel.
+                     gene_symbol                      - Gene symbol representing gene in the GFD
+                     disease_name                     - Disease name representing the disease in the GFD
+                     allelic_requirement_to_be_added  - Allelic requirement value of the GFD. Can be more than one.
+                     mutation_consequence_to_be_added - Mutation consequence value of the GFD
+                     confidence_value_to_be_added     - Confidence value for the GFDPanel
+                     panel                            - Add new entry to this panel
   Status     : Stable
 =cut
 
@@ -55,6 +79,7 @@ sub add {
   my $email = $self->session('email');
   my $gfd_model = $self->model('genomic_feature_disease');  
   my $gfd_panel_model = $self->model('genomic_feature_disease_panel');
+  my $user_model = $self->model('user');
 
   if (defined $self->param('add_existing_entry_to_panel') && $self->param('add_existing_entry_to_panel') == 1) {
     my $gfd_id = $self->param('gfd_id');
@@ -81,31 +106,42 @@ sub add {
   if (!$disease) {
     $disease = $disease_model->add($disease_name);
   }
-
+  # Find exisiting GFDs with the same gene symbol, allelic requirement and mutation consequence
   my $gfds = $gfd_model->fetch_all_by_GenomicFeature_constraints($gf, {
     'mutation_consequence_attrib' => $mutation_consequence_attrib_id,
     'allelic_requirement_attrib' => $allelic_requirement_attrib_ids,
   });
   if (scalar @$gfds == 0) {
+    # No GFDs with the same gene symbol, allelic requirement and mutation consequence exist
+    # We will create a new GFD
     my $gfd = $self->create_gfd();
     my $gfd_id = $gfd->dbID;
     $self->add_gfd_to_panel($gfd_id);
     return;
   } else {
+    # Check if a GFD with same gene symbol, allelic requirement, mutation consequence and disease name exists
     my $existing_gfds = _get_existing_gfds($gfds, $disease->dbID, $target_panel);
     if ($existing_gfds->{same_disease_target_panel}) {
+      # If GFD already exists and is also already in the target panel
+      # send user to GFD page
       my $gfd = $existing_gfds->{same_disease_target_panel};
       my $gfd_id = $gfd->dbID;
       $self->feedback_message('GFD_IN_DB');
       return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$gfd_id");   
     } else {
+      # Send user back to add new entry page
+      # And show the existing GFDs
+      # User can then choose to add an exisiting GFD to the target panel
+      # Or create a new GFD and add the new GFD to the target panel
       my $allelic_requirement_to_be_added = $gfd_model->get_value('allelic_requirement', $allelic_requirement_attrib_ids);
       my $mutation_consequence_to_be_added = $gfd_model->get_value('mutation_consequence', $mutation_consequence_attrib_id);
       my $confidence_value_to_be_added = $gfd_model->get_value('confidence_category', $confidence_attrib_id);
+      my $user = $user_model->fetch_by_email($email);
+      my @panels = split(',', $user->panel);
       $self->stash(
         existing_gfds => $existing_gfds,
         new_gfd => {
-          mutation_consequence_to_be_added =>  $mutation_consequence_to_be_added,
+          mutation_consequence_to_be_added => $mutation_consequence_to_be_added,
           allelic_requirement_to_be_added => $allelic_requirement_to_be_added,
           gene_symbol => $gene_symbol,
           disease_name => $disease_name,
@@ -113,15 +149,26 @@ sub add {
         confidence_value_to_be_added => $confidence_value_to_be_added,
         confidence_values => $gfd_model->get_confidence_values,
         mutation_consequences =>  $gfd_model->get_mutation_consequences,
+        mutation_consequence_to_be_added => $mutation_consequence_to_be_added,
         allelic_requirements => $gfd_model->get_allelic_requirements,
+        allelic_requirement_to_be_added => $allelic_requirement_to_be_added,
         gene_symbol => $gene_symbol,
         disease_name => $disease_name,
-        panel => $target_panel
+        panel => $target_panel,
+        panels => \@panels
       );
       return $self->render(template => 'add_new_entry');
     }
   }
 }
+
+=head2 create_gfd
+  Description: Create a new GenomicFeatureDisease from user input parameters
+  Returntype : GenomicFeatureDisease
+  Exceptions : None
+  Caller     : Gene2phenotype::Controller::GenomicFeatureDiseasePanel::add
+  Status     : Stable
+=cut
 
 sub create_gfd {
   my $self = shift;
@@ -149,6 +196,14 @@ sub create_gfd {
   return $gfd;
 }
 
+=head2 add_gfd_to_panel
+  Description: Add GenomicFeatureDisease to panel
+  Returntype : Redirect to GenomicFeatureDisease page
+  Exceptions : None
+  Caller     : Gene2phenotype::Controller::GenomicFeatureDiseasePanel::add
+  Status     : Stable
+=cut
+
 sub add_gfd_to_panel {
   my $self = shift;
   my $gfd_id = shift;
@@ -173,15 +228,34 @@ sub add_gfd_to_panel {
   $self->redirect_to("/gene2phenotype/gfd?GFD_id=$gfd_id");
 }
 
+=head2 _get_exisiting_gfds
+  Arg[1]     : Arrayref of GenomicFeatureDisease $gfds
+  Arg[2]     : Integer $new_disease_id - Database id of target disease as
+               provided by the user
+  Arg[3]     : String $target_panel - Panel is provided by the user and
+               the new entry should be added to that panel.
+  Description: All $gfds have the same gene symbol, allelic requirement
+               and mutation consequence as defined by the user. This method
+               categorises them in the following way:
+               Identify GFDs with:
+               - same disease and target panel
+               - same disease and non-target panel
+               - different disease and target panel
+               - different disease and non-target panel
+  Returntype : Hashref where keys are the different categories:
+               - same_disease_target_panel
+               - same_disease_non_target_panel
+               - different_disease_target_panel
+               - different_disease_non_target_panel
+  Exceptions : None
+  Caller     : Gene2phenotype::Controller::GenomicFeatureDiseasePanel::add
+  Status     : Stable
+=cut
+
 sub _get_existing_gfds {
   my $gfds = shift;
   my $new_disease_id = shift;
   my $target_panel = shift;
-  # Identify:
-  # same disease and target panel
-  # same disease and non-target panel
-  # different disease and target panel
-  # different disease and non-target panel
   my $existing_gfds;
   foreach my $gfd (@$gfds) {
     my @disease_name_synonyms = map {$_->get_Disease->name } @{$gfd->get_all_GFDDiseaseSynonyms};
@@ -209,6 +283,18 @@ sub _get_existing_gfds {
   return $existing_gfds;
 }
 
+=head2 update_visibility
+  Description: Update the visibility setting of a GenomicFeatureDiseasePanel
+  Exceptions : None
+  Caller     : Template: user/gfd_attributes.html.ep
+               Request: GET /gene2phenotype/gfd_panel/authorised/update
+               Params:
+                   visibility - The value is either authorised or restricted
+                   GFD_id - database id of the GenomicFeatureDisease
+                   GFD_panel_id - database id the GenomicFeatureDiseasePanel
+  Status     : Stable
+=cut
+
 sub update_visibility {
   my $self = shift;
   my $GFD_id = $self->param('GFD_id');
@@ -222,6 +308,18 @@ sub update_visibility {
   return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
 
+=head2 update_confidence_category
+  Description: Update the confidence value of a GenomicFeatureDiseasePanel
+  Exceptions : None
+  Caller     : Template: user/gfd_attributes.html.ep
+               Request: GET /gene2phenotype/gfd_panel/confidence_category/update
+               Params:
+                   category_attrib_id - The new confidence category attrib
+                   GFD_id - database id of the GenomicFeatureDisease
+                   GFD_panel_id - database id the GenomicFeatureDiseasePanel
+  Status     : Stable
+=cut
+
 sub update_confidence_category {
   my $self = shift;
   my $category_attrib_id = $self->param('category_attrib_id'); 
@@ -234,6 +332,17 @@ sub update_confidence_category {
   $self->feedback_message('UPDATED_CONFIDENCE_CATEGORY_SUC');
   return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
+
+=head2 delete
+  Description: Delete the GenomicFeatureDiseasePanel
+  Exceptions : None
+  Caller     : Template: user/gfd_attributes.html.ep
+               Request: GET /gene2phenotype/gfd_panel/delete
+               Params:
+                   GFD_id - database id of the GenomicFeatureDisease
+                   GFD_panel_id - database id the GenomicFeatureDiseasePanel
+  Status     : Stable
+=cut
 
 sub delete {
   my $self = shift;
