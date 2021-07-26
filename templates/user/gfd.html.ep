@@ -14,7 +14,7 @@
      % if ($gfd->{restricted_mutation}){
         <p><span class="label label-info">Restricted repertoire of mutations</span></p> 
      % }
-     <div>
+    <div>
         %= form_for '/gene2phenotype/gfd/restricted_mutation/update' => begin
           <select name="restricted_mutation"> <!-- restricted_mutation comes from the parameter resricted_mutation in the controller -->
              <% if ($gfd->{restricted_mutation}) { %>
@@ -24,11 +24,11 @@
                <option value="set" selected>Set restricted repertoire of mutations.</option> 
                <option value="unset" >Unset restricted repertoire of mutations.</option>
              <% } %>
-         </select>
+          </select>
             %= hidden_field GFD_id => $gfd->{GFD_id}
             <input id="button" type="submit" value="Update" class="btn btn-primary btn-sm"/>
 
-       %end    
+        %end    
      
     </div>
   </div>
