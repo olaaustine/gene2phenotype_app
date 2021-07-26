@@ -540,7 +540,17 @@ sub update_GFD_category {
   $GFD->confidence_category_attrib($category_attrib_id);
   $GFD_adaptor->update($GFD, $user); 
 }
-
+=head2 update_restricted_mutation
+  Arg [1]    : String $email - Email of user who updates the restricted mutation set 
+  Arg [2]    : Integer $GFD_id - Database id of GenomicFeatureDisease 
+  Arg [3]    : String $restricted mutation - Value is either set or unset 
+  Description: Update restricted_mutation_set of GenomicFeatureDisease, adding or removing the restricted repertoire of mutation flag
+  ReturnType : None 
+  Exceptions : None 
+  Caller     : Gene2phenotype::Controller::GenomicFeatureDisease::update_restricted_mutation
+  Status     : Stable  
+=cut
+ 
 sub update_restricted_mutation {
   my $self = shift;
   my $email = shift;

@@ -135,12 +135,20 @@ sub update_disease {
   $self->feedback_message('UPDATED_DISEASE_ATTRIBS_SUC');
   return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
-
+=head2 update_restricted_mutation
+  Description: Updated the restricted mutation set of a GenomicFeatureDisease
+  Exceptions : None
+  Caller     : Template: user/gfd.hmtl.ep
+               Request : GET /gene2phenotype/gfd/restricted_mutation/update
+               Params  : 
+                   restricted - The value is either set or unset, (restricted_mutation) comes from the argument in model.
+                   GFD_id - The database id of the GenomicFeatureDisease.
+  Status     : Stable 
+=cut
 sub update_restricted_mutation {
   my $self = shift;
   my $GFD_id = $self->param("GFD_id");
   my $restricted = $self->param('restricted_mutation');
-  print STDERR "The value of $restricted \n ";
   my $model = $self->model("genomic_feature_disease");
   my $email = $self->session("email");
   $model->update_restricted_mutation($email, $GFD_id, $restricted);
