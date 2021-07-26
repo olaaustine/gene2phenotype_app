@@ -136,5 +136,18 @@ sub update_disease {
   return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
 
+sub update_restricted_mutation {
+  my $self = shift;
+  my $GFD_id = $self->param("GFD_id");
+  my $restricted = $self->param('restricted_mutation');
+  print STDERR "The value of $restricted \n ";
+  my $model = $self->model("genomic_feature_disease");
+  my $email = $self->session("email");
+  $model->update_restricted_mutation($email, $GFD_id, $restricted);
+  $self->session(last_url => "/gene2phenotype/gfd?GFD_id=$GFD_id");
+  $self->feedback_message('UPDATED_RESTRICTED_MUTATION_SUC');
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+}
+
 
 1;

@@ -201,6 +201,7 @@ sub startup {
   $r->get('/gene2phenotype/gfd/publication/:action')->to(controller => 'genomic_feature_disease_publication');
   $r->get('/gene2phenotype/gfd/comment/:action')->to(controller => 'genomic_feature_disease_comment');
   $r->get('/gene2phenotype/gfd/show_add_new_entry_form')->to('genomic_feature_disease#show_add_new_entry_form');
+  $r->get('gene2phenotype/gfd/restricted_mutation/update')->to('genomic_feature_disease#update_restricted_mutation');
   $r->get('/gene2phenotype/gfd/add')->to('genomic_feature_disease#add');
   $r->get('/gene2phenotype/gfd/delete')->to('genomic_feature_disease#delete');
 

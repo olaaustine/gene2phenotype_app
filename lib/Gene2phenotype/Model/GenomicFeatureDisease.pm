@@ -541,6 +541,20 @@ sub update_GFD_category {
   $GFD_adaptor->update($GFD, $user); 
 }
 
+sub update_restricted_mutation {
+  my $self = shift;
+  my $email = shift;
+  my $GFD_id = shift;
+  my $restricted_mutation = shift;
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor("human", "gene2phenotype", "GenomicFeatureDisease" );
+  my $user_adaptor = $registry->get_adaptor("human", "gene2phenotype", "user");
+  my $user = $user_adaptor->fetch_by_email($email);
+  my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
+  my $is_restricted = $restricted_mutation eq 'set' ? 1 : 0; 
+  $GFD->restricted_mutation_set($is_restricted);
+  $GFD_adaptor->update($GFD, $user);
+}
 sub update_disease {
   my $self = shift;
   my $email = shift;
