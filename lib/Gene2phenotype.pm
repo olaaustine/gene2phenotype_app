@@ -263,7 +263,6 @@ sub startup {
     my $ip = $c->remote_addr;
     my $file_name = $c->stash('file_name');
     my $is_logged_in = $c->session('logged_in');
-    my $user_panels = $c->session('panels');
     my $panel_name = $file_name;
     $panel_name =~ s/G2P\.csv\.gz//;
     $file_name =~ s/\.csv\.gz//;
@@ -276,7 +275,7 @@ sub startup {
     my $tmp_dir = "$downloads_dir/$stamp";
     mkpath($tmp_dir);
     $log->debug("download file $ip $panel_name $year $mon $mday");
-    download_data($tmp_dir, $file_name, $registry_file, $is_logged_in, $user_panels, $panel_name);
+    download_data($tmp_dir, $file_name, $registry_file, $is_logged_in, $panel_name);
     $c->render_file('filepath' => "$tmp_dir/$file_name.gz", 'filename' => "$file_name.gz", 'format' => 'zip', 'cleanup' => 1);
   });
 
