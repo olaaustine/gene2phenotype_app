@@ -263,9 +263,21 @@ sub startup {
     my $ip = $c->remote_addr;
     my $file_name = $c->stash('file_name');
     my $is_logged_in = $c->session('logged_in');
+    my @authorised_panels = @{$c->stash('authorised_panels')};
     my $panel_name = $file_name;
     $panel_name =~ s/G2P\.csv\.gz//;
     $file_name =~ s/\.csv\.gz//;
+
+    # Can the user download data for the specified panel?
+    # If the user is not logged check if the panel that the user
+    # wants to download is in the list of authorised panels (visible panels)
+    if (!$is_logged_in) {
+      if (! grep {$panel_name eq $_} @authorised_panels) {
+        $c->flash(message => 'Specified panel cannot be downloaded. Please contact g2p-help@ebi.ac.uk', alert_class => 'alert-danger');
+        return $c->redirect_to('/gene2phenotype/downloads');
+      }          
+    }   
+
     my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime(time);
     $year += 1900;
     $mon++;
