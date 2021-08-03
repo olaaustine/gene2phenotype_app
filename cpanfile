@@ -1,4 +1,4 @@
-requires 'Mojolicious', '8.09';
+requires 'Mojolicious', '== 8.09';
 requires 'File::Rsync';
 requires 'File::Path';
 requires 'Mojolicious::Plugin::ForkCall';
@@ -13,7 +13,7 @@ requires 'Moose', '2.2011';
 requires 'XML::RSS::Parser';
 requires 'FileHandle';
 requires 'HTTP::Tiny';
-requires 'IO::Socket::SSL', '2.060';
+requires 'IO::Socket::SSL', '== 2.060';
 requires 'HTML::Entities';
 requires 'IPC::Cmd';
 requires 'Data::Dumper';
