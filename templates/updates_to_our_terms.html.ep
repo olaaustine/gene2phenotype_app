@@ -1,0 +1,305 @@
+<div>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <ul class="nav navbar-nav">
+        <li>
+          %= link_to Gene2Phenotype  => '/gene2phenotype' => (class => 'navbar-brand')
+        </li>
+        <li>
+          %= link_to About => '/gene2phenotype/about' => (class => 'navbar-brand')
+        </li>
+        <li>
+          %= link_to 'G2P VEP Plugin' => '/gene2phenotype/g2p_vep_plugin' => (class => 'navbar-brand')
+        </li>
+        <li>
+          %= link_to Downloads => '/gene2phenotype/downloads' => (class => 'navbar-brand')
+        </li>
+
+        <% if ($logged_in) { %>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button">Curator views <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li>
+                %= link_to 'Duplicated LGM entries' => '/gene2phenotype/curator/show_all_duplicated_LGM_by_panel' => (class => 'navbar-brand')
+              </li>
+              <li>
+                %= link_to 'Entries without publications' => '/gene2phenotype/curator/no_publication' => (class => 'navbar-brand')
+              </li>
+              <li>
+                %= link_to 'Restricted entries' => '/gene2phenotype/curator/restricted_entries' => (class => 'navbar-brand')
+              </li>
+            </ul>
+          </li>
+        <% } %>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button">Documentation <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li>
+              %= link_to 'Create your own panel' => '/gene2phenotype/create_panel' => (class => 'navbar-brand')
+            </li>
+            <li>
+              %= link_to 'Terminology' => '/gene2phenotype/terminology' => (class => 'navbar-brand')
+            </li>
+
+
+            <% if ($logged_in) { %>
+              <li>
+                %= link_to 'Enter a new gene-disease pair' => '/gene2phenotype/documentation/enter_new_gene_disease_pair' => (class => 'navbar-brand')
+              </li>
+            <% } %>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <% if ($logged_in) { %>
+          <li>
+            %= link_to 'Sign out' => '/gene2phenotype/logout'
+          </li>
+          <li>
+            %= link_to 'Account' => '/gene2phenotype/account'
+          </li>
+        <% } else { %>
+          <li>
+            %= link_to 'Sign in' => '/gene2phenotype/login'
+          </li>
+        <% } %>
+      </ul>
+    </div>
+  </nav>
+  %= include 'alerts'
+</div>
+
+<div class="container">
+  <div class="alert alert-danger" role="alert">
+    <h1>We are updating our terminology</h1>
+    <p>The <a href="https://thegencc.org/about.html">GenCC</a> develops consistent terminology for describing gene-disease validity. As part of the GenCC we are aligning our existing terms to the new terminology.</p>
+    <p>We are updating our terms in the following categories:
+      <ul>
+        <li><a href="#confidence_value">Confidence value</a></li>
+        <li><a href="#allelic_requirement">Allelic requirement</a></li>
+        <li><a href="#mutation_consequence">Mutation consequence</a></li>
+      </ul>
+      <p>We are introducing a new category:
+      <ul>
+        <li><a href="#cross_cutting_modifier">Cross cutting modifier</a></li>
+      </ul>
+      <p>We are introducing new flags which can be used for adding granularity in the curation process:
+      <ul>
+        <li><a href="#new_confidence_value_flag">Confidence value flag</a></li>
+        <li><a href="#new_mutation_consequence_flag">Mutation consequence flag</a></li>
+      </ul>
+    </p>
+    <h3>We are planning to move to the new terminology in September</h3>
+    <p>Our download files will only contain the new terminology after the move. We will create a final data export which uses our current terminology before the switch. Those files will remain available from our website, but won't be updated anymore.</p>
+    <p>Please direct any questions to <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a></p>
+  </div>
+
+  <div class="alert alert-info" role="alert">
+    <a name="new_confidence_value_flag"></a>
+    <h3>NEW: Confidence value flag</h3>
+    <ul>
+      <li>clinical review</li>
+    </ul>
+  </div>
+  <a name="confidence_value"></a>
+  <h2>Confidence value</h2>
+
+  <table class="table table-hover table-bordered">
+    <tr>
+      <th>Original G2P terms</th>
+      <th class="info">New G2P terms, aligned with GenCC</th>
+      <th>Comments</th>
+    </tr>
+    <tr>
+      <td>both RD and IF</td>
+      <td class="info">both RD and IF</td>
+      <td>Can be coded with flag <span class="label label-info">clincial review</span></td>
+    </tr>
+    <tr>
+      <td>child IF</td>
+      <td class="info">child IF</td>
+      <td>Plan to remove</td>
+    </tr>
+    <tr>
+      <td>confirmed</td>
+      <td class="info">definitive</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>possible</td>
+      <td class="info">limited</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>probable</td>
+      <td class="info">strong</td>
+      <td></td>
+    </tr>
+  </table>
+
+  <div class="alert alert-info" role="alert">
+    <a name="cross_cutting_modifier"></a>
+    <h3>NEW: Cross cutting modifier</h3>
+    <ul>
+      <li>requires heterozygosity</li>
+      <li>typically de novo</li>
+      <li>typically mosaic</li>
+      <li>typified by age related penetrance</li>
+      <li>typified by reduced penetrance</li>
+    </ul>
+  </div>
+
+  <a name="allelic_requirement"></a>
+  <h2>Allelic requirement</h2>
+
+  <table class="table table-hover table-bordered">
+    <tr>
+      <th>Original G2P terms</th>
+      <th class="info">New G2P terms, aligned with GenCC</th>
+      <th>Comments</th>
+    </tr>
+    <tr>
+      <td>biallelic</td>
+      <td class="info">biallelic_autosomal</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>digenic</td>
+      <td class="info">digenic</td>
+      <td>Plan to remove</td>
+    </tr>
+    <tr>
+      <td>hemizygous</td>
+      <td class="info">monoallelic_X_hem</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>imprinted</td>
+      <td class="info">imprinted</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>mitochondrial</td>
+      <td class="info">mitochondrial</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>monoallelic</td>
+      <td class="info">monoallelic_autosomal</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>monoallelic (Y)</td>
+      <td class="info">monoallelic_Y_hem</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>mosaic</td>
+      <td></td>
+      <td>Code with flag <span class="label label-info">typically mosaic</span></td>
+    </tr>
+    <tr>
+      <td>uncertain</td>
+      <td class="info">uncertain</td>
+      <td>Plan to remove</td>
+    </tr>
+    <tr>
+      <td>x-linked dominant</td>
+      <td class="info">monoallelic_X_het</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>x-linked over-dominance</td>
+      <td class="info">monoallelic_X_het</td>
+      <td>Code with flag <span class="label label-info">requires heterozygosity</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td class="info">monoallelic_PAR</td>
+      <td>New term</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td class="info">biallelic_PAR</td>
+      <td>New term</td>
+    </tr>
+  </table>
+
+  <div class="alert alert-info" role="alert">
+    <a name="new_mutation_consequence_flag"></a>
+    <h3>NEW: Mutation consequence flag</h3>
+    <ul>
+      <li>escape NMD</li>
+      <li>part of contiguous gene duplication</li>
+      <li>part of contiguous genomic interval deletion</li>
+      <li>restricted mutation set</li>
+    </ul>
+  </div>
+
+  <a name="mutation_conequence"></a>
+  <h2>Mutation consequence</h2>
+
+  <table class="table table-hover table-bordered">
+    <tr>
+      <th>Original G2P terms</th>
+      <th class="info">New G2P terms, aligned with GenCC</th>
+      <th>Comments</th>
+    </tr>
+    <tr>
+      <td>5_prime or 3_prime UTR mutation</td>
+      <td class="info">5_prime or 3_prime UTR mutation</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>activating</td>
+      <td class="info">altered gene product structure</td>
+      <td>Code with flag <span class="label label-info">restricted mutation set</span></td>
+    </tr>
+    <tr>
+      <td>all missense/in frame</td>
+      <td class="info">altered gene product structure</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>cis-regulatory or promotor mutation</td>
+      <td class="info">cis-regulatory or promotor mutation</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>dominant negative</td>
+      <td class="info">altered gene product structure</td>
+      <td>Code with flag <span class="label label-info">restricted mutation set</span></td>
+    </tr>
+    <tr>
+      <td>gain of function</td>
+      <td class="info">altered gene product structure</td>
+      <td>Code with flag <span class="label label-info">restricted mutation set</span></td>
+    </tr>
+    <tr>
+      <td>increased gene dosage</td>
+      <td class="info">increased gene product level</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>loss of function</td>
+      <td class="info">absent gene product</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>part of contiguous gene duplication</td>
+      <td class="info">increased gene product level</td>
+      <td>Code with flag <span class="label label-info">part of contiguous gene duplication</span></td>
+    </tr>
+    <tr>
+      <td>part of contiguous genomic interval deletion</td>
+      <td class="info">absent gene product</td>
+      <td>Code with flag <span class="label label-info">part of contiguous genomic interval deletion</span></td>
+    </tr>
+    <tr>
+      <td>uncertain</td>
+      <td class="info">uncertain</td>
+      <td></td>
+    </tr>
+  </table>
+</div>
+%= include 'footer'

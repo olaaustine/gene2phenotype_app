@@ -114,6 +114,9 @@ sub startup {
   $r->get('/gene2phenotype/disclaimer')->to(template => 'disclaimer');
   $r->get('/gene2phenotype/documentation')->to(template => 'documentation');
   $r->get('/gene2phenotype/help')->to(template => 'help');
+  $r->get('/gene2phenotype/updates_to_our_terms')->to(template => 'updates_to_our_terms');
+
+
   $r->get('/gene2phenotype/documentation/enter_new_gene_disease_pair' => sub {
     my $c = shift;
     if ($c->session('logged_in')) {
