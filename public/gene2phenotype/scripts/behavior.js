@@ -1,98 +1,33 @@
 $(document).ready(function(){
   $( ".accordion" ).accordion({
-heightStyle: "content",
-collapsible: true,
-active: false,
-
+    heightStyle: "content",
+    collapsible: true,
+    active: false,
   });
 
   function compare(a,b) {
     return parseInt(a.span.begin) - parseInt(b.span.begin);
   }
 
-function debounce(func, wait, immediate) {
-	var timeout;
-	return function() {
-		var context = this, args = arguments;
-		var later = function() {
-			timeout = null;
-			if (!immediate) func.apply(context, args);
-		};
-		var callNow = immediate && !timeout;
-		clearTimeout(timeout);
-		timeout = setTimeout(later, wait);
-		if (callNow) func.apply(context, args);
-	};
-};
-//https://gist.github.com/mishudark/2766831
-function __highlight(s, t) {
-  var matcher = new RegExp("("+$.ui.autocomplete.escapeRegex(t)+")", "ig" );
-  return s.replace(matcher, "<strong>$1</strong>");
-}
-
-  $( ".hide_pubtator_annotations" ).on( "click", function() {
-    var div_remove = $(this).parent().find('.tm2');
-    div_remove.remove();
-    var div_hide = $(this).parent().find('.tm');
-    div_hide.hide();
-    var show_button = $(this).parent().find('.show_pubtator_annotations');
-    show_button.show();
-    var hide_button = $(this);
-    hide_button.addClass('hide');
-  });
-
-  $( ".show_pubtator_annotations" ).on( "click", function() {
-    var pmid = $(this).parent().find('.tm_pmid').text();
-    var tm_div = $(this).parent().find('.tm');
-    var div = tm_div.find('.tm_pubtator');
-    var hide_button = $(this).parent().find('.hide_pubtator_annotations');
-    var url = 'https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/RESTful/tmTool.cgi/Gene,Disease,Mutation/' + pmid + '/PubAnnotation?content-type=application/json';
-    $.getJSON(url)
-      .done(function(data) {
-        if (!data.error) {
-          var text = data[0].text; 
-          text = text.replace(/\\/g, '');
-          var text_length = text.length;
-          var denotations = data[0].denotations;
-          denotations.sort(compare);
-          var arrayLength = denotations.length;
-          var start = 0;
-          var annotated_abstract = '<br>';
-          var annotation_types = {};
-           
-          for (var i = 0; i < arrayLength; i++) {
-            var denotation_start = denotations[i].span.begin;
-            var denotation_end = denotations[i].span.end;
-            var annotation = denotations[i].obj.split(':', 2);
-            var annotation_type = annotation[0];
-            annotation_types[annotation_type] = 1;
-            var annotation_desc = annotation[1];
-            var annotation_highlight = 'tm_' + annotation_type;
-            var end = denotation_start - 1;
-            if (end != -1) {
-              var subtext = text.substring(start, end + 1);
-              annotated_abstract = annotated_abstract + subtext;
-            }
-            var subtext = text.substring(denotation_start, denotation_end);
-            var html_annotation = "<div class='" + annotation_highlight + "'>" + subtext + "</div>";
-            annotated_abstract = annotated_abstract + html_annotation;
-            start = denotation_end;            
-          }
-          if (start < text_length) {
-            var subtext = text.substring(start, text_length + 1);
-            annotated_abstract = annotated_abstract + subtext;
-          }
-          tm_div.show();
-          var legend = '';
-          for (var i in annotation_types) {
-            legend = legend + "<span class='tm_" + i + " tm_legend'>" + i + "</span>"; 
-          }  
-          div.append("<div class='tm2'>" + annotated_abstract + '<br>' + legend + "</div>");
-          hide_button.removeClass('hide');
-        }
-    });
-    $(this).hide();
-  });
+  function debounce(func, wait, immediate) {
+    var timeout;
+    return function() {
+      var context = this, args = arguments;
+      var later = function() {
+        timeout = null;
+        if (!immediate) func.apply(context, args);
+      };
+      var callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) func.apply(context, args);
+    };
+  };
+  //https://gist.github.com/mishudark/2766831
+  function __highlight(s, t) {
+    var matcher = new RegExp("("+$.ui.autocomplete.escapeRegex(t)+")", "ig" );
+    return s.replace(matcher, "<strong>$1</strong>");
+  }
 
   if ($('#gene_symbol').length > 0) {  
     var gene_symbol = $('#gene_symbol').val();
@@ -177,7 +112,6 @@ function __highlight(s, t) {
   for (index = 0; index < panels.length; ++index) {
     $('#curator_table_' + panels[index]).DataTable();
   }
-
 
   $(".show_toggle_view_button").mouseleave(function(){
     $(this).closest('.show_db_content').find('.section_header').css('background-color', 'white');
@@ -402,10 +336,5 @@ function __highlight(s, t) {
     $this_content = $button.closest(".add_entry_anyway");
     $this_content.hide();
   });
-
-
-
-
 });
-
 
