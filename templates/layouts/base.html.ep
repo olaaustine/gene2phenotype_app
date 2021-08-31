@@ -18,7 +18,6 @@
 %= javascript '/gene2phenotype/scripts/behavior.js?version=23'
 %= javascript '/gene2phenotype/scripts/cookie_banner.js?version=1'
 %= javascript '/gene2phenotype/scripts/alerts.js?version=1'
-%= javascript '/gene2phenotype/scripts/piecharts.js'
 %= javascript '/gene2phenotype/scripts/jstree/jstree.min.js'
 %= javascript '/gene2phenotype/scripts/ontology_tree.js'
 %= javascript '/gene2phenotype/scripts/jquery.dataTables.min.js'
