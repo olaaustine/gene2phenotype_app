@@ -59,8 +59,6 @@ sub fetch_by_dbID {
 
   my $disease_name_synonyms = $self->get_disease_name_synonyms($gfd);
 
-  my $disease_ontology_accessions = []; 
-
   my $allelic_requirement = $gfd->allelic_requirement;
   my $allelic_requirement_list = $self->get_allelic_requirement_list($gfd, $logged_in);
 
@@ -83,7 +81,6 @@ sub fetch_by_dbID {
     disease_name => $disease_name,
     disease_id => $disease_id,
     disease_name_synonyms => $disease_name_synonyms,
-    ontology_accessions => $disease_ontology_accessions,
     GFD_id => $dbID,
     gfd_id => $dbID,
     allelic_requirement => $allelic_requirement,
@@ -336,38 +333,6 @@ sub get_mutation_consequence_list {
     }
   }
   return \@mutation_consequence_list;
-}
-
-sub _get_disease_ontology_accessions {
-  my $self = shift;
-  my $GFD = shift;
-  my $registry = $self->app->defaults('registry');
-  my $ontology_term_adaptor = $registry->get_adaptor('Multi', 'Ontology', 'OntologyTerm');
-
-  my $disease = $GFD->get_Disease;
-  my $accessions = $disease->ontology_accessions;
-  my @ontology_accessions_tmpl = ();
-
-  foreach my $accession (@$accessions) {
-    my $term = $ontology_term_adaptor->fetch_by_accession($accession);
-    if ($term) {
-      my $term_name = $term->name;
-      my $term_source = $term->ontology;     
-      push @ontology_accessions_tmpl, {
-        accession => $accession,
-        name => $term_name,
-        source => $term_source,      
-      };
-    } else {
-      push @ontology_accessions_tmpl, {
-        accession => $accession,
-      };
-    }
-  }
-
-  @ontology_accessions_tmpl = sort {$a->{name} cmp $b->{name}} @ontology_accessions_tmpl; 
-
-  return \@ontology_accessions_tmpl;
 }
 
 sub get_publications {
