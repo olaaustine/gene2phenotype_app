@@ -89,7 +89,7 @@
         <li><a href="#new_mutation_consequence_flag">Mutation consequence flag</a></li>
       </ul>
     </p>
-    <h3>We are planning to move to the new terminology in September</h3>
+    <h3>We are planning to move to the new terminology this autumn</h3>
     <p>Our download files will only contain the new terminology after the move. We will create a final data export which uses our current terminology before the switch. Those files will remain available from our website, but won't be updated anymore.</p>
     <p>Please direct any questions to <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a></p>
   </div>
@@ -229,7 +229,7 @@
     <a name="new_mutation_consequence_flag"></a>
     <h3>NEW: Mutation consequence flag</h3>
     <ul>
-      <li>escape NMD</li>
+      <li>likely to escape nonsense mediated decay</li>
       <li>part of contiguous gene duplication</li>
       <li>part of contiguous genomic interval deletion</li>
       <li>restricted mutation set</li>
