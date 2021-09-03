@@ -70,7 +70,7 @@
   <div class="alert alert-danger container" role="alert">
     <h1>We are updating our terminology</h1>
     <p>The <a href="https://thegencc.org/about.html">GenCC</a> develops consistent terminology for describing gene-disease validity. As part of the GenCC we are aligning our existing terms to the new terminology.</p>
-    <p>We are planning to move to the new terminology in September. Please find out more about the planned update <%= link_to '/gene2phenotype/updates_to_our_terms' => begin %>here<% end %>.</p>
+    <p>We are planning to move to the new terminology this autumn. Please find out more about the planned update <%= link_to '/gene2phenotype/updates_to_our_terms' => begin %>here<% end %>.</p>
   </div>
 
   %= include 'alerts'
