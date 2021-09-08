@@ -13,12 +13,13 @@ requires 'Moose', '2.2011';
 requires 'XML::RSS::Parser';
 requires 'FileHandle';
 requires 'HTTP::Tiny';
-requires 'IO::Socket::SSL', '== 2.060';
+requires 'IO::Socket::SSL';
 requires 'HTML::Entities';
 requires 'IPC::Cmd';
 requires 'Data::Dumper';
 requires 'Perl::OSType';
 requires 'Crypt::PasswdMD5';
+requires 'Net::SSLeay';
 
 on 'build' => sub {
     requires 'Module::Build::Pluggable';
