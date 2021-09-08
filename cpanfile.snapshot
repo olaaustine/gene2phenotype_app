@@ -70,6 +70,20 @@ DISTRIBUTIONS
       perl 5.008001
       strict 0
       warnings 0
+  Carp-1.50
+    pathname: X/XS/XSAWYERX/Carp-1.50.tar.gz
+    provides:
+      Carp 1.50
+      Carp::Heavy 1.50
+    requirements:
+      Config 0
+      Exporter 0
+      ExtUtils::MakeMaker 0
+      IPC::Open3 1.0103
+      Test::More 0.47
+      overload 0
+      strict 0
+      warnings 0
   Class-Accessor-Lite-0.08
     pathname: K/KA/KAZUHO/Class-Accessor-Lite-0.08.tar.gz
     provides:
@@ -134,6 +148,15 @@ DISTRIBUTIONS
       Carp 0
       ExtUtils::MakeMaker 0
       Test::More 0.47
+  Crypt-PasswdMD5-1.41
+    pathname: R/RS/RSAVAGE/Crypt-PasswdMD5-1.41.tgz
+    provides:
+      Crypt::PasswdMD5 1.41
+    requirements:
+      Digest::MD5 2.53
+      ExtUtils::MakeMaker 0
+      strict 0
+      warnings 0
   Data-OptList-0.110
     pathname: R/RJ/RJBS/Data-OptList-0.110.tar.gz
     provides:
@@ -181,6 +204,15 @@ DISTRIBUTIONS
       perl 5.006
       strict 0
       warnings 0
+  Digest-MD5-2.58
+    pathname: T/TO/TODDR/Digest-MD5-2.58.tar.gz
+    provides:
+      Digest::MD5 2.58
+    requirements:
+      Digest::base 1.00
+      ExtUtils::MakeMaker 0
+      XSLoader 0
+      perl 5.006
   Dist-CheckConflicts-0.11
     pathname: D/DO/DOY/Dist-CheckConflicts-0.11.tar.gz
     provides:
@@ -220,7 +252,7 @@ DISTRIBUTIONS
     pathname: T/TO/TODDR/Exporter-5.73.tar.gz
     provides:
       Exporter 5.73
-      Exporter::Heavy 5.66
+      Exporter::Heavy 5.70
     requirements:
       Carp 1.05
       ExtUtils::MakeMaker 0
@@ -374,7 +406,6 @@ DISTRIBUTIONS
       IO::Socket::SSL::Utils 2.014
     requirements:
       ExtUtils::MakeMaker 0
-      Mozilla::CA 0
       Net::SSLeay 1.46
       Scalar::Util 0
   IPC-Run3-0.048
@@ -430,20 +461,6 @@ DISTRIBUTIONS
       ExtUtils::MakeMaker 0
       File::Basename 0
       File::Spec 0
-      MIME::Types 1.28
-      Mail::Address 1.62
-  MIME-Types-2.17
-    pathname: M/MA/MARKOV/MIME-Types-2.17.tar.gz
-    provides:
-      MIME::Type 2.17
-      MIME::Types 2.17
-      MojoX::MIME::Types 2.17
-    requirements:
-      ExtUtils::MakeMaker 0
-      File::Basename 0
-      File::Spec 0
-      List::Util 0
-      Test::More 0.47
   MRO-Compat-0.13
     pathname: H/HA/HAARG/MRO-Compat-0.13.tar.gz
     provides:
@@ -451,39 +468,6 @@ DISTRIBUTIONS
     requirements:
       ExtUtils::MakeMaker 0
       perl 5.006
-  MailTools-2.20
-    pathname: M/MA/MARKOV/MailTools-2.20.tar.gz
-    provides:
-      Mail::Address 2.20
-      Mail::Cap 2.20
-      Mail::Field 2.20
-      Mail::Field::AddrList 2.20
-      Mail::Field::Date 2.20
-      Mail::Field::Generic 2.20
-      Mail::Filter 2.20
-      Mail::Header 2.20
-      Mail::Internet 2.20
-      Mail::Mailer 2.20
-      Mail::Mailer::qmail 2.20
-      Mail::Mailer::rfc822 2.20
-      Mail::Mailer::sendmail 2.20
-      Mail::Mailer::smtp 2.20
-      Mail::Mailer::smtp::pipe 2.20
-      Mail::Mailer::smtps 2.20
-      Mail::Mailer::smtps::pipe 2.20
-      Mail::Mailer::testfile 2.20
-      Mail::Mailer::testfile::pipe 2.20
-      Mail::Send 2.20
-      Mail::Util 2.20
-      MailTools 2.20
-    requirements:
-      Date::Format 0
-      Date::Parse 0
-      ExtUtils::MakeMaker 0
-      IO::Handle 0
-      Net::Domain 1.05
-      Net::SMTP 1.03
-      Test::More 0
   Module-Build-0.4224
     pathname: L/LE/LEONT/Module-Build-0.4224.tar.gz
     provides:
@@ -745,6 +729,7 @@ DISTRIBUTIONS
       Mojolicious::Lite undef
       Mojolicious::Plugin undef
       Mojolicious::Plugin::Config undef
+      Mojolicious::Plugin::Config::Sandbox undef
       Mojolicious::Plugin::DefaultHelpers undef
       Mojolicious::Plugin::EPLRenderer undef
       Mojolicious::Plugin::EPRenderer undef
@@ -812,6 +797,13 @@ DISTRIBUTIONS
       Module::Build::Tiny 0.035
       Mojolicious 5.80
       perl 5.010001
+  Mojolicious-Plugin-RemoteAddr-0.03
+    pathname: K/KO/KOORCHIK/Mojolicious-Plugin-RemoteAddr-0.03.tar.gz
+    provides:
+      Mojolicious::Plugin::RemoteAddr 0.03
+    requirements:
+      ExtUtils::MakeMaker 0
+      Mojolicious 3.90
   Mojolicious-Plugin-RenderFile-0.12
     pathname: K/KO/KOORCHIK/Mojolicious-Plugin-RenderFile-0.12.tar.gz
     provides:
@@ -1197,14 +1189,6 @@ DISTRIBUTIONS
       parent 0.223
       strict 1.03
       warnings 1.03
-  Mozilla-CA-20180117
-    pathname: A/AB/ABH/Mozilla-CA-20180117.tar.gz
-    provides:
-      Mozilla::CA 20180117
-    requirements:
-      ExtUtils::MakeMaker 0
-      Test 0
-      perl 5.006
   Net-SSLeay-1.85
     pathname: M/MI/MIKEM/Net-SSLeay-1.85.tar.gz
     provides:
@@ -1281,6 +1265,15 @@ DISTRIBUTIONS
       ExtUtils::MakeMaker 0
       Test::More 0
       perl 5.006
+  Socket-2.032
+    pathname: P/PE/PEVANS/Socket-2.032.tar.gz
+    provides:
+      Socket 2.032
+    requirements:
+      ExtUtils::CBuilder 0
+      ExtUtils::Constant 0.23
+      ExtUtils::MakeMaker 0
+      perl 5.006001
   Sub-Exporter-0.987
     pathname: R/RJ/RJBS/Sub-Exporter-0.987.tar.gz
     provides:
@@ -1408,49 +1401,6 @@ DISTRIBUTIONS
       Test::Builder::Module 0
       Test::More 0.88
       perl 5.008_001
-  TimeDate-2.30
-    pathname: G/GB/GBARR/TimeDate-2.30.tar.gz
-    provides:
-      Date::Format 2.24
-      Date::Format::Generic 2.24
-      Date::Language 1.10
-      Date::Language::Afar 0.99
-      Date::Language::Amharic 1.00
-      Date::Language::Austrian 1.01
-      Date::Language::Brazilian 1.01
-      Date::Language::Bulgarian 1.01
-      Date::Language::Chinese 1.00
-      Date::Language::Chinese_GB 1.01
-      Date::Language::Czech 1.01
-      Date::Language::Danish 1.01
-      Date::Language::Dutch 1.02
-      Date::Language::English 1.01
-      Date::Language::Finnish 1.01
-      Date::Language::French 1.04
-      Date::Language::Gedeo 0.99
-      Date::Language::German 1.02
-      Date::Language::Greek 1.00
-      Date::Language::Hungarian 1.01
-      Date::Language::Icelandic 1.01
-      Date::Language::Italian 1.01
-      Date::Language::Norwegian 1.01
-      Date::Language::Oromo 0.99
-      Date::Language::Romanian 1.01
-      Date::Language::Russian 1.01
-      Date::Language::Russian_cp1251 1.01
-      Date::Language::Russian_koi8r 1.01
-      Date::Language::Sidama 0.99
-      Date::Language::Somali 0.99
-      Date::Language::Spanish 1.00
-      Date::Language::Swedish 1.01
-      Date::Language::Tigrinya 1.00
-      Date::Language::TigrinyaEritrean 1.00
-      Date::Language::TigrinyaEthiopian 1.00
-      Date::Language::Turkish 1.0
-      Date::Parse 2.30
-      Time::Zone 2.24
-    requirements:
-      ExtUtils::MakeMaker 0
   Try-Tiny-0.30
     pathname: E/ET/ETHER/Try-Tiny-0.30.tar.gz
     provides:
@@ -1552,6 +1502,14 @@ DISTRIBUTIONS
     requirements:
       ExtUtils::MakeMaker 0
       perl 5.008
+  base-2.23
+    pathname: R/RJ/RJBS/base-2.23.tar.gz
+    provides:
+      base 2.23
+      fields 2.23
+    requirements:
+      ExtUtils::MakeMaker 0
+      Test::More 0.4
   namespace-autoclean-0.28
     pathname: E/ET/ETHER/namespace-autoclean-0.28.tar.gz
     provides:
@@ -1574,3 +1532,13 @@ DISTRIBUTIONS
       ExtUtils::MakeMaker 0
       Package::Stash 0.23
       perl 5.008001
+  version-0.9929
+    pathname: L/LE/LEONT/version-0.9929.tar.gz
+    provides:
+      version 0.9929
+      version::regex 0.9929
+      version::vpp 0.9929
+      version::vxs 0.9929
+    requirements:
+      ExtUtils::MakeMaker 0
+      perl 5.006002
