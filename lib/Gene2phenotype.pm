@@ -47,7 +47,7 @@ sub startup {
   $self->plugin('Model');
   $self->plugin('RenderFile');
   $self->plugin(mail => {
-    from => 'anja@ebi.ac.uk',
+    from => 'noreplyG2P@ebi.ac.uk',
     type => 'text/html',
   });
 
