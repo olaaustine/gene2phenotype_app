@@ -20,7 +20,6 @@ package Gene2phenotype::Controller::Login;
 use Digest::MD5 qw/md5_hex/;
 use base qw(Gene2phenotype::Controller::BaseController);
 
-
 =head2 on_user_login
   Description: Gets email and password arguments and uses the authenticate method to check if
                the password is correct for the given user. After authentication we update the
@@ -108,11 +107,13 @@ sub send_recover_pwd_mail {
 
   my $model = $self->model('user');
   my $user = $model->fetch_by_email($email);
+  
 
   my $autologin_code = md5_hex( time + rand(time) );
-
   my $url = $self->url_for('/gene2phenotype/login/recovery/reset')->query(code => $autologin_code)->to_abs;
-
+  my $message = "Hi $user->{username}, This is the url to change your password, Kindly follow the link, $url";
+  my $mes_join = join(",\n", (split ',', $message) ), "\n"; 
+  
   $self->session(email => $email);
   $self->session(code => $autologin_code);
   $self->session(send_recover_email_mail => 1);
@@ -121,7 +122,7 @@ sub send_recover_pwd_mail {
     $self->mail(
       to      => $email,
       subject => 'Reset your password for gene2phenotype website',
-      data    => $url,
+      data    => $mes_join,
     );
 
     $self->flash(message => "An email with instructions for how to reset your email has been sent to $email", alert_class => 'alert-info');
