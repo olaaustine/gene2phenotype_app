@@ -15,7 +15,7 @@
     <div id='phenotype_second'>
       <div class="alert_container">
         % if (my $alert_class = flash 'phenotype_alert_class') {
-          <div class="alert <%= $alert_class %>" role="alert">
+          <div class="alert alert-danger" role="alert">
             % if (my $message = flash 'message') {
               <p><%== $message %></p>
             % }
