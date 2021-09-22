@@ -100,6 +100,37 @@ sub fetch_by_dbID {
 
 }
 
+sub update_allelic_requirement {
+  my $self = shift;
+  my $email = shift;
+  my $GFD_id = shift;
+  my $allelic_requirement_id = shift; 
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor("human", "gene2phenotype", "GenomicFeatureDisease");
+  my $user_adaptor = $registry->get_adaptor("human", "gene2phenotype", "user");
+  my $user = $user_adaptor->fetch_by_email($email);
+  my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
+  $GFD->allelic_requirement_attrib($allelic_requirement_id);
+  $GFD->update($GFD, $user);
+}
+
+sub update_mutation_consequence {
+  my $self = shift;
+  my $email = shift;
+  my $GFD_id = shift;
+  my $mutation_consequence_id = shift;
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor("human", "gene2phenotype", "GenomicFeatureDisease");
+  my $user_adaptor = $registry->get_adaptor("human", "gene2phenotype", "user");
+  my $user = $user_adaptor->fetch_by_email($email);
+  my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
+  $GFD->mutation_consequence_attrib($mutation_consequence_id);
+  $GFD->update($GFD, $user);
+
+}
+
+
+
 sub fetch_all_by_panel_restricted {
   my $self = shift;
   my $panel = shift;

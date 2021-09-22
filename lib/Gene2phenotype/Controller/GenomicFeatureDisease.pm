@@ -20,6 +20,7 @@ package Gene2phenotype::Controller::GenomicFeatureDisease;
 use base qw(Gene2phenotype::Controller::BaseController);
 use strict;
 use warnings;
+use Data::Dumper;
 
 sub show {
   my $self = shift;
@@ -108,6 +109,63 @@ sub show_add_new_entry_form {
   }
 
   $self->render(template => 'add_new_entry');
+}
+
+sub edit_allelic_mutation_form {
+  my $self = shift;
+  my $email = $self->session('email');
+  my $dbID =  $self->param('GFD_id');
+  my $gfd;
+  my $authorised_panels = $self->stash('authorised_panels');
+  my $logged_in = 0;
+  
+
+  my $gfd_model = $self->model('genomic_feature_disease');
+  my $disease_model = $self->model('disease');
+  if ($self->session('logged_in')) {
+    my $user_panels = $self->stash('user_panels');
+    $logged_in = 1;
+    $gfd = $gfd_model->fetch_by_dbID($dbID, $logged_in, $authorised_panels, $user_panels);
+  }
+  
+  $self->stash(gfd => $gfd);
+ 
+  
+
+  my $allelic_requirements = $gfd_model->get_allelic_requirements;
+  $self->stash(allelic_requirements => $allelic_requirements);
+
+  my $mutation_consequences =  $gfd_model->get_mutation_consequences;
+  $self->stash(mutation_consequences => $mutation_consequences);
+  ;
+     
+  $self->render(template => 'edit_entry');
+
+}
+
+sub update_allelic_requirement {
+  my $self = shift;
+  my $allelic_requirement_ids =  my $allelic_requirement_attrib_ids = join(',', sort @{$self->every_param('allelic_requirement_attrib_id')});
+  my $GFD_id = $self->param('GFD_id');
+  my $model = $self->model('genomic_feature_disease');
+  my $email = $self->session('email');
+  my $allelic_requirement = $model->get_value('allelic_requirement', $allelic_requirement_ids);
+  $model->update_allelic_requirement($email, $GFD_id, $allelic_requirement);
+  $self->session(last_url => "/gene2phenotype/gfd/edit_entry?GFD_id=$GFD_id");
+  $self->feedback_message("UPDATED_ALLELIC_REQUIREMENT_SUC");
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+}
+
+sub update_mutation_consequence {
+  my $self = shift; 
+  my $mutation_consequence = $self->param('mutation_consequence_id');
+  my $GFD_id = $self->param('GFD_id');
+  my $model = $self->model('genomic_feature_disease');
+  my $email = $self->session('email');
+  $model->update_allelic_requirement($email, $GFD_id, $mutation_consequence);
+  $self->session(last_url => "/gene2phenotype/gfd/edit_entry?GFD_id=$GFD_id");
+  $self->feedback_message("UPDATED_MUTATION_CONSEQ_SUC");
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
 
 sub update_organ_list {
