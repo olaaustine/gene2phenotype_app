@@ -7,13 +7,18 @@
   <div class="show_db_content">
     <dl>
       <dt>Allelic requirement</dt>
-      <dd><%= $gfd->{allelic_requirement} %></dd>
+      <dd><p><span class="label label-info"><%= $gfd->{allelic_requirement} %></p></dd>
       <dt>Mutation consequence summary</dt>
-      <dd><%= $gfd->{mutation_consequence} %></dd>
+      <dd><p><span class="label label-info"><%= $gfd->{mutation_consequence} %></p></dd>
+      % if ($gfd->{restricted_mutation} == 1){
+        <dt>Mutation consequences flag</dt> 
+        <dd><p><span class="badge">Restricted repertoire of mutations</span></p></dd>
+      % }
     </dl>
-    % if ($gfd->{restricted_mutation} == 1){
-       <p><span class="label label-info">Restricted repertoire of mutations</span></p> 
-    % }
+    %= form_for '/gene2phenotype/gfd/edit_entry' => begin 
+      %= hidden_field GFD_id => $gfd->{GFD_id}
+      <input id="button" type="submit" value="EDIT" class="btn btn-primary btn-sm" style="float: right;">
+    %end
   </div>
 
   <% if (@{$gfd->{logs}}) { %>
