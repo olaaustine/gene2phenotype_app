@@ -10,13 +10,9 @@
     <div class="col-sm-10">
       <% foreach my $AR (@{$allelic_requirements}) { %>
         <% if (my $allelic_requirement = stash 'allelic_requirement') { %>
-          <% if ( grep { $AR->{AR_attrib_value} eq $_ } split(',', $allelic_requirement)) { %>
-            %= check_box allelic_requirement_attrib_id => $AR->{AR_attrib_id}, checked => 1
-          <% } else { %>
-            %= check_box allelic_requirement_attrib_id => $AR->{AR_attrib_id}
-          <% } %>
+           %= radio_button allelic_requirement_attrib_id => $AR->{AR_attrib_id}, checked => 1
         <% } else { %>
-          %= check_box allelic_requirement_attrib_id => $AR->{AR_attrib_id}
+           %= radio_button allelic_requirement_attrib_id => $AR->{AR_attrib_id}
         <% } %>
         <%= $AR->{AR_attrib_value} %>
         %= tag 'br'
@@ -35,9 +31,13 @@
       <div class="col-sm-10">
         <% foreach my $mc ( @{$mutation_consequences} ) { %>
           <% if (my $mutation_consequence = stash 'mutation_consequence') { %>
-            %= check_box mutation_consequence_attrib_id => $mc->[1], checked => 1
+            <% if ($mutation_consequence eq $mc->[0]) { %>
+              %= radio_button  mutation_consequence_attrib_id => $mc->[1], selected => "selected"
+            <% } else { %>
+              %= radio_button mutation_consequence_attrib_id => $mc->[1]
+            <% } %>
           <% } else { %>
-            %= check_box mutation_consequence_attrib_id => $mc->[1]
+             %= radio_button mutation_consequence_attrib_id => $mc->[1] 
           <% } %>
           <%= $mc->[0] %>
           %= tag 'br'
@@ -50,6 +50,39 @@
    %end 
 </div>
 
-
+<div class="alert_entry_exists" role="alert">
+<% if (my $gfds = stash '_gfds') { %>
+   <div class="panel-body">
+     <h3>Entries with same gene symbol, allelic requirement and mutation consequence exists:</h3>
+   </div>
+   <table class="table table-bordered table-condensed">
+     <thead>
+     <tr>
+       <th scope="col">Gene symbol</th>
+       <th scope="col">Allelic requirement</th>
+       <th scope="col">Mutation consequence</th>
+       <th scope="col">Panels</th>
+       <th scope="col">Go to page</th>
+     </tr>
+     </thead>
+     <tbody>
+     <% foreach my $exist_gfd ($gfds) { %> 
+       <tr>
+         <td><%= $gfd->{gene_symbol} %></td>
+         <td><%= $gfd->{allelic_requirement} %></td>
+         <td><%= $gfd->{mutation_consequence} %></td>
+         <td><%= join(',', @{$exist_gfd->{panels}}) %></td>
+         <td>
+           %= form_for '/gene2phenotype/gfd' => (id => $gfd->{gfd_id}) => begin
+             %= hidden_field dbID => $exist_gfd->{dbID}
+             <input id="button" type="submit" value="Go to page" class="btn btn-primary btn-sm"/>
+           % end
+         </td>
+       </tr>
+     <% } %>
+     </tbody> 
+   </table>
+<% } %>
+</div>
 
 %= include 'footer'

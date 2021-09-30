@@ -146,35 +146,76 @@ sub edit_allelic_mutation_form {
 
 sub update_allelic_requirement {
   my $self = shift;
+  my $GFD_id = $self->param('GFD_id');
   my $allelic_requirement =  $self->param('allelic_requirement');
   my $gfd_model = $self->model('genomic_feature_disease');
+  my $gfd;
+  my $logged_in = 1;
+  my $authorised_panels = $self->stash('authorised_panels');;
+  $gfd = $gfd_model->fetch_by_dbID($GFD_id, $logged_in, $authorised_panels);
+  my $gf_model = $self->model('genomic_feature');
+  my $gene_symbol = $gfd->{gene_symbol};
+  my $gf = $gf_model->fetch_by_gene_symbol($gene_symbol); 
   if (!defined $allelic_requirement) {
     my $allelic_requirement_attrib_ids = join(',', sort @{$self->every_param('allelic_requirement_attrib_id')});
     $allelic_requirement = $gfd_model->get_value('allelic_requirement', $allelic_requirement_attrib_ids);
   }
-  my $GFD_id = $self->param('GFD_id');
   my $email = $self->session('email');
-  $gfd_model->update_allelic_requirement($email, $GFD_id, $allelic_requirement);
-  $self->session(last_url => "/gene2phenotype/gfd/edit_entry?GFD_id=$GFD_id");
-  $self->feedback_message("UPDATED_ALLELIC_REQUIREMENT_SUC");
-  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+  if ($allelic_requirement eq $gfd->{allelic_requirement}) {
+    $self->feedback_message('SELECTED_ALLELIC_REQUIREMENT');
+    return $self->redirect_to("/gene2phenotype/gfd/edit_entry?GFD_id=$GFD_id");
+  }
+  my $gfds = $gfd_model->fetch_all_by_GenomicFeature_constraints($gf, {
+    'mutation_consequence' => $gfd->{mutation_consequence},,
+    'allelic_requirement' => $allelic_requirement
+  });
+  if (scalar @$gfds == 0) {
+    $gfd_model->update_allelic_requirement($email, $GFD_id, $allelic_requirement);
+    $self->session(last_url => "/gene2phenotype/gfd/edit_entry?GFD_id=$GFD_id");
+    $self->feedback_message("UPDATED_ALLELIC_REQUIREMENT_SUC");
+    return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+  }
+  else {
+    $self->stash(
+      gfds => @$gfds );
+  }
 }
 
 sub update_mutation_consequence {
   my $self = shift; 
   my $mutation_consequence = $self->param('mutation_consequence');
-  print Dumper $mutation_consequence;
   my $GFD_id = $self->param('GFD_id');
+  my $gfd; 
+  my $logged_in = 1; 
+  my $authorised_panels = $self->stash('authorised_panels');
   my $gfd_model = $self->model('genomic_feature_disease');
+  $gfd = $gfd_model->fetch_by_dbID($GFD_id, $logged_in, $authorised_panels);
+  my $gf_model = $self->model('genomic_feature');
+  my $gene_symbol = $gfd->{gene_symbol};
+  my $gf = $gf_model->fetch_by_gene_symbol($gene_symbol);
   if (!defined $mutation_consequence){
     my $mutation_consequence_attrib_id = $self->param('mutation_consequence_attrib_id');
     $mutation_consequence = $gfd_model->get_value('mutation_consequence', $mutation_consequence_attrib_id);
   }
   my $email = $self->session('email');
-  $gfd_model->update_mutation_consequence($email, $GFD_id, $mutation_consequence);
-  $self->session(last_url => "/gene2phenotype/gfd/edit_entry?GFD_id=$GFD_id");
-  $self->feedback_message("UPDATED_MUTATION_CONSEQ_SUC");
-  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+  if ($mutation_consequence eq $gfd->{mutation_consequence}) {
+    $self->feedback_message('SELECTED_MUTATION_CONSEQ');
+    return $self->redirect_to("/gene2phenotype/gfd/edit_entry?GFD_id=$GFD_id");
+  }
+  my $gfds = $gfd_model->fetch_all_by_GenomicFeature_constraints($gf, {
+    'mutation_consequence' => $mutation_consequence,
+    'allelic_requirement' => $gfd->{allelic_requirement},
+  });
+  if (scalar @$gfds == 0) {
+    $gfd_model->update_mutation_consequence($email, $GFD_id, $mutation_consequence);
+    $self->session(last_url => "/gene2phenotype/gfd/edit_entry?GFD_id=$GFD_id");
+    $self->feedback_message("UPDATED_MUTATION_CONSEQ_SUC");
+    return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+  } 
+  else {
+    $self->stash(
+     gfds => @$gfds );
+  }
 }
 
 sub update_organ_list {

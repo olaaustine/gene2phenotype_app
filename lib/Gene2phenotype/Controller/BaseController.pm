@@ -39,6 +39,8 @@ our %MESSAGES = (
   UPDATED_DISEASE_ATTRIBS_SUC => { msg => 'Successfully updated disease attributes.', type => 'success',},
   UPDATED_VISIBILITY_STATUS_SUC => { msg => 'Successfully updated visibility status.', type => 'success',},
   UPDATED_MUTATION_CONSEQ_SUC => {msg => 'Succesfully updated mutation consequence', type => 'success',},
+  SELECTED_MUTATION_CONSEQ => {msg => "Mutation consequence already selected", type => "danger",},
+  SELECTED_ALLELIC_REQUIREMENT => {msg => "Allelic requirement already selected", type => "danger",},
   UPDATED_ALLELIC_REQUIREMENT_SUC => {msg => 'Succesfully updated allelic requirement', type => 'success',},
   DISEASE_MIM_IN_DB => { msg => 'Disease mim is already in database.', type => 'danger',},
   WRONG_FORMAT_DISEASE_MIM => { msg => 'Invalid format for disease mim. It needs to be a number.', type => 'danger',},
