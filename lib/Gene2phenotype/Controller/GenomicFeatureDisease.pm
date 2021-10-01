@@ -47,7 +47,7 @@ sub show {
     return $self->redirect_to("/gene2phenotype/");
   }
   $self->stash(gfd => $gfd);
-
+  print Dumper $gfd;
   my $disease_id = $gfd->{disease_id};
   my $disease_attribs = $disease_model->fetch_by_dbID($disease_id);
   $self->stash(disease => $disease_attribs);

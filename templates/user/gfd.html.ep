@@ -8,10 +8,18 @@
     <dl>
       <dt>Allelic requirement</dt>
       <dd><p><span class="label label-info"><%= $gfd->{allelic_requirement} %></p></dd>
+      % if ($gfd->{cross_cutting_modifier} ){
+        <dt>Cross cutting modifier</dt>
+        <dd><p><span class="badge"><%= $gfd->{cross_cutting_modifier} %></span></p></dd>
+      % }
       <dt>Mutation consequence summary</dt>
       <dd><p><span class="label label-info"><%= $gfd->{mutation_consequence} %></p></dd>
-      % if ($gfd->{restricted_mutation} == 1){
+      % if ($gfd->{mutation_consequence_flag} && $gfd->{mutation_consequence_flag} ne "restricted mutation set" ){
         <dt>Mutation consequences flag</dt> 
+        <dd><p><span class="badge"><%= $gfd->{mutation_consequence_flag} %></span></p></dd>
+      % }
+      % if ($gfd->{mutation_consequence_flag} eq "restricted mutation set" ){
+        <dt>Mutation consequences flag</dt>
         <dd><p><span class="badge">Restricted repertoire of mutations</span></p></dd>
       % }
     </dl>
