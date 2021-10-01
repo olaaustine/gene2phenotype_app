@@ -99,6 +99,7 @@ sub show_add_new_entry_form {
 
     my $confidence_values = $gfd_model->get_confidence_values;
     $self->stash(confidence_values => $confidence_values);
+    
 
     my $allelic_requirements = $gfd_model->get_allelic_requirements;
     $self->stash(allelic_requirements => $allelic_requirements);
@@ -134,12 +135,19 @@ sub edit_allelic_mutation_form {
 
   my $allelic_requirements = $gfd_model->get_allelic_requirements;
   $self->stash(allelic_requirements => $allelic_requirements);
-  
-  
+    
+
+  my $cross_cutting_modifiers = $gfd_model->get_cross_cutting_modifiers;
+  $self->stash(cross_cutting_modifiers => $cross_cutting_modifiers);
+  print Dumper $cross_cutting_modifiers;  
+
   my $mutation_consequences =  $gfd_model->get_mutation_consequences;
   $self->stash(mutation_consequences => $mutation_consequences);
   
-     
+  my $mutation_consequence_flags = $gfd_model->get_mutation_consequence_flags;
+  $self->stash(mutation_consequence_flags => $mutation_consequence_flags);
+  print Dumper $mutation_consequence_flags; 
+    
   $self->render(template => 'edit_entry');
 
 }

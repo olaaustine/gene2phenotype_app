@@ -66,9 +66,9 @@ sub fetch_by_dbID {
   my $mutation_consequence_list = $self->get_mutation_consequence_list($gfd, $logged_in);
   my $restricted_mutation = $gfd->restricted_mutation_set; 
   my $mutation_consequence_flag = $gfd->mutation_consequence_flag;
-  #my $mutation_consequence_flag_list = $self->get_mutation_consequence_flag_list($gfd, $logged_in);
+  my $mutation_consequence_flag_list = $self->get_mutation_consequence_flag_list($gfd, $logged_in);
   my $cross_cutting_modifier = $gfd->cross_cutting_modifier;
-  #my $cross_cutting_modifier_list = $self->get_cross_cutting_modifier_list($gfd, $logged_in);
+  my $cross_cutting_modifier_list = $self->get_cross_cutting_modifier_list($gfd, $logged_in);
   my $comments = $self->get_comments($gfd);
   my $publications = $self->get_publications($gfd);
   my $phenotypes = $self->get_phenotypes($gfd);
@@ -91,9 +91,9 @@ sub fetch_by_dbID {
     mutation_consequence => $mutation_consequence,
     mutation_consequence_list => $mutation_consequence_list,
     mutation_consequence_flag => $mutation_consequence_flag,
-    #mutation_consequence_flag_list => $mutation_consequence_flag_list,
+    mutation_consequence_flag_list => $mutation_consequence_flag_list,
     cross_cutting_modifier => $cross_cutting_modifier, 
-    #cross_cutting_modifier_list => $cross_cutting_modifier_list,
+    cross_cutting_modifier_list => $cross_cutting_modifier_list,
     restricted_mutation => $restricted_mutation,
     comments => $comments,
     publications => $publications,
@@ -442,6 +442,49 @@ sub get_mutation_consequence_list {
     }
   }
   return \@mutation_consequence_list;
+}
+
+sub get_mutation_consequence_flag_list {
+  my $self = shift;
+  my $GFD = shift;
+  my $mutation_consequence_flag = $GFD->mutation_consequence_flag;
+  my $registry = $self->app->defaults('registry');
+  my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
+  my $mutation_consequence_flag_value_to_attrib = $attribute_adaptor->get_values_by_type('mutation_consequence_flag');
+  my @mutation_consequence_flag_list = ();
+  foreach my $value (sort keys %$mutation_consequence_flag_value_to_attrib) {
+    my $attrib = $mutation_consequence_flag_value_to_attrib->{$value};
+    my $selected = ($value eq $mutation_consequence_flag) ? 'selected' : undef;
+    push @mutation_consequence_flag_list, {
+        attrib_id => $attrib,
+        attrib_value => $value,
+        selected  => $selected,
+      };
+   
+  } 
+     
+  return \@mutation_consequence_flag_list;
+}
+
+sub get_cross_cutting_modifier_list {
+  my $self = shift;
+  my $GFD = shift;
+  my $cross_cutting_modifier = $GFD->cross_cutting_modifier;
+  my $registry = $self->app->defaults('registry');
+  my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
+  my $cross_cutting_modifier_value_to_attrib = $attribute_adaptor->get_values_by_type('cross_cutting_modifier');
+  my @cross_cutting_modifier_list = ();
+  foreach my $value (sort keys %$cross_cutting_modifier_value_to_attrib) {
+    my $attrib = $cross_cutting_modifier_value_to_attrib->{$value};
+    my $selected = ($value eq $cross_cutting_modifier) ? 'selected' : undef;
+    push @cross_cutting_modifier_list, {
+      attrib_id => $attrib,
+      attrib_value => $value,
+      selected  => $selected,
+    };
+  }
+
+  return \@cross_cutting_modifier_list;
 }
 
 sub get_publications {

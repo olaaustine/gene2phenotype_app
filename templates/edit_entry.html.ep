@@ -23,7 +23,24 @@
     <input id="button" type="submit" value="Update" class="btn btn-primary btn-sm" style="float: right;"/>
   %end 
 
-
+   %= form_for '/gene2phenotype/gfd/cross_cutting_modifier/update' => (class => 'form-horizontal', id => 'cross_cutting_modifiers') => begin
+   <div class="form-group">
+      <label class="col-sm-2 control-label">Cross cutting modifier:<p><span class="label label-info"><%= $gfd->{cross_cutting_modifier} %></p></label>
+      <div class="col-sm-10">
+        <% foreach my $CCM (@{$cross_cutting_modifiers}) { %>
+          <% if (my $cross_cutting_modifier = stash 'cross_cutting_modifier') { %>
+            %= radio_button cross_cutting_modifier_attrib_id => $CCM->{CCM_attrib_id},  selected => "selected"
+          <% } else { %>
+            %= radio_button cross_cutting_modifier_attrib_id => $CCM->{CCM_attrib_id}
+          <% } %>
+          <%= $CCM->{CCM_attrib_value} %>
+          %= tag 'br'
+        <% } %>
+      </div>
+   </div>
+     %= hidden_field GFD_id => $gfd->{GFD_id}
+     <input id="button" type="submit" value="Update" class="btn btn-primary btn-sm" style="float: right;"/>
+   %end
 
    %= form_for '/gene2phenotype/gfd/mutation_consequence/update' => (class => 'form-horizontal', id => 'update_mutation_consequece') => begin
      <div class="form-group">
@@ -45,6 +62,25 @@
       </div>
     </div>  
  
+     %= hidden_field GFD_id => $gfd->{GFD_id}
+     <input id="button" type="submit" value="Update" class="btn btn-primary btn-sm" style="float: right;"/>
+   %end
+
+     %= form_for '/gene2phenotype/gfd/mutation_consequence_flag/update' => (class => 'form-horizontal', id => 'mutation consequence flag') => begin
+   <div class="form-group">
+      <label class="col-sm-2 control-label">Mutation consequence flags:<p><span class="label label-info"><%= $gfd->{mutation_consequence_flag} %></p></label>
+      <div class="col-sm-10">
+        <% foreach my $MCF (@{$mutation_consequence_flags}) { %>
+          <% if (my $mutation_consequence_flag = stash 'mutation_consequence_flag') { %>
+            %= radio_button mutation_consequence_flag_attrib_id => $MCF->{MFC_attrib_id}, selected => "selected"
+          <% } else { %>
+            %= radio_button mutation_consequence_flag_attrib_id => $MCF->{MFC_attrib_id}
+          <% } %>
+          <%= $MCF->{MFC_attrib_value} %>
+          %= tag 'br'
+        <% } %>
+      </div>
+   </div>
      %= hidden_field GFD_id => $gfd->{GFD_id}
      <input id="button" type="submit" value="Update" class="btn btn-primary btn-sm" style="float: right;"/>
    %end 
