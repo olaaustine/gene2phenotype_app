@@ -156,8 +156,35 @@ sub update_mutation_consequence {
 
 }
 
+sub update_mutation_consequence_flag {
+  my $self = shift; 
+  my $email = shift; 
+  my $GFD_id = shift; 
+  my $mutation_consequence_flag = shift;
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor("human", "gene2phenotype", "GenomicFeatureDisease");
+  my $user_adaptor = $registry->get_adaptor("human", "gene2phenotype", "user");
+  my $user = $user_adaptor->fetch_by_email($email);
+  my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
+  $GFD->mutation_consequence_flag($mutation_consequence_flag);
+  $GFD_adaptor->update($GFD, $user);
 
+}
 
+sub update_cross_cutting_modifier { 
+  my $self = shift; 
+  my $email = shift;
+  my $GFD_id = shift;
+  my $cross_cutting_modifier = shift;
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor("human", "gene2phenotype", "GenomicFeatureDisease");
+  my $user_adaptor = $registry->get_adaptor("human", "gene2phenotype", "user");
+  my $user = $user_adaptor->fetch_by_email($email);
+  my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
+  $GFD->cross_cutting_modifier($cross_cutting_modifier);
+  $GFD_adaptor->update($GFD, $user);
+
+}
 sub fetch_all_by_panel_restricted {
   my $self = shift;
   my $panel = shift;

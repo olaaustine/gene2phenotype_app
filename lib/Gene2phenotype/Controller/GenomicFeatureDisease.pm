@@ -135,7 +135,7 @@ sub edit_allelic_mutation_form {
 
   my $allelic_requirements = $gfd_model->get_allelic_requirements;
   $self->stash(allelic_requirements => $allelic_requirements);
-    
+  print Dumper $allelic_requirements; 
 
   my $cross_cutting_modifiers = $gfd_model->get_cross_cutting_modifiers;
   $self->stash(cross_cutting_modifiers => $cross_cutting_modifiers);
@@ -143,7 +143,8 @@ sub edit_allelic_mutation_form {
 
   my $mutation_consequences =  $gfd_model->get_mutation_consequences;
   $self->stash(mutation_consequences => $mutation_consequences);
-  
+  print Dumper $mutation_consequences; 
+
   my $mutation_consequence_flags = $gfd_model->get_mutation_consequence_flags;
   $self->stash(mutation_consequence_flags => $mutation_consequence_flags);
   print Dumper $mutation_consequence_flags; 
@@ -189,6 +190,32 @@ sub update_allelic_requirement {
   }
 }
 
+sub update_cross_cutting_modifier {
+  my $self = shift;
+  my $cross_cutting_modifier = $self->param('cross_cutting_modifier');
+  my $GFD_id = $self->param("GFD_id");
+  my $model = $self->model("genomic_feature_disease");
+  my $email = $self->session("email");
+  my $gfd;
+  my $logged_in = 1;
+  my $authorized_panels = $self->stash('authorized_panels');
+  $gfd = $model->fetch_by_dbID($GFD_id, $logged_in, $authorized_panels);
+  if (!defined $cross_cutting_modifier) {
+    my $cross_cutting_modifier_attrib_id = $self->param('cross_cutting_modifier_attrib_id');
+    print Dumper $cross_cutting_modifier_attrib_id;
+    $cross_cutting_modifier = $model->get_value('cross_cutting_modifier', $cross_cutting_modifier_attrib_id);
+  }
+  if ($cross_cutting_modifier eq $gfd->{cross_cutting_modifier}) {
+     $self->feedback_message('SELECTED_CROSS_CUTTING_MODIFIER');
+     return $self->redirect_to("/gene2phenotype/gfd/edit_entry?GFD_id=$GFD_id");
+  }
+  $model->update_cross_cutting_modifier($email, $GFD_id, $cross_cutting_modifier);
+  $self->session(last_url => "/gene2phenotype/gfd/edit_entry?GFD_id=$GFD_id");
+  $self->feedback_message("UPDATED_CROSS_CUT_SUC");
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+}
+
+
 sub update_mutation_consequence {
   my $self = shift; 
   my $mutation_consequence = $self->param('mutation_consequence');
@@ -224,6 +251,30 @@ sub update_mutation_consequence {
     $self->stash(
      gfds => @$gfds );
   }
+}
+
+sub update_mutation_consequence_flag {
+  my $self = shift;
+  my $mutation_consequence_flag = $self->param('mutation_consequence_flag');
+  my $GFD_id = $self->param("GFD_id");
+  my $model = $self->model("genomic_feature_disease");
+  my $email = $self->session("email");
+  my $gfd;
+  my $logged_in = 1;
+  my $authorized_panels = $self->stash('authorized_panels');
+  $gfd = $model->fetch_by_dbID($GFD_id, $logged_in, $authorized_panels);
+  if (!defined $mutation_consequence_flag) {
+    my $mutation_consequence_flag_attrib_id = $self->param('mutation_consequence_flag_attrib_id');
+    $mutation_consequence_flag = $model->get_value('mutation_consequence_flag', $mutation_consequence_flag_attrib_id);
+  }
+  if ($mutation_consequence_flag eq $gfd->{mutation_consequence_flag})  {
+     $self->feedback_message('SELECTED_MUTATION_CON_FLAG');
+     return $self->redirect_to("/gene2phenotype/gfd/edit_entry?GFD_id=$GFD_id");
+  }
+  $model->update_mutation_consequence_flag($email, $GFD_id, $mutation_consequence_flag);
+  $self->session(last_url => "/gene2phenotype/gfd/edit_entry?GFD_id=$GFD_id");
+  $self->feedback_message("UPDATED_MUT_CON_FLAG_SUC");
+  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
 
 sub update_organ_list {

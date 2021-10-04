@@ -18,7 +18,7 @@
               <td>
                 %= form_for '/gene2phenotype/gfd_panel/confidence_category/update' => begin
                   %= select_field category_attrib_id => $gfd_panel->{confidence_category_list} 
-                  <div class="align_buttons_right">
+                   <div class="align_buttons_right">
                     %= hidden_field GFD_id => $gfd_panel->{GFD_id}
                     %= hidden_field GFD_panel_id => $gfd_panel->{GFD_panel_id}
                     %= submit_button 'Update', class => 'btn btn-primary btn-sm', id => 'button'

@@ -21,7 +21,10 @@
   </div>
     %= hidden_field GFD_id => $gfd->{GFD_id}
     <input id="button" type="submit" value="Update" class="btn btn-primary btn-sm" style="float: right;"/>
-  %end 
+  %end
+ 
+  <div class="alert_update_allele" role="alert">
+  </div> 
 
    %= form_for '/gene2phenotype/gfd/cross_cutting_modifier/update' => (class => 'form-horizontal', id => 'cross_cutting_modifiers') => begin
    <div class="form-group">
