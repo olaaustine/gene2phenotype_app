@@ -23,10 +23,14 @@
         <dd><p><span class="badge">Restricted repertoire of mutations</span></p></dd>
       % }
     </dl>
-    %= form_for '/gene2phenotype/gfd/edit_entry' => begin 
-      %= hidden_field GFD_id => $gfd->{GFD_id}
-      <input id="button" type="submit" value="EDIT" class="btn btn-primary btn-sm" style="float: right;">
-    %end
+    <% foreach my $gfd_panel (@{$gfd->{gfd_panels}}) { %>
+      % if ($gfd_panel->{user_can_edit}) {
+        %= form_for '/gene2phenotype/gfd/edit_entry' => begin 
+          %= hidden_field GFD_id => $gfd->{GFD_id}
+          <input id="button" type="submit" value="EDIT" class="btn btn-primary btn-sm" style="float: right;">
+        %end
+      % }
+    <% } %>
   </div>
 
   <% if (@{$gfd->{logs}}) { %>
