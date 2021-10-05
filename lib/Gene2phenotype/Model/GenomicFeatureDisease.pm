@@ -784,6 +784,7 @@ sub get_gfd_panels {
       user_can_edit => $user_can_edit,
       confidence_category => $confidence_category,
       confidence_category_list => $confidence_category_list,
+      clinical_review => $gfd_panel->clinical_review,
     }
   }
   return \@gfd_panels;  
