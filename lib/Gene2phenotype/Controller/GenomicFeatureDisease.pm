@@ -47,7 +47,6 @@ sub show {
     return $self->redirect_to("/gene2phenotype/");
   }
   $self->stash(gfd => $gfd);
-  print Dumper $gfd;
   my $disease_id = $gfd->{disease_id};
   my $disease_attribs = $disease_model->fetch_by_dbID($disease_id);
   $self->stash(disease => $disease_attribs);
@@ -135,19 +134,19 @@ sub edit_allelic_mutation_form {
 
   my $allelic_requirements = $gfd_model->get_allelic_requirements;
   $self->stash(allelic_requirements => $allelic_requirements);
-  print Dumper $allelic_requirements; 
+ 
 
   my $cross_cutting_modifiers = $gfd_model->get_cross_cutting_modifiers;
   $self->stash(cross_cutting_modifiers => $cross_cutting_modifiers);
-  print Dumper $cross_cutting_modifiers;  
+  
 
   my $mutation_consequences =  $gfd_model->get_mutation_consequences;
   $self->stash(mutation_consequences => $mutation_consequences);
-  print Dumper $mutation_consequences; 
+ 
 
   my $mutation_consequence_flags = $gfd_model->get_mutation_consequence_flags;
   $self->stash(mutation_consequence_flags => $mutation_consequence_flags);
-  print Dumper $mutation_consequence_flags; 
+  
     
   $self->render(template => 'edit_entry');
 
@@ -185,11 +184,10 @@ sub update_allelic_requirement {
     return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
   }
   else {
-    $self->stash(
-      gfds => @$gfds );
+    $self->feedback_message("GFD_ALREADY_EXISTS");
+    return $self->redirect_to("/gene2phenotype/gfd/edit_entry?GFD_id=$GFD_id");
   }
 }
-
 sub update_cross_cutting_modifier {
   my $self = shift;
   my $cross_cutting_modifier = $self->param('cross_cutting_modifier');
@@ -202,7 +200,6 @@ sub update_cross_cutting_modifier {
   $gfd = $model->fetch_by_dbID($GFD_id, $logged_in, $authorized_panels);
   if (!defined $cross_cutting_modifier) {
     my $cross_cutting_modifier_attrib_id = $self->param('cross_cutting_modifier_attrib_id');
-    print Dumper $cross_cutting_modifier_attrib_id;
     $cross_cutting_modifier = $model->get_value('cross_cutting_modifier', $cross_cutting_modifier_attrib_id);
   }
   if ($cross_cutting_modifier eq $gfd->{cross_cutting_modifier}) {
@@ -248,9 +245,10 @@ sub update_mutation_consequence {
     return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
   } 
   else {
-    $self->stash(
-     gfds => @$gfds );
+    $self->feedback_message("GFD_ALREADY_EXISTS");
+    return $self->redirect_to("/gene2phenotype/gfd/edit_entry?GFD_id=$GFD_id");
   }
+
 }
 
 sub update_mutation_consequence_flag {

@@ -46,6 +46,7 @@ our %MESSAGES = (
   SELECTED_CROSS_CUTTING_MODIFIER => {msg => "Cross cutting modifier already selected", type => 'danger'},
   UPDATED_MUT_CON_FLAG_SUC => {msg => "Successfully updated mutation consequence flag", type => 'success',},
   SELECTED_MUTATION_CON_FLAG => {msg => "Mutation consequence flag already selected", type => 'danger'},
+  GFD_ALREADY_EXISTS => {msg => 'Genomic feature Disease with the same gene symbol, allelic requirement and mutation consequence already exists. Please contact g2p-help@ebi.ac.uk.', type => 'danger', }, 
   DISEASE_MIM_IN_DB => { msg => 'Disease mim is already in database.', type => 'danger',},
   WRONG_FORMAT_DISEASE_MIM => { msg => 'Invalid format for disease mim. It needs to be a number.', type => 'danger',},
   UPDATED_ORGAN_LIST => { msg => 'Successfully updated organ specificity list.', type => 'success',},
