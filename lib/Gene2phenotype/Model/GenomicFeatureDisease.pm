@@ -131,11 +131,11 @@ sub update_allelic_requirement {
   $GFD_adaptor->update($GFD, $user);
 }
 
-=head2 update_allelic_requirement 
+=head2 update_mutation_consequence
   Args        : String $email, email address of the user updating the GFD 
                 Integer $GFD_id The Database id of the GFD being updated 
                 $mutation_consequence Mutation consequence to be updated  
-  Description: Update the allelic requirement  of a GenomicFeatureDisease
+  Description: Update the mutation consequence of a GenomicFeatureDisease
   Exceptions : None
   Caller     : Gene2phenotype::Controller::GenomicFeatureDisease::update_mutation_consequence
   Status     : Stable
@@ -156,6 +156,16 @@ sub update_mutation_consequence {
 
 }
 
+=head2 update_mutation_consequence_flag
+  Args        : String $email, email address of the user updating the GFD 
+                Integer $GFD_id The Database id of the GFD being updated 
+                $mutation_consequence Mutation consequence to be updated  
+  Description: Update the mutation consequence flag of a GenomicFeatureDisease
+  Exceptions : None
+  Caller     : Gene2phenotype::Controller::GenomicFeatureDisease::update_mutation_consequence_flag
+  Status     : Stable
+=cut
+
 sub update_mutation_consequence_flag {
   my $self = shift; 
   my $email = shift; 
@@ -170,6 +180,16 @@ sub update_mutation_consequence_flag {
   $GFD_adaptor->update($GFD, $user);
 
 }
+
+=head2 update_mutation_consequence_flag
+  Args        : String $email, email address of the user updating the GFD 
+                Integer $GFD_id The Database id of the GFD being updated 
+                $mutation_consequence Mutation consequence to be updated  
+  Description: Update the cross cutting modifier of a GenomicFeatureDisease
+  Exceptions : None
+  Caller     : Gene2phenotype::Controller::GenomicFeatureDisease::update_cross_cutting_modifier
+  Status     : Stable
+=cut
 
 sub update_cross_cutting_modifier { 
   my $self = shift; 
@@ -471,6 +491,15 @@ sub get_mutation_consequence_list {
   return \@mutation_consequence_list;
 }
 
+=head2 get_mutation_consequence_flag_list
+  Arg [1]    : None
+  Description: Used to get the mutation consequence flags and the selected flag stores it in an array. 
+  Returntype : Arrayref of mutation_consequence_flags 
+  Exceptions : None
+  Caller     : Gene2phenotype::Model::GenomicFeatureDisease::fetch_by_dbID
+  Status     : Stable
+=cut
+
 sub get_mutation_consequence_flag_list {
   my $self = shift;
   my $GFD = shift;
@@ -492,6 +521,15 @@ sub get_mutation_consequence_flag_list {
      
   return \@mutation_consequence_flag_list;
 }
+
+=head2 get_cross_cutting_modifier_list
+  Arg [1]    : None
+  Description: Used to get the cross cutting modifier list and the selected flag stores it in an array. 
+  Returntype : Arrayref of cross_cutting_modifier_list 
+  Exceptions : None
+  Caller     : Gene2phenotype::Model::GenomicFeatureDisease::fetch_by_dbID
+  Status     : Stable
+=cut
 
 sub get_cross_cutting_modifier_list {
   my $self = shift;

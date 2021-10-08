@@ -111,6 +111,17 @@ sub show_add_new_entry_form {
   $self->render(template => 'add_new_entry');
 }
 
+=head2 edit_allelic_mutation_form
+  Description: Setup the form for editing a GFD entry. Get all possible values for:
+               allelic requirement, mutation consequence, mutation consequence flag and cross cutting modifiers.
+               Only if users are  allowed to edit the panels.
+  Returntype : If the user is logged in and allowed to edit the panel  edit_entry.html.ep
+  Exceptions : None
+  Caller     : Template: user/gfd.html.ep
+               Request: GET /gene2phenotype/gfd/edit_entry
+  Status     : Stable
+=cut
+
 sub edit_allelic_mutation_form {
   my $self = shift;
   my $email = $self->session('email');
@@ -152,6 +163,17 @@ sub edit_allelic_mutation_form {
 
 }
 
+=head2 update_allelic_requirement
+  Description: Updating the allelic requirement  of a GenomicFeatureDisease
+  Exceptions : None
+  Caller     : Template: edit_entry.html.ep
+               Request : GET /gene2phenotype/gfd/allelic_requirement/update
+               Params  : 
+                   allelic_requirement - The allelic requirement to be updated to 
+                   GFD_id - The database id of the GenomicFeatureDisease.
+  Status     : Stable 
+=cut
+
 sub update_allelic_requirement {
   my $self = shift;
   my $GFD_id = $self->param('GFD_id');
@@ -188,6 +210,18 @@ sub update_allelic_requirement {
     return $self->redirect_to("/gene2phenotype/gfd/edit_entry?GFD_id=$GFD_id");
   }
 }
+
+=head2 update_cross_cutting_modifier
+  Description: Updating the cross cutting modifier  of a GenomicFeatureDisease
+  Exceptions : None
+  Caller     : Template: edit_entry.html.ep
+               Request : GET /gene2phenotype/gfd/cross_cutting_modifier/update
+               Params  : 
+                   cross cutting modifier - The cross cutting modifier to be updated to 
+                   GFD_id - The database id of the GenomicFeatureDisease.
+  Status     : Stable 
+=cut
+
 sub update_cross_cutting_modifier {
   my $self = shift;
   my $cross_cutting_modifier = $self->param('cross_cutting_modifier');
@@ -212,6 +246,16 @@ sub update_cross_cutting_modifier {
   return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
 
+=head2 update_mutation_consequence
+  Description: Updating the mutation consequence  of a GenomicFeatureDisease
+  Exceptions : None
+  Caller     : Template: edit_entry.html.ep
+               Request : GET /gene2phenotype/gfd/mutation_consequence/update
+               Params  : 
+                   mutatiom_consequence - The mutation consequence to be updated to 
+                   GFD_id - The database id of the GenomicFeatureDisease.
+  Status     : Stable 
+=cut
 
 sub update_mutation_consequence {
   my $self = shift; 
@@ -251,6 +295,16 @@ sub update_mutation_consequence {
 
 }
 
+=head2 update_mutation_consequence_flag
+  Description: Updating the mutation consequence flag of a GenomicFeatureDisease
+  Exceptions : None
+  Caller     : Template: edit_entry.html.ep
+               Request : GET /gene2phenotype/gfd/mutation_consequence_flag/update
+               Params  : 
+                   mutation_consequence_flag - The mutation consequence flag to be updated to 
+                   GFD_id - The database id of the GenomicFeatureDisease.
+  Status     : Stable 
+=cut
 sub update_mutation_consequence_flag {
   my $self = shift;
   my $mutation_consequence_flag = $self->param('mutation_consequence_flag');
