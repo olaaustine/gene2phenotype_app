@@ -20,7 +20,6 @@ package Gene2phenotype::Controller::GenomicFeatureDisease;
 use base qw(Gene2phenotype::Controller::BaseController);
 use strict;
 use warnings;
-use Data::Dumper;
 
 sub show {
   my $self = shift;
@@ -119,6 +118,7 @@ sub show_add_new_entry_form {
   Exceptions : None
   Caller     : Template: user/gfd.html.ep
                Request: GET /gene2phenotype/gfd/edit_entry
+               Template : edit_entry.html.ep
   Status     : Stable
 =cut
 
@@ -187,8 +187,8 @@ sub update_allelic_requirement {
   my $gene_symbol = $gfd->{gene_symbol};
   my $gf = $gf_model->fetch_by_gene_symbol($gene_symbol); 
   if (!defined $allelic_requirement) {
-    my $allelic_requirement_attrib_ids = join(',', sort @{$self->every_param('allelic_requirement_attrib_id')});
-    $allelic_requirement = $gfd_model->get_value('allelic_requirement', $allelic_requirement_attrib_ids);
+    my $allelic_requirement_attrib_id = $self->param('allelic_requirement_attrib_id');
+    $allelic_requirement = $gfd_model->get_value('allelic_requirement', $allelic_requirement_attrib_id);
   }
   my $email = $self->session('email');
   if ($allelic_requirement eq $gfd->{allelic_requirement}) {

@@ -181,7 +181,7 @@ sub update_mutation_consequence_flag {
 
 }
 
-=head2 update_mutation_consequence_flag
+=head2 update_cross_cutting_modifier
   Args        : String $email, email address of the user updating the GFD 
                 Integer $GFD_id The Database id of the GFD being updated 
                 $mutation_consequence Mutation consequence to be updated  
