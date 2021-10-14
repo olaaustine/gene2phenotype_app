@@ -9,12 +9,15 @@ consequence. The header fields are:
   - disease name:                 Name provided by the curator
   - disease mim:                  OMIM number for a disease entry
   - disease confidence:           One value from the list of possible categories: both DD and IF, confirmed, possible, probable
-  - allelic requirement:          comma-separated list of allelic requirement attributes. Possible values are: biallelic, monoallelic (Y),
-                                  imprinted, uncertain, monoallelic, hemizygous, x-linked dominant, x-linked over-dominance, mosaic,
-                                  mitochondrial, digenic 
-  - mutation consequence:         One value from the list of possible consequences: 5_prime or 3_prime UTR mutation, activating,
-                                  all missense/in frame, cis-regulatory or promotor mutation, dominant negative, increased gene dosage,
-                                  loss of function, part of contiguous gene duplication, part of contiguous genomic interval deletion, uncertain
+  - allelic requirement:          One value from the list of possible allelic requirement attributes. Possible values are:   
+                                  biallelic_autosomal, monoallelic_autosomal,
+                                  imprinted, monoallelic_PAR, biallelic_PAR, mitochondrial, monoallelix_X_hem, monallelic_X_het, monoallelic_Y_hem.   
+  - cross cutting modifier        One value from the list of possible cross cutting modifier : 
+                                  requires heterozygosity, typically de novo, typically mosaic, typified by age related penetrance, typified by reduced penetrance.
+  - mutation consequence:         One value from the list of possible consequences: 5_prime or 3_prime UTR mutation, 
+                                  cis-regulatory or promotor mutation, absent gene product, altered gene product structure, increased gene product level, uncertain.
+  - mutation consequences flag    Ome value from the list of possible flags : 
+                                  likely to escape nonsense mediated decay, part of contiguous gene duplication, part of contiguous genomic interval deletion, restricted mutation set.  
   - phenotypes:                   semicolon-separated list of HPO (http://www.human-phenotype-ontology.org/) IDs
   - organ specificity list:       semicolon-separated list of organs
   - pmids:                        semicolon-separated list of PMIDs 
