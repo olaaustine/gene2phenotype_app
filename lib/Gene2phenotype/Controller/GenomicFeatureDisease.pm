@@ -155,16 +155,8 @@ sub edit_allelic_mutation_form {
   $self->stash(allelic_requirements => $allelic_requirements);
  
 
-  my $cross_cutting_modifiers = $gfd_model->get_cross_cutting_modifiers;
-  $self->stash(cross_cutting_modifiers => $cross_cutting_modifiers);
-  
-
   my $mutation_consequences =  $gfd_model->get_mutation_consequences;
-  $self->stash(mutation_consequences => $mutation_consequences);
- 
-
-  my $mutation_consequence_flags = $gfd_model->get_mutation_consequence_flags;
-  $self->stash(mutation_consequence_flags => $mutation_consequence_flags);
+  $self->stash(mutation_consequences => $mutation_consequences;
   
     
   $self->render(template => 'edit_entry');
