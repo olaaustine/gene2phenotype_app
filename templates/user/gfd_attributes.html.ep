@@ -19,7 +19,7 @@
                 %= form_for '/gene2phenotype/gfd_panel/confidence_category/update' => begin
                   %= select_field category_attrib_id => $gfd_panel->{confidence_category_list}
                   % if ($gfd_panel->{clinical_review}) {
-                    <p><span class="label label-info">Clinical review</span></p> 
+                    <p><span class="label label-info">Requires clinical review</span></p> 
                   % } 
                    <div class="align_buttons_right">
                     %= hidden_field GFD_id => $gfd_panel->{GFD_id}
