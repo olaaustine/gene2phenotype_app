@@ -12,12 +12,8 @@ consequence. The header fields are:
   - allelic requirement:          One value from the list of possible allelic requirement attributes. Possible values are:   
                                   biallelic_autosomal, monoallelic_autosomal,imprinted, monoallelic_PAR, 
                                   biallelic_PAR, mitochondrial, monoallelix_X_hem, monallelic_X_het, monoallelic_Y_hem.   
-  - cross cutting modifier        One value from the list of possible cross cutting modifier : 
-                                  requires heterozygosity, typically de novo, typically mosaic, typified by age related penetrance, typified by reduced penetrance.
   - mutation consequence:         One value from the list of possible consequences: 5_prime or 3_prime UTR mutation, 
                                   cis-regulatory or promotor mutation, absent gene product, altered gene product structure, increased gene product level, uncertain.
-  - mutation consequences flag    One value from the list of possible flags : 
-                                  likely to escape nonsense mediated decay, part of contiguous gene duplication, part of contiguous genomic interval deletion, restricted mutation set.  
   - phenotypes:                   semicolon-separated list of HPO (http://www.human-phenotype-ontology.org/) IDs
   - organ specificity list:       semicolon-separated list of organs
   - pmids:                        semicolon-separated list of PMIDs 
@@ -25,3 +21,7 @@ consequence. The header fields are:
   - prev symbols:                 Symbols previously approved by the HGNC for this gene
   - hgnc id:                      HGNC identifier
   - gene disease pair entry date: Entry date for the gene disease pair into the database
+  - cross cutting modifier        One value from the list of possible cross cutting modifier : 
+                                  requires heterozygosity, typically de novo, typically mosaic, typified by age related penetrance, typified by reduced penetrance.
+  - mutation consequences flag    One value from the list of possible flags : 
+                                  likely to escape nonsense mediated decay, part of contiguous gene duplication, part of contiguous genomic interval deletion, restricted mutation set.  
