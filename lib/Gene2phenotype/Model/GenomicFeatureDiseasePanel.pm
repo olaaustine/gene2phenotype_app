@@ -105,7 +105,8 @@ sub update_confidence_category {
   my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
   my $user = $user_adaptor->fetch_by_email($email);
   my $GFD_panel = $GFD_panel_adaptor->fetch_by_dbID($GFD_panel_id);
-  if ($category_attrib_id == 51) {
+  $category_attrib_id = 49 if ($category_attrib_id == 53);
+  if ($category_attrib_id == 51 || $category_attrib_id == 49) {
     $GFD_panel->clinical_review(1);
   }
   else {
