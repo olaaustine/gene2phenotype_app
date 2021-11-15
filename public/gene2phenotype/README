@@ -26,4 +26,4 @@ consequence. The header fields are:
   - mutation consequences flag    One value from the list of possible flags : 
                                   likely to escape nonsense mediated decay, part of contiguous gene duplication, part of contiguous genomic interval deletion, restricted mutation set.  
 
-The old files are still supported and can be found in  ftp://ftp.ebi.ac.uk/pub/databases/gene2phenotype/
+The old files are supported and can be found in  http://ftp.ebi.ac.uk/pub/databases/gene2phenotype/
