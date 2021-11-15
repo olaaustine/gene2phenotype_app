@@ -25,3 +25,5 @@ consequence. The header fields are:
                                   requires heterozygosity, typically de novo, typically mosaic, typified by age related penetrance, typified by reduced penetrance.
   - mutation consequences flag    One value from the list of possible flags : 
                                   likely to escape nonsense mediated decay, part of contiguous gene duplication, part of contiguous genomic interval deletion, restricted mutation set.  
+
+The old files are still supported and can be found in  ftp://ftp.ebi.ac.uk/pub/databases/gene2phenotype/
