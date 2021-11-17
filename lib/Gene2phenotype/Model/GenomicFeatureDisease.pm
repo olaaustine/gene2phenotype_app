@@ -203,7 +203,6 @@ sub update_cross_cutting_modifier {
   my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
   $GFD->cross_cutting_modifier($cross_cutting_modifier);
   $GFD_adaptor->update($GFD, $user);
-
 }
 sub fetch_all_by_panel_restricted {
   my $self = shift;

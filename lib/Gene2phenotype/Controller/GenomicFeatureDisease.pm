@@ -232,8 +232,8 @@ sub update_cross_cutting_modifier {
   my $authorized_panels = $self->stash('authorized_panels');
   $gfd = $model->fetch_by_dbID($GFD_id, $logged_in, $authorized_panels);
   if (!defined $cross_cutting_modifier) {
-    my $cross_cutting_modifier_attrib_id = $self->param('cross_cutting_modifier_attrib_id');
-    $cross_cutting_modifier = $model->get_value('cross_cutting_modifier', $cross_cutting_modifier_attrib_id);
+    my $cross_cutting_modifier_attrib_ids = join(',', sort@{$self->param('cross_cutting_modifier_attrib_id')});
+    $cross_cutting_modifier = $model->get_value('cross_cutting_modifier', $cross_cutting_modifier_attrib_ids);
   }
   if ($cross_cutting_modifier eq $gfd->{cross_cutting_modifier}) {
      $self->feedback_message('SELECTED_CROSS_CUTTING_MODIFIER');

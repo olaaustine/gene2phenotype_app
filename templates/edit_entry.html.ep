@@ -32,13 +32,17 @@
       <div class="col-sm-10">
         <% foreach my $CCM (@{$cross_cutting_modifiers}) { %>
           <% if (my $cross_cutting_modifier = stash 'cross_cutting_modifier') { %>
-            %= radio_button cross_cutting_modifier_attrib_id => $CCM->{CCM_attrib_id},  selected => "selected"
+            <% if ( grep { $CCM->{CCM_attrib_value eq $_ } split(',', $cross_cutting_modifier)) { %>
+              %= check_box cross_cutting_modifier_attrib_id => $CCM->{CCM_attrib_id},  selected => "selected"
+            <% } else { %>
+              %= check_box cross_cutting_modifier_attrib_id => $CCM->{CCM_attrib_id}
+            <% } %>
           <% } else { %>
-            %= radio_button cross_cutting_modifier_attrib_id => $CCM->{CCM_attrib_id}
+            %= check_box cross_cutting_modifier_attrib_id => $CCM->{CCM_attrib_id}
           <% } %>
           <%= $CCM->{CCM_attrib_value} %>
           %= tag 'br'
-        <% } %>
+       <% } %>
       </div>
    </div>
      %= hidden_field GFD_id => $gfd->{GFD_id}
