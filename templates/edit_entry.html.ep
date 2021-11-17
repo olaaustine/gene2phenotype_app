@@ -42,7 +42,7 @@
           <% } %>
           <%= $CCM->{CCM_attrib_value} %>
           %= tag 'br'
-       <% } %>
+        <% } %>
       </div>
    </div>
      %= hidden_field GFD_id => $gfd->{GFD_id}
