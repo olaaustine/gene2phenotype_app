@@ -1,0 +1,22 @@
+%= include 'header'
+%= include 'search'
+%= form_for '/gene2phenotype/gfd/allelic_requirement/update' => (class => 'form-horizontal', id => 'update_allelic_requirements') => begin
+<div class="form-group">
+  <label class="col-sm-2 control-label">Allelic requirement:<p><span class="label label-info"><%= $gfd->{allelic_requirement} %></p></label>
+  <div class="col-sm-10">
+    <% foreach my $AR (@{$allelic_requirements}) { %>
+      <% if (my $allelic_requirement = stash 'allelic_requirement') { %>
+         %= radio_button allelic_requirement_attrib_id => $AR->{AR_attrib_id}, checked => 1
+      <% } else { %>
+         %= radio_button allelic_requirement_attrib_id => $AR->{AR_attrib_id}
+      <% } %>
+      <%= $AR->{AR_attrib_value} %>
+      %= tag 'br'
+    <% } %>
+  </div>
+</div>
+  %= hidden_field GFD_id => $gfd->{GFD_id}
+  <input id="button" type="submit" value="Update" class="btn btn-primary btn-sm" style="float: right;"/>
+%end
+
+%= include 'footer'

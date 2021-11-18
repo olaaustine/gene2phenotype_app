@@ -157,9 +157,32 @@ sub edit_allelic_mutation_form {
   $self->stash(mutation_consequence_flags => $mutation_consequence_flags);
 
  
-    
-  $self->render(template => 'edit_entry');
+  $self->render(template => 'show_attribs');
+}
 
+sub update_allelic_requirement_temp{
+  my $self = shift;
+  my $email = $self->session('email');
+  my $dbID =  $self->param('GFD_id');
+  my $gfd;
+  my $authorised_panels = $self->stash('authorised_panels');
+  my $logged_in = 0;
+
+
+  my $gfd_model = $self->model('genomic_feature_disease');
+  my $disease_model = $self->model('disease');
+  if ($self->session('logged_in')) {
+    my $user_panels = $self->stash('user_panels');
+    $logged_in = 1;
+    $gfd = $gfd_model->fetch_by_dbID($dbID, $logged_in, $authorised_panels, $user_panels);
+  }
+
+  $self->stash(gfd => $gfd);
+
+  my $allelic_requirements = $gfd_model->get_allelic_requirements;
+  $self->stash(allelic_requirements => $allelic_requirements);
+
+  $self->render('allelic');
 }
 
 =head2 update_allelic_requirement
@@ -202,13 +225,40 @@ sub update_allelic_requirement {
     $gfd_model->update_allelic_requirement($email, $GFD_id, $allelic_requirement);
     $self->session(last_url => "/gene2phenotype/gfd/edit_entry?GFD_id=$GFD_id");
     $self->feedback_message("UPDATED_ALLELIC_REQUIREMENT_SUC");
-    return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+    return $self->redirect_to("/gene2phenotype/gfd/show_attribs?GFD_id=$GFD_id");
   }
   else {
     $self->feedback_message("GFD_ALREADY_EXISTS");
     return $self->redirect_to("/gene2phenotype/gfd/edit_entry?GFD_id=$GFD_id");
   }
 }
+sub update_cross_cutting_modifier_temp {
+  my $self = shift;
+  my $email = $self->session('email');
+  my $dbID =  $self->param('GFD_id');
+  my $gfd;
+  my $authorised_panels = $self->stash('authorised_panels');
+  my $logged_in = 0;
+
+
+  my $gfd_model = $self->model('genomic_feature_disease');
+  my $disease_model = $self->model('disease');
+  if ($self->session('logged_in')) {
+    my $user_panels = $self->stash('user_panels');
+    $logged_in = 1;
+    $gfd = $gfd_model->fetch_by_dbID($dbID, $logged_in, $authorised_panels, $user_panels);
+  }
+
+  $self->stash(gfd => $gfd);
+
+  my $cross_cutting_modifiers = $gfd_model->get_cross_cutting_modifiers;
+  $self->stash(cross_cutting_modifiers => $cross_cutting_modifiers);
+
+  $self->render('ccm');
+} 
+
+
+
 
 =head2 update_cross_cutting_modifier
   Description: Updating the cross cutting modifier  of a GenomicFeatureDisease
