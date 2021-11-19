@@ -6,12 +6,14 @@
   <div class="show_db_content">
     <dl>
       <dt>Allelic requirement</dt>
-      <dd><p><span class="badgeo"><%= $gfd->{allelic_requirement} %></p></dd>
-      % if ($gfd->{cross_cutting_modifier} ){
+      <dd><p><span class="badge"><%= $gfd->{allelic_requirement} %></p></dd>
+       % if ($gfd->{cross_cutting_modifier} ){
         <dt>Cross cutting modifier</dt>
-        <dd><p><span class="label label-info"><%= $gfd->{cross_cutting_modifier} %></span></p></dd>
+        % for (split /,/, $gfd->{cross_cutting_modifier}) {
+          <dd><p><span class="label label-info"><%= $_ %></span></p></dd>
+        % }
       % }
-      <dt>Mutation consequence summary</dt>
+     <dt>Mutation consequence summary</dt>
       <dd><p><span class="badge"><%= $gfd->{mutation_consequence} %></p></dd>
       % if ($gfd->{mutation_consequence_flag} && $gfd->{mutation_consequence_flag} ne "restricted mutation set" ){
         <dt>Mutation consequences flag</dt> 
