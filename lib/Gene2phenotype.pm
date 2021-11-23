@@ -209,7 +209,9 @@ sub startup {
   $r->get('/gene2phenotype/gfd/show_attribs')->to('genomic_feature_disease#edit_allelic_mutation_form');
   $r->get('/gene2phenotype/gfd/edit_entry')->to('genomic_feature_disease#edit_allelic_mutation_form');
   $r->get('/gene2phenotype/gfd/update_allelic')->to('genomic_feature_disease#update_allelic_requirement_temp');
-  $r->get('/gene2phenotype/gfd/update_ccm')->to('genomic_feature_disease#update_cross_cutting_modifier_temp'); 
+  $r->get('/gene2phenotype/gfd/update_ccm')->to('genomic_feature_disease#update_cross_cutting_modifier_temp');
+  $r->get('/gene2phenotype/gfd/update_mutation_con')->to('genomic_feature_disease#update_mutation_consequence_temp');
+  $r->get('/gene2phenotype/gfd/update_mcf')->to('genomic_feature_disease#update_mutation_consequence_flag_temp'); 
   $r->get('/gene2phenotype/gfd/allelic_requirement/update')->to('genomic_feature_disease#update_allelic_requirement');
   $r->get('/gene2phenotype/gfd/mutation_consequence/update')->to('genomic_feature_disease#update_mutation_consequence');
   $r->get('/gene2phenotype/gfd/mutation_consequence_flag/update')->to('genomic_feature_disease#update_mutation_consequence_flag');
