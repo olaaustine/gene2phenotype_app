@@ -7,23 +7,23 @@
   <div class="clear"></div>
   <div style="margin: 25px">
     <dl>
-      <dt>Allelic requirement</dt>
-      <dd><p><span class="badge" style="font-size:20px"><%= $gfd->{allelic_requirement} %></p></dd>
+      <dt style="font-size:15px;">Allelic requirement:</dt>
+      <dd><p><span class="badge" style="font-size:15px"><%= $gfd->{allelic_requirement} %></p></dd>
       %= form_for '/gene2phenotype/gfd/update_allelic' => (class => 'form-horizontal', id => 'update_allelic_requirements') => begin
         %= hidden_field GFD_id => $gfd->{GFD_id}
-        <input id="button" type="submit" value="EDIT" class="btn btn-primary btn-sm" style="float:center; text-align:center;">
+        <input id="button" type="submit" value="EDIT" class="btn btn-primary btn-sm" style="margin-left: 1em;">
       %end
   </div>
 
   <div style="margin: 25px">
     % if ($gfd->{cross_cutting_modifier} ){
-        <dt>Cross cutting modifier</dt>
+        <dt style="font-size:13px;">Cross cutting modifier:</dt>
         % for (split /,/, $gfd->{cross_cutting_modifier}) {
-          <dd><p><span class="label label-info" style="font-size:15px"><%= $_ %></span></p></dd>
+          <dd><p><span class="label label-info" style="font-size:13px"><%= $_ %></span></p></dd>
         % }
      %= form_for '/gene2phenotype/gfd/update_ccm' => (class => 'form-horizontal', id => 'update_cross_cutting_modifier') => begin
         %= hidden_field GFD_id => $gfd->{GFD_id}
-        <input id="button" type="submit" value="EDIT" class="btn btn-primary btn-sm" style="float: center; text-align:center;">
+        <input id="button" type="submit" value="EDIT" class="btn btn-primary btn-sm" style="margin-left: 1em;">
      %end
    % }
    % else {
@@ -37,11 +37,11 @@
 
 
   <div style="margin: 25px">
-      <dt>Mutation consequence summary</dt>
-      <dd><p><span class="badge" style="font-size:20px"><%= $gfd->{mutation_consequence} %></p></dd>
+      <dt style="font-size:15px">Mutation consequence summary</dt>
+      <dd><p><span class="badge" style="font-size:15px"><%= $gfd->{mutation_consequence} %></p></dd>
        %= form_for '/gene2phenotype/gfd/update_mutation_con' => (class => 'form-horizontal', id => 'update_mutation_consequence_flag') => begin
         %= hidden_field GFD_id => $gfd->{GFD_id}
-        <input id="button" type="submit" value="EDIT" class="btn btn-primary btn-sm" style="float: center; text-align:center">
+        <input id="button" type="submit" value="EDIT" class="btn btn-primary btn-sm" style="margin-left: 1em;">
      %end
   </div>
  
@@ -49,16 +49,16 @@
   <div style="margin: 25px" >
     % if ($gfd->{mutation_consequence_flag} ){
      % if ($gfd->{mutation_consequence_flag} && $gfd->{mutation_consequence_flag} ne "restricted mutation set" ){
-      <dt>Mutation consequences flag</dt> 
-      <dd><p><span class="label label-info" style="font-size:15px"><%= $gfd->{mutation_consequence_flag} %></span></p></dd>
+      <dt style=font-size:13px>Mutation consequences flag</dt> 
+      <dd><p><span class="label label-info" style="font-size:13px"><%= $gfd->{mutation_consequence_flag} %></span></p></dd>
     % }
     % if ($gfd->{mutation_consequence_flag} eq "restricted mutation set" ){
       <dt>Mutation consequences flag</dt>
-      <dd><p><span class="badge">Restricted repertoire of mutations</span></p></dd>
+      <dd><p><span class="label label-info style=font-size:10px">Restricted repertoire of mutations</span></p></dd>
     % }
     %= form_for '/gene2phenotype/gfd/update_mcf' => (class => 'form-horizontal', id => 'update_mutation_consequence_flag') => begin
       %= hidden_field GFD_id => $gfd->{GFD_id}
-      <input id="button" type="submit" value="EDIT" class="btn btn-primary btn-sm" style="float: center; text-align:center;">
+      <input id="button" type="submit" value="EDIT" class="btn btn-primary btn-sm" style="margin-left: 1em;">
     %end
   % }
   % else {

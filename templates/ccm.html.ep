@@ -1,9 +1,12 @@
 %= include 'header'
 %= include 'search'
-
+<div class="container">
   %= form_for '/gene2phenotype/gfd/cross_cutting_modifier/update' => (class => 'form-horizontal', id => 'cross_cutting_modifiers') => begin
    <div class="form-group">
-      <label class="col-sm-2 control-label">Cross cutting modifier:<p><span class="label label-info"><%= $gfd->{cross_cutting_modifier} %></p></label>
+      <label class="col-sm-2 control-label">Cross cutting modifier:
+      % for (split /,/,  $gfd->{cross_cutting_modifier}){
+        <p><span class="label label-info"><%= $_ %></p></label>
+      %  }
       <div class="col-sm-10">
         <% foreach my $CCM (@{$cross_cutting_modifiers}) { %>
           <% if (my $cross_cutting_modifier = stash 'cross_cutting_modifier') { %>
@@ -18,8 +21,8 @@
    </div>
      %= hidden_field GFD_id => $gfd->{GFD_id}
      <input id="button" type="submit" value="Update" class="btn btn-primary btn-sm" style="float: right;"/>
-  %end
-
+   %end
+</div>
 
 
 
