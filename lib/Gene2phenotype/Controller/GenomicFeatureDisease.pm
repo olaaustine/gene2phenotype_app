@@ -426,7 +426,7 @@ sub update_mutation_consequence_flag {
   $model->update_mutation_consequence_flag($email, $GFD_id, $mutation_consequence_flag);
   $self->session(last_url => "/gene2phenotype/gfd/show_attribs?GFD_id=$GFD_id");
   $self->feedback_message("UPDATED_MUT_CON_FLAG_SUC");
-  return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
+  return $self->redirect_to("/gene2phenotype/gfd/show_attribs?GFD_id=$GFD_id");
 }
 
 sub update_organ_list {
