@@ -113,14 +113,14 @@ sub show_add_new_entry_form {
 }
 
 =head2 edit_allelic_mutation_form
-  Description: Setup the form for editing a GFD entry. Get all possible values for:
-               allelic requirement, mutation consequence, mutation consequence flag and cross cutting modifiers.
+  Description: Setup the form for editing a GFD entry. Shows the values for:
+               allelic requirement, mutation consequence, mutation consequence flag and cross cutting modifiers if defined, allows users to be able to edit/add attribs.
                Only if users are  allowed to edit the panels.
   Returntype : If the user is logged in and allowed to edit the panel  edit_entry.html.ep
   Exceptions : None
   Caller     : Template: user/gfd.html.ep
                Request: GET /gene2phenotype/gfd/edit_entry
-               Template : edit_entry.html.ep
+               Template : show_attribs.html.ep
   Status     : Stable
 =cut
 
@@ -143,23 +143,20 @@ sub edit_allelic_mutation_form {
   
   $self->stash(gfd => $gfd);
  
-  my $allelic_requirements = $gfd_model->get_allelic_requirements;
-  $self->stash(allelic_requirements => $allelic_requirements);
- 
-  
-  my $cross_cutting_modifiers = $gfd_model->get_cross_cutting_modifiers;
-  $self->stash(cross_cutting_modifiers => $cross_cutting_modifiers);
-
-  my $mutation_consequences =  $gfd_model->get_mutation_consequences;
-  $self->stash(mutation_consequences => $mutation_consequences);
- 
-  my $mutation_consequence_flags = $gfd_model->get_mutation_consequence_flags;
-  $self->stash(mutation_consequence_flags => $mutation_consequence_flags);
-
- 
   $self->render(template => 'show_attribs');
 }
 
+=head2 update_allelic_requirement_temp
+  Description: Setup the form for editing a GFD entry. Shows the values for possible :
+               allelic requirements and the already selected allelic requirement.
+               Only if users are  allowed to edit the panels.
+  Returntype : If the user is logged in and allowed to edit the panel  allelic.html.ep
+  Exceptions : None
+  Caller     : Template: show_attribs.html.ep
+               Request: GET /gene2phenotype/gfd/update_allelic
+               Template : allelic.html.ep
+  Status     : Stable
+=cut
 sub update_allelic_requirement_temp{
   my $self = shift;
   my $email = $self->session('email');
@@ -188,7 +185,7 @@ sub update_allelic_requirement_temp{
 =head2 update_allelic_requirement
   Description: Updating the allelic requirement  of a GenomicFeatureDisease
   Exceptions : None
-  Caller     : Template: edit_entry.html.ep
+  Caller     : Template: allelic.html.ep
                Request : GET /gene2phenotype/gfd/allelic_requirement/update
                Params  : 
                    allelic_requirement - The allelic requirement to be updated to 
@@ -218,7 +215,7 @@ sub update_allelic_requirement {
     return $self->redirect_to("/gene2phenotype/gfd/show_attribs?GFD_id=$GFD_id");
   }
   my $gfds = $gfd_model->fetch_all_by_GenomicFeature_constraints($gf, {
-    'mutation_consequence' => $gfd->{mutation_consequence},,
+    'mutation_consequence' => $gfd->{mutation_consequence},
     'allelic_requirement' => $allelic_requirement
   });
   if (scalar @$gfds == 0) {
@@ -232,6 +229,18 @@ sub update_allelic_requirement {
     return $self->redirect_to("/gene2phenotype/gfd/ahow_attribs?GFD_id=$GFD_id");
   }
 }
+
+=head2 update_cross_cutting_modifier_temp
+  Description: Setup the form for editing a GFD entry. Shows the values for possible :
+               cross cutting modifiers and the already selected cross cutting modifier (if any) 
+               Only if users are  allowed to edit the panels.
+  Returntype : If the user is logged in and allowed to edit the panel  ccm.html.ep
+  Exceptions : None
+  Caller     : Template: show_attribs.html.ep
+               Request: GET /gene2phenotype/gfd/update_ccm
+               Template : ccm.html.ep
+  Status     : Stable
+=cut
 sub update_cross_cutting_modifier_temp {
   my $self = shift;
   my $email = $self->session('email');
@@ -257,13 +266,10 @@ sub update_cross_cutting_modifier_temp {
   $self->render('ccm');
 } 
 
-
-
-
 =head2 update_cross_cutting_modifier
   Description: Updating the cross cutting modifier  of a GenomicFeatureDisease
   Exceptions : None
-  Caller     : Template: edit_entry.html.ep
+  Caller     : Template: ccm.html.ep
                Request : GET /gene2phenotype/gfd/cross_cutting_modifier/update
                Params  : 
                    cross cutting modifier - The cross cutting modifier to be updated to 
@@ -294,6 +300,18 @@ sub update_cross_cutting_modifier {
   $self->feedback_message("UPDATED_CROSS_CUT_SUC");
   return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
+
+=head2 update_mutation_consequence_temp
+  Description: Setup the form for editing a GFD entry. Shows the values for possible :
+               mutation consequences and the already selected mutation consequence.
+               Only if users are  allowed to edit the panels.
+  Returntype : If the user is logged in and allowed to edit the panel  mutation.html.ep
+  Exceptions : None
+  Caller     : Template: show_attribs.html.ep
+               Request: GET /gene2phenotype/gfd/update_mutation_con
+               Template : mutation.html.ep
+  Status     : Stable
+=cut
 sub update_mutation_consequence_temp {
   my $self = shift;
   my $email = $self->session('email');
@@ -322,10 +340,10 @@ sub update_mutation_consequence_temp {
 =head2 update_mutation_consequence
   Description: Updating the mutation consequence  of a GenomicFeatureDisease
   Exceptions : None
-  Caller     : Template: edit_entry.html.ep
+  Caller     : Template: mutation.html.ep
                Request : GET /gene2phenotype/gfd/mutation_consequence/update
                Params  : 
-                   mutatiom_consequence - The mutation consequence to be updated to 
+                   mutation_consequence - The mutation consequence to be updated to 
                    GFD_id - The database id of the GenomicFeatureDisease.
   Status     : Stable 
 =cut
@@ -368,6 +386,17 @@ sub update_mutation_consequence {
 
 }
 
+=head2 update_mutation_consequence_flag_temp
+  Description: Setup the form for editing a GFD entry. Shows the values for possible :
+               mutation consequence flags and the already selected cross cutting modifier (if any) 
+               Only if users are  allowed to edit the panels.
+  Returntype : If the user is logged in and allowed to edit the panel  ccm.html.ep
+  Exceptions : None
+  Caller     : Template: show_attribs.html.ep
+               Request: GET /gene2phenotype/gfd/update_mcf
+               Template : mcf.html.ep
+  Status     : Stable
+=cut
 sub update_mutation_consequence_flag_temp {
   my $self = shift;
   my $email = $self->session('email');
@@ -398,7 +427,7 @@ sub update_mutation_consequence_flag_temp {
 =head2 update_mutation_consequence_flag
   Description: Updating the mutation consequence flag of a GenomicFeatureDisease
   Exceptions : None
-  Caller     : Template: edit_entry.html.ep
+  Caller     : Template: show_attribs.html.ep
                Request : GET /gene2phenotype/gfd/mutation_consequence_flag/update
                Params  : 
                    mutation_consequence_flag - The mutation consequence flag to be updated to 
