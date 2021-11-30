@@ -104,7 +104,7 @@ sub fetch_by_dbID {
     logs => \@logs,
     statistics => $gf_statistics,
   };
-
+   
 }
 
 =head2 update_allelic_requirement 
@@ -509,7 +509,7 @@ sub get_mutation_consequence_flag_list {
   my @mutation_consequence_flag_list = ();
   foreach my $value (sort keys %$mutation_consequence_flag_value_to_attrib) {
     my $attrib = $mutation_consequence_flag_value_to_attrib->{$value};
-    my $selected = ($value eq $mutation_consequence_flag) ? 'selected' : undef;
+    my $selected = ($mutation_consequence_flag && $value eq $mutation_consequence_flag) ? 'selected' : undef;
     push @mutation_consequence_flag_list, {
         attrib_id => $attrib,
         attrib_value => $value,
@@ -533,14 +533,14 @@ sub get_mutation_consequence_flag_list {
 sub get_cross_cutting_modifier_list {
   my $self = shift;
   my $GFD = shift;
-  my $cross_cutting_modifier = $GFD->cross_cutting_modifier;
+  my @cross_cutting_modifier = split(',', $GFD->cross_cutting_modifier);
   my $registry = $self->app->defaults('registry');
   my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
   my $cross_cutting_modifier_value_to_attrib = $attribute_adaptor->get_values_by_type('cross_cutting_modifier');
   my @cross_cutting_modifier_list = ();
   foreach my $value (sort keys %$cross_cutting_modifier_value_to_attrib) {
     my $attrib = $cross_cutting_modifier_value_to_attrib->{$value};
-    my $selected = ($value eq $cross_cutting_modifier) ? 'selected' : undef;
+    my $selected = (grep $_ eq $value, @cross_cutting_modifier) ? 'selected' : '';
     push @cross_cutting_modifier_list, {
       attrib_id => $attrib,
       attrib_value => $value,
