@@ -47,14 +47,10 @@
  
 
   <div style="margin: 25px" >
-    % if ($gfd->{mutation_consequence_flag} ){
-     % if ($gfd->{mutation_consequence_flag} && $gfd->{mutation_consequence_flag} ne "restricted mutation set" ){
+    % if ($gfd->{mutation_consequence_flag}) {
+     % if ($gfd->{mutation_consequence_flag}){
       <dt style=font-size:15px>Mutation consequences flag</dt> 
       <dd><p><span class="label label-info" style="font-size:13px"><%= $gfd->{mutation_consequence_flag} %></span></p></dd>
-    % }
-    % if ($gfd->{mutation_consequence_flag} eq "restricted mutation set" ){
-      <dt>Mutation consequences flag</dt>
-      <dd><p><span class="label label-info style=font-size:10px">Restricted repertoire of mutations</span></p></dd>
     % }
     %= form_for '/gene2phenotype/gfd/update_mcf' => (class => 'form-horizontal', id => 'update_mutation_consequence_flag') => begin
       %= hidden_field GFD_id => $gfd->{GFD_id}
@@ -67,7 +63,9 @@
       <input id="button" type="submit" value="Add mutation consequences flag" class="btn btn-primary btn-sm" style="float: center; text-align:center">
     %end
   % } 
-
+ </div>
+  
+ <div style="margin: 25px" >
    %= form_for '/gene2phenotype/gfd' => begin
      %= hidden_field GFD_id => $gfd->{GFD_id}
      <input id="button" type="submit" value="BACK" class="btn btn-primary btn-sm" style="float: left;">
