@@ -533,7 +533,7 @@ sub get_mutation_consequence_flag_list {
 sub get_cross_cutting_modifier_list {
   my $self = shift;
   my $GFD = shift;
-  my @cross_cutting_modifier = split(',', $GFD->cross_cutting_modifier);
+  my @cross_cutting_modifier = split(',', $GFD->cross_cutting_modifier) if ($GFD->cross_cutting_modifier);
   my $registry = $self->app->defaults('registry');
   my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
   my $cross_cutting_modifier_value_to_attrib = $attribute_adaptor->get_values_by_type('cross_cutting_modifier');
