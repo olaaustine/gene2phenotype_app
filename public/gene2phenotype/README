@@ -27,4 +27,4 @@ consequence. The header fields are:
                                   likely to escape nonsense mediated decay, part of contiguous gene duplication, part of contiguous genomic interval deletion, restricted repertoire of mutations.  
 
 The old files are supported and can be found in  http://ftp.ebi.ac.uk/pub/databases/gene2phenotype/
-The .txt file has the checksum value that is used to check the integrity of the file downloaded. 
+The _md5.txt file has the checksum value that is used to check the integrity of the file downloaded. 
