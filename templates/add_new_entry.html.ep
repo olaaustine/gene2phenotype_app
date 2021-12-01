@@ -32,12 +32,12 @@
         <% foreach my $AR (@{$allelic_requirements}) { %>
           <% if (my $allelic_requirement_to_be_added = stash 'allelic_requirement_to_be_added') { %>
             <% if ( grep { $AR->{AR_attrib_value} eq $_ } split(',', $allelic_requirement_to_be_added)) { %>
-              %= check_box allelic_requirement_attrib_id => $AR->{AR_attrib_id}, checked => 1
+              %= radio_button allelic_requirement_attrib_id => $AR->{AR_attrib_id}, checked => 1
             <% } else { %>
-              %= check_box allelic_requirement_attrib_id => $AR->{AR_attrib_id}
+              %= radio_button allelic_requirement_attrib_id => $AR->{AR_attrib_id}
             <% } %>
           <% } else { %>
-            %= check_box allelic_requirement_attrib_id => $AR->{AR_attrib_id}
+            %= radio_button allelic_requirement_attrib_id => $AR->{AR_attrib_id}
           <% } %>
           <%= $AR->{AR_attrib_value} %>
           %= tag 'br'

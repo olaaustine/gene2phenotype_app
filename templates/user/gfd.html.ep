@@ -5,15 +5,33 @@
   <h3 class="title">Gene: <span class="text-primary"><i><%= $gfd->{gene_symbol} %></i></span> Disease: <span class="text-primary"><i><%= $gfd->{disease_name} %></i></span></h3>
   <div class="clear"></div>
   <div class="show_db_content">
+    % my $found = 0;
+     <% foreach my $gfd_panel (@{$gfd->{gfd_panels}}) { %>
+      % if ($gfd_panel->{user_can_edit} && $found == 0) {
+        %= form_for '/gene2phenotype/gfd/edit_entry' => begin 
+          %= hidden_field GFD_id => $gfd->{GFD_id}
+          <input id="button" type="submit" value="EDIT" class="btn btn-primary btn-sm" style="float: right;">
+          % $found = 1;
+        %end
+      % }
+    <% } %>
     <dl>
       <dt>Allelic requirement</dt>
-      <dd><%= $gfd->{allelic_requirement} %></dd>
+      <dd><p><span class="badge"><%= $gfd->{allelic_requirement} %></p></dd>
+      % if ($gfd->{cross_cutting_modifier} ){
+        <dt>Cross cutting modifier</dt>
+        % for (split /,/, $gfd->{cross_cutting_modifier}) {
+          <dd><p><span class="label label-info"><%= $_ %></span></p></dd>
+        % }
+      % }
       <dt>Mutation consequence summary</dt>
-      <dd><%= $gfd->{mutation_consequence} %></dd>
+      <dd><p><span class="badge"><%= $gfd->{mutation_consequence} %></p></dd>
+      % if ($gfd->{mutation_consequence_flag}){
+        <dt>Mutation consequences flag</dt> 
+        <dd><p><span class="label label-info"><%= $gfd->{mutation_consequence_flag} %></span></p></dd>
+      % }
     </dl>
-    % if ($gfd->{restricted_mutation} == 1){
-       <p><span class="label label-info">Restricted repertoire of mutations</span></p> 
-    % }
+    
   </div>
 
   <% if (@{$gfd->{logs}}) { %>

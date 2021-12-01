@@ -1,0 +1,28 @@
+%= include 'header'
+%= include 'search'
+<div class="container">
+  %= form_for '/gene2phenotype/gfd/mutation_consequence/update' => (class => 'form-horizontal', id => 'update_mutation_consequece') => begin
+     <div class="form-group">
+      <label class="col-sm-4 control-label">Mutation consequence:<p><span class="badge"><%= $gfd->{mutation_consequence} %></p></label>
+      <div class="col-sm-8">
+        <% foreach my $mc ( @{$mutation_consequences} ) { %>
+          <% if (my $mutation_consequence = stash 'mutation_consequence') { %>
+            <% if ($mutation_consequence eq $mc->[0]) { %>
+              %= radio_button  mutation_consequence_attrib_id => $mc->[1], selected => "selected"
+            <% } else { %>
+              %= radio_button mutation_consequence_attrib_id => $mc->[1]
+            <% } %>
+          <% } else { %>
+             %= radio_button mutation_consequence_attrib_id => $mc->[1] 
+          <% } %>
+          <%= $mc->[0] %>
+          %= tag 'br'
+        <% } %>
+      </div>
+    </div>  
+
+     %= hidden_field GFD_id => $gfd->{GFD_id}
+     <input id="button" type="submit" value="Update" class="btn btn-primary btn-sm" style="float: right;"/>
+   %end
+</div>
+%= include 'footer'

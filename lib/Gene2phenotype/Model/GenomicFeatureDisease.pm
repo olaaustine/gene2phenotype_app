@@ -65,7 +65,10 @@ sub fetch_by_dbID {
   my $mutation_consequence = $gfd->mutation_consequence;
   my $mutation_consequence_list = $self->get_mutation_consequence_list($gfd, $logged_in);
   my $restricted_mutation = $gfd->restricted_mutation_set; 
-
+  my $mutation_consequence_flag = $gfd->mutation_consequence_flag;
+  my $mutation_consequence_flag_list = $self->get_mutation_consequence_flag_list($gfd, $logged_in);
+  my $cross_cutting_modifier = $gfd->cross_cutting_modifier;
+  my $cross_cutting_modifier_list = $self->get_cross_cutting_modifier_list($gfd, $logged_in);
   my $comments = $self->get_comments($gfd);
   my $publications = $self->get_publications($gfd);
   my $phenotypes = $self->get_phenotypes($gfd);
@@ -87,6 +90,10 @@ sub fetch_by_dbID {
     allelic_requirement_list => $allelic_requirement_list,
     mutation_consequence => $mutation_consequence,
     mutation_consequence_list => $mutation_consequence_list,
+    mutation_consequence_flag => $mutation_consequence_flag,
+    mutation_consequence_flag_list => $mutation_consequence_flag_list,
+    cross_cutting_modifier => $cross_cutting_modifier, 
+    cross_cutting_modifier_list => $cross_cutting_modifier_list,
     restricted_mutation => $restricted_mutation,
     comments => $comments,
     publications => $publications,
@@ -97,9 +104,106 @@ sub fetch_by_dbID {
     logs => \@logs,
     statistics => $gf_statistics,
   };
+   
+}
+
+=head2 update_allelic_requirement 
+  Args        : String $email, email address of the user updating the GFD 
+                Integer $GFD_id The Database id of the GFD being updated 
+                $allelic_requirement Allelic requirement to be updated  
+  Description: Update the allelic requirement  of a GenomicFeatureDisease
+  Exceptions : None
+  Caller     : Gene2phenotype::Controller::GenomicFeatureDisease::update_allelic_requirement
+  Status     : Stable
+=cut
+
+sub update_allelic_requirement {
+  my $self = shift;
+  my $email = shift;
+  my $GFD_id = shift;
+  my $allelic_requirement = shift; 
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor("human", "gene2phenotype", "GenomicFeatureDisease");
+  my $user_adaptor = $registry->get_adaptor("human", "gene2phenotype", "user");
+  my $user = $user_adaptor->fetch_by_email($email);
+  my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
+  $GFD->allelic_requirement($allelic_requirement);
+  $GFD_adaptor->update($GFD, $user);
+}
+
+=head2 update_mutation_consequence
+  Args        : String $email, email address of the user updating the GFD 
+                Integer $GFD_id The Database id of the GFD being updated 
+                $mutation_consequence Mutation consequence to be updated  
+  Description: Update the mutation consequence of a GenomicFeatureDisease
+  Exceptions : None
+  Caller     : Gene2phenotype::Controller::GenomicFeatureDisease::update_mutation_consequence
+  Status     : Stable
+=cut
+
+sub update_mutation_consequence {
+  my $self = shift;
+  my $email = shift;
+  my $GFD_id = shift;
+  my $mutation_consequence = shift;
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor("human", "gene2phenotype", "GenomicFeatureDisease");
+  my $user_adaptor = $registry->get_adaptor("human", "gene2phenotype", "user");
+  my $user = $user_adaptor->fetch_by_email($email);
+  my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
+  $GFD->mutation_consequence($mutation_consequence);
+  $GFD_adaptor->update($GFD, $user);
 
 }
 
+=head2 update_mutation_consequence_flag
+  Args        : String $email, email address of the user updating the GFD 
+                Integer $GFD_id The Database id of the GFD being updated 
+                $mutation_consequence Mutation consequence to be updated  
+  Description: Update the mutation consequence flag of a GenomicFeatureDisease
+  Exceptions : None
+  Caller     : Gene2phenotype::Controller::GenomicFeatureDisease::update_mutation_consequence_flag
+  Status     : Stable
+=cut
+
+sub update_mutation_consequence_flag {
+  my $self = shift; 
+  my $email = shift; 
+  my $GFD_id = shift; 
+  my $mutation_consequence_flag = shift;
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor("human", "gene2phenotype", "GenomicFeatureDisease");
+  my $user_adaptor = $registry->get_adaptor("human", "gene2phenotype", "user");
+  my $user = $user_adaptor->fetch_by_email($email);
+  my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
+  $GFD->mutation_consequence_flag($mutation_consequence_flag);
+  $GFD_adaptor->update($GFD, $user);
+
+}
+
+=head2 update_cross_cutting_modifier
+  Args        : String $email, email address of the user updating the GFD 
+                Integer $GFD_id The Database id of the GFD being updated 
+                $mutation_consequence Mutation consequence to be updated  
+  Description: Update the cross cutting modifier of a GenomicFeatureDisease
+  Exceptions : None
+  Caller     : Gene2phenotype::Controller::GenomicFeatureDisease::update_cross_cutting_modifier
+  Status     : Stable
+=cut
+
+sub update_cross_cutting_modifier { 
+  my $self = shift; 
+  my $email = shift;
+  my $GFD_id = shift;
+  my $cross_cutting_modifier = shift;
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor("human", "gene2phenotype", "GenomicFeatureDisease");
+  my $user_adaptor = $registry->get_adaptor("human", "gene2phenotype", "user");
+  my $user = $user_adaptor->fetch_by_email($email);
+  my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
+  $GFD->cross_cutting_modifier($cross_cutting_modifier);
+  $GFD_adaptor->update($GFD, $user);
+}
 sub fetch_all_by_panel_restricted {
   my $self = shift;
   my $panel = shift;
@@ -249,6 +353,31 @@ sub get_allelic_requirements {
   return \@AR_tmpl;
 }
 
+=head2 get_cross_cutting_modifiers
+  Arg [1]    : None
+  Description: Used to get the cross cutting modifier and stores it in an array. 
+  Returntype : Arrayref of cross_cutting_modifiers 
+  Exceptions : None
+  Caller     : Gene2phenotype::Controller::GenomicFeatureDisease::edit_allelic_mutation_form 
+  Status     : Stable
+=cut
+
+sub get_cross_cutting_modifiers {
+  my $self = shift; 
+  my $registry = $self->app->defaults('registry');
+  my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
+  my $cross_cutting_modifiers = $attribute_adaptor->get_values_by_type('cross_cutting_modifier');
+  my @CCM_tmpl = ();
+  foreach my $cross_cutting_modifier (sort keys %$cross_cutting_modifiers){
+    my $attrib = $cross_cutting_modifiers->{$cross_cutting_modifier};
+    push @CCM_tmpl, {
+      CCM_attrib_id => $attrib, 
+      CCM_attrib_value => $cross_cutting_modifier
+    };
+  }
+  return \@CCM_tmpl;
+}
+
 sub get_mutation_consequences {
   my $self = shift;
   my $registry = $self->app->defaults('registry');
@@ -260,6 +389,32 @@ sub get_mutation_consequences {
     push @MC_tmpl, [$mutation_consequence => $attrib];
   }
   return \@MC_tmpl;
+}
+
+=head2 get_mutation_consequence_flags
+  Arg [1]    : None
+  Description: Used to get the mutation consequence flags and stores it in an array. 
+  Returntype : Arrayref of mutation_consequence_flags 
+  Exceptions : None
+  Caller     : Gene2phenotype::Controller::GenomicFeatureDisease::edit_allelic_mutation_form 
+  Status     : Stable
+=cut
+
+sub get_mutation_consequence_flags {
+  my $self = shift; 
+  my $registry = $self->app->defaults('registry');
+  my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
+  my $mutation_consequence_flags = $attribute_adaptor->get_values_by_type('mutation_consequence_flag');
+  my @MCF_tmpl = ();
+  foreach my $mutation_consequence_flag (sort keys %$mutation_consequence_flags){
+    my $attrib = $mutation_consequence_flags->{$mutation_consequence_flag};
+    push @MCF_tmpl, {
+      MFC_attrib_id => $attrib, 
+      MFC_attrib_value => $mutation_consequence_flag
+    };
+  }
+  return \@MCF_tmpl;
+
 }
 
 sub _get_confidence_category_list {
@@ -333,6 +488,67 @@ sub get_mutation_consequence_list {
     }
   }
   return \@mutation_consequence_list;
+}
+
+=head2 get_mutation_consequence_flag_list
+  Arg [1]    : None
+  Description: Used to get the mutation consequence flags and the selected flag stores it in an array. 
+  Returntype : Arrayref of mutation_consequence_flags 
+  Exceptions : None
+  Caller     : Gene2phenotype::Model::GenomicFeatureDisease::fetch_by_dbID
+  Status     : Stable
+=cut
+
+sub get_mutation_consequence_flag_list {
+  my $self = shift;
+  my $GFD = shift;
+  my $mutation_consequence_flag = $GFD->mutation_consequence_flag;
+  my $registry = $self->app->defaults('registry');
+  my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
+  my $mutation_consequence_flag_value_to_attrib = $attribute_adaptor->get_values_by_type('mutation_consequence_flag');
+  my @mutation_consequence_flag_list = ();
+  foreach my $value (sort keys %$mutation_consequence_flag_value_to_attrib) {
+    my $attrib = $mutation_consequence_flag_value_to_attrib->{$value};
+    my $selected = ($mutation_consequence_flag && $value eq $mutation_consequence_flag) ? 'selected' : undef;
+    push @mutation_consequence_flag_list, {
+        attrib_id => $attrib,
+        attrib_value => $value,
+        selected  => $selected,
+      };
+   
+  } 
+     
+  return \@mutation_consequence_flag_list;
+}
+
+=head2 get_cross_cutting_modifier_list
+  Arg [1]    : None
+  Description: Used to get the cross cutting modifier list and the selected flag stores it in an array. 
+  Returntype : Arrayref of cross_cutting_modifier_list 
+  Exceptions : None
+  Caller     : Gene2phenotype::Model::GenomicFeatureDisease::fetch_by_dbID
+  Status     : Stable
+=cut
+
+sub get_cross_cutting_modifier_list {
+  my $self = shift;
+  my $GFD = shift;
+  my @cross_cutting_modifier = split(',', $GFD->cross_cutting_modifier) if ($GFD->cross_cutting_modifier);
+  my $registry = $self->app->defaults('registry');
+  my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
+  my $cross_cutting_modifier_value_to_attrib = $attribute_adaptor->get_values_by_type('cross_cutting_modifier');
+  my @cross_cutting_modifier_list = ();
+  foreach my $value (sort keys %$cross_cutting_modifier_value_to_attrib) {
+    my $attrib = $cross_cutting_modifier_value_to_attrib->{$value};
+    my $selected = (grep $_ eq $value, @cross_cutting_modifier) ? 'selected' : '';
+    push @cross_cutting_modifier_list, {
+      attrib_id => $attrib,
+      attrib_value => $value,
+      selected  => $selected,
+    };
+  }
+
+  return \@cross_cutting_modifier_list;
 }
 
 sub get_publications {
@@ -605,6 +821,7 @@ sub get_gfd_panels {
       user_can_edit => $user_can_edit,
       confidence_category => $confidence_category,
       confidence_category_list => $confidence_category_list,
+      clinical_review => $gfd_panel->clinical_review,
     }
   }
   return \@gfd_panels;  

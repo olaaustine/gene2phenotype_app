@@ -11,7 +11,11 @@
         <% foreach my $gfd_panel (@{$gfd->{gfd_panels}}) { %>
           <tr>
             <td><%= $gfd_panel->{panel} %></td>
-            <td><%= $gfd_panel->{confidence_category} %></td>
+            <td><%= $gfd_panel->{confidence_category} %> 
+              % if ($gfd_panel->{clinical_review}) {
+                <p><span class="label label-info">Requires clinical review</span></p>
+               % }
+            </td>
           </tr>
         <% } %>
       </tbody>
