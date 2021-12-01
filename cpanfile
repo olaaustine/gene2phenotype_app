@@ -1,3 +1,4 @@
+requires 'Apache::Htpasswd';
 requires 'Mojolicious', '== 8.09';
 requires 'File::Rsync';
 requires 'File::Path';
