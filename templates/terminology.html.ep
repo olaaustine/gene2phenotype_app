@@ -27,10 +27,6 @@
       <th>Both RD and IF</th>
       <td>Plausible disease-causing mutations within, affecting or encompassing the coding region of a single gene identified in multiple (&gt;3) unrelated cases/families with both the relevant disease (RD) and an incidental disorder.</td>
     </tr>
-    <tr>
-      <th>Child IF</th>
-      <td>Plausible disease-causing mutations within, affecting or encompassing the coding region of a single gene identified in multiple (&gt;3) unrelated cases/families with a incidental (non-developmental) disorder that has significant medical implications and presents during childhood.</td>
-    </tr>
   </table>
   
   <h4>Confidence value flag</h4>
@@ -151,8 +147,8 @@
       <td>Description</td>
     </tr>
     <tr>
-      <th>likely to escape nonsense medicated decay</th>
-      <td>A mutation is said to be likely to escape nonsense medicated decay if it follows the following rules 
+      <th>likely to escape nonsense mediated decay</th>
+      <td>A mutation is said to be likely to escape nonsense mediated decay if it follows the following rules 
         <ul>
           <li>Location falls in the last exon of the transcript.</li>
           <li>Location is in the 50bp towards the end of the second to the last exon.</li>
@@ -170,8 +166,8 @@
       <td>Changes the DNA sequences depending on the size and location of the deleted sequence in the genome.</td>
     </tr>
     <tr>
-      <th>restricted mutation set</th>
-      <td>restricted repertoire of mutations.</td>
+      <th>restricted repertoire of mutations</th>
+      <td>restricted mutation set.</td>
     </tr>
   </table>
 </div>
