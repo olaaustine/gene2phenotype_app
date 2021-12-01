@@ -8,50 +8,34 @@
       <th>Description</th>
     </tr>
     <tr>
-      <th rowspan="3">Confirmed</th>
-      <td><b><u>Plausible disease-causing mutations*</u></b> within, affecting or encompassing an <b><u>interpretable functional region**</u></b> of a <b><u>single gene</u></b> identified in multiple (&gt;3) unrelated cases/families with a <b><u>developmental disorder***</u></b></td>
+      <th>Definitive</th>
+      <td>The role of this gene in this particular disease has been repeatedly demonstrated in both the research and clinical diagnostic settings and has been repeatedly demonstrated in both the research and clinical diagnostic settings, and has been upheld over time (at least 2 independent publication over 3 years' time). No convincing evidence has emerged that contradicts the role of the gene in the specified disease. <b>(previously labelled as confirmed)</b>.</td>
     </tr>
     <tr>
-      <td>Plausible disease-causing mutations within, affecting or encompassing <b><u>cis-regulatory elements</u></b> convincingly affecting the <b><u>expression of a single gene</u></b> identified in multiple (&gt;3) unrelated cases/families with a developmental disorder</td>
+      <th>Strong</th>
+      <td>The role of this gene as a monogenic cause of disease has been repeatedly and independently demonstrated providing very strong convincing evidence in humans and no conflicting evidence for this gene's role in this disease. <b>(previously labelled as probable)</b></td>
     </tr>
     <tr>
-      <td>As definition 1 and 2 of <b>Probable Gene</b> (see below) with addition of convincing bioinformatic or functional evidence of causation e.g. known inborn error of metabolism with mutation in orthologous gene which is known to have the relevant deficient enzymatic activity in other species; existence of animal mode which recapitulates the human phenotype</td>
+      <th>Moderate</th>
+      <td>There is moderate evidence in humans to support a casual role for this gene in this disease with no contradictory eveidence. The body of evidence is not large (e.g possibly only one key paper) but appears convincing enough that the gene-disease pair is likely to be validated with additional evidence in the near future.</td>
     </tr>
     <tr>
-      <th rowspan="3">Probable</th>
-      <td>Plausible disease-causing mutations within, affecting or encompassing an interpretable functional region of a single gene identified in more than one (2 or 3) unrelated cases/families or segregation within multiple individuals within a single large family with a developmental disorder</td>
-    </tr>
-    <tr>
-      <td>Plausible disease-causing mutations within, affecting or encompassing cis-regulatory elements convincingly affecting the expression of a single gene identified in in more than one (2 or 3) unrelated cases/families with a developmental disorder</td>
-    </tr>
-    <tr>
-      <td>As definitions of <b>Possible Gene</b> (see below) with addition of convincing bioinformatic or functional evidence of causation e.g. known inborn error of metabolism with mutation in orthologous gene which is known to have the relevant deficient enzymatic activity in other species; existence of animal mode which recapitulates the human phenotype</td>
-    </tr>
-    <tr>
-      <th rowspan="3">Possible</th>
-      <td>Plausible disease-causing mutations within, affecting or encompassingan interpretable functional region of a single gene identified in one case or segregation within multiple individuals within a small family with a developmental disorder</td>
-    </tr>
-    <tr>
-      <td>Plausible disease-causing mutations within, affecting or encompassing cis-regulatory elements convincingly affecting the expression of a single gene identified in one case/family with a developmental disorder</td>
-    </tr>
-    <tr>
-      <td>Possible disease-causing mutations within, affecting or encompassing an interpretable functional region of a single gene identified in more than one unrelated cases/families or segregation within multiple individuals within a single large family with a developmental disorder</td>
+      <th>Limited</th>
+      <td>Little human evidence exists to support a casual role for this gene in this disease, but not all evidence has been refuted. For example, there may be a collection of rare missense variants in humans but without convincing functional impact, segegration data that could either arise by chance (e.g across one or two meioses) or does not implicate a single gene, or functional data without direct recapitulation of the phenotype. Overall, the body of evidence does not meet contemporary criteria for claiming a valid association with disease. The majority are probably false associations. <b>(previously labelled as possible).</b></td>
     </tr>
     <tr>
       <th>Both RD and IF</th>
-      <td>Plausible disease-causing mutations within, affecting or encompassing the coding region of a single gene identified in multiple (&gt;3) unrelated cases/families with both the relevant disease (RD) and an incidental disorder</td>
-    </tr>
-    <tr>
-      <th>Child IF</th>
-      <td>Plausible disease-causing mutations within, affecting or encompassing the coding region of a single gene identified in multiple (&gt;3) unrelated cases/families with a incidental (non-developmental) disorder that has significant medical implications and presents during childhood</td>
+      <td>Plausible disease-causing mutations within, affecting or encompassing the coding region of a single gene identified in multiple (&gt;3) unrelated cases/families with both the relevant disease (RD) and an incidental disorder.</td>
     </tr>
   </table>
-
-  <div>
-  <p><b>* Plausible disease-causing mutation</b> Recurrent de novo mutations convincingly affecting gene function Rare, fully-penetrant mutations - relevant genotype never seen in contols</p>
-  <p><b>** Interpretable functional region</b> ORF in protein coding genes miRNA stem or loop</p>
-  <p><b>*** Developmental Disorder</b> Disorder in which the most prominent pathogenetic mechanism occurs during embryogenesis or early brain development. Early onset degenerative disorders that may mimic above definition are includes; for example Sanfillipo syndrome which can mimic global developmental delay</p>
-  </div>
+  
+  <h4>Confidence value flag</h4>
+  <table class="table">
+    <tr> 
+      <th>requires clinical review</th>
+      <td>A flag added to confidence value to suggest further review by clinicians is required.</td>
+    </tr>
+  </table>
 
   <h4>Allelic requirement</h4>
   <table class="table">
@@ -60,48 +44,68 @@
       <th>Description</th>
     </tr>
     <tr>
-      <th>Monoallelic</th>
-      <td>Plausible disease-causing mutations identified on one allele in all or the vast majority of with specific developmental disorder</td>
+      <th>monoallelic_autosomal</th>
+      <td>Plausible disease-causing mutations on an autosomal chromsome identified on one allele in all or the vast majority of with specific disorder.</td>
     </tr>
     <tr>
-      <th>Monoallelic (Y)</th>
-      <td></td>
+      <th>monoallelic_X_hem</th>
+      <td>Plausible disease-causing mutations identified on the X chromosome in a male as a cause of a specific disease, the disorder being predominantly recessive in female carriers.</td>
     </tr>
     <tr>
-      <th>Biallelic</th>
-      <td>Plausible disease-causing homozygous or compound heterozygous mutations identified on both alleles in the majority of with specific developmental disorder</td>
+      <th>monoallelic_Y_hem</th>
+      <td>Plausible disease-causing mutations identified in an allele found in the Y chromosome. The Y chromsome is passed from father to son as this mutation may affect only males.</td>
     </tr>
     <tr>
-      <th>Imprinted</th>
-      <td>Plausible disease-causing mutations identified on one allele with the parent of origin determining the specific developmental disorder</td>
+      <th>monoallelic_X_het</th>
+      <td>Plausible disease-causing mutations identified in one copy of the X chromosome in females as a cause of a specific disease, include disorders where heterozygous females and hemizygous males are similarly affected e.g SMC1A mutations.</td>
     </tr>
     <tr>
-      <th>Digenic</th>
-      <td>Plausible disease-causing mutations identified on one or both alleles of two different genes causing a specific developmental disorder where similar mutations of either gene would not</td>
+      <th>monoallelic_PAR</th>
+      <td>Plausible disease-causing mutations identified in an allele found in the pseudoautosomal regions. Inheritance is  not strictly sex-linked.</td>
     </tr>
     <tr>
-      <th>Hemizygous</th>
-      <td>Plausible disease-causing mutations identified on the X chromosome in a male as a cause of a specific developmental disorder, the disorder being predominantly recessive in female carriers</td>
+      <th>mitochondrial</th>
+      <td>Plausible disease-causing mutations identified on mitochondial DNA where homoplasmy or heteroplasmy are associated with a specific disorder.</td>
     </tr>
     <tr>
-      <th>X-linked dominant</th>
-      <td>Plausible disease-causing mutations identified one copy of the X chromosome in females as a cause of a specific developmental disorder, includes disorders where heterozygous females and hemizygous males are similarly affected e.g. SMC1A mutations</td>
+      <th>biallelic_autosomal</th>
+      <td>Plausible disease-causing homozygous or compound heterozygous mutations identified on both alleles in the autosomal chromsome.</td>
     </tr>
     <tr>
-      <th>X-linked over-dominance</th>
-      <td></td>
+      <th>biallelic_PAR</th>
+      <td>Plausible disease-causing homozygous or compound heterozygous mutations identified on both alleles found in the pseudoautosomal regions. Inheritance is not strictly sex-linked.</td>
+    </tr>
+  </table>
+
+  <h4>Cross cutting modifier</h4>
+  <table class="table">
+    <tr> 
+      <th>Category</th>
+      <th>Description</th>
     </tr>
     <tr>
-      <th>Mosaic</th>
-      <td>Plausible disease-causing mutations identified on one allele in a proportion of cells with the others being wild-type as a cause of a specific developmental disorder</td>
+      <th>requires heterozygosity</th>
+      <td>Different variation of the same gene is required. The different mutations are inherited from both parents.</td>
     </tr>
     <tr>
-      <th>Mitochondrial</th>
-      <td>Plausible disease-causing mutations identified on mitochondial DNA where homoplasmy or heteroplasmy are associated with a specific developmental disorder</td>
+      <th>typically de novo</th>
+      <td>Plausible disease causing mutations that occur post zygotically (formation of gametes).</td>
     </tr>
     <tr>
-      <th>Uncertain</th>
-      <td>Plausible disease-causing mutations in which the allele status is not recorded or is unclear with specific developmental disorder</td>
+      <th>typically mosaic</th>
+      <td>Plausible disease causing mutations identified on one allele in a proportion of cells with the others being wild-type.</td>
+    </tr>
+    <tr>
+      <th>typified by age related penetrance</th>
+      <td>Plausible disease causing mutation identified but the expression of the disease may be changed by age.</td>
+    </tr>
+    <tr>
+      <th>typified by reduced penetrance</th>
+      <td>Plausible disease-causing mutation identified but not all carriers express the related disease phenotype. Also called incomplete penetrance.</td>
+    </tr>
+    <tr>
+      <th>imprinted</th>
+      <td>Plausible disease-causing mutations identified in one allele in which the allele's parental origin determines the disease/phenotype exhibited.</td>
     </tr>
   </table>
   <h4>Mutation consequence</h4>
@@ -111,32 +115,59 @@
       <th>Description</th>
     </tr>
     <tr>
-      <th>Loss of function</th>
-      <td>Nonsense, frame-shifting indel, essential splice site mutation, whole gene deletion or any other mutation where functional analysis demonstrates clear reduction or loss of function</td>
+      <th>5_prime or 3_prime UTR mutation</th>
+      <td>mutations located in the untranslated regions. These regions may change regulatory mechanisms which in turn modify cellular processes and molecular pathways increasing disease risk. </td>
     </tr>
     <tr>
-      <th>All missense/in frame</th>
-      <td>Where all the mutations described in the data source are either missense or in frame deletions and there is no evidence favoring either loss-of-function, activating or dominant negative effect</td>
+      <th>altered gene product structure</th>
+      <td>mutations that alter the structure of the gene, changes the expression of the gene causing it to be activated or expressed at higher levels. It also modifies the gene product function.</td>
     </tr>
     <tr>
-      <th>Dominant negative</th>
-      <td>Mutation within one allele of a gene that creates a significantly greater deleterious effect on gene product function than a monoallelic loss of function mutation</td>
+      <th>absent gene product</th>
+      <td>Nonsense, frame-shifting indel, essential splice site mutation, whole gene deletion or any other mutation where functional analysis demonstrates clear reduction or loss of function.</td>
     </tr>
     <tr>
-      <th>Activating</th>
-      <td>Mutation, usually missense that results in a constituative functional activation of the gene product</td>
+      <th>increased gene product level</th>
+      <td>Mutation that increases the functional dosage of a gene. Increases the expression of the gene.</td>
     </tr>
     <tr>
-      <th>Increased gene dosage</th>
-      <td>Copy number variation that increases the functional dosage of the gene</td>
+      <th>cis-regulatory or promotor mutation</th>
+      <td>Mutation in cis-regulatory elements that lies outwith the known transcription unit and promotor of the controlled gene.</td>
     </tr>
     <tr>
-      <th>Cis-regulatory or promotor mutation</th>
-      <td>Mutation in cis-regulatory elements that lies outwith the known transcription unit and promotor of the controlled gene</td>
+      <th>uncertain</th>
+      <td>Where the exact nature of the mutation is unclear or not recorded.</td>
+    </tr>
+  </table>
+  
+  <h4>Mutation consequences flag</h4>
+  <table class="table">
+    <tr>
+      <th>Category</th>
+      <td>Description</td>
     </tr>
     <tr>
-      <th>Uncertain</th>
-      <td>Where the exact nature of the mutation is unclear or not recorded</td>
+      <th>likely to escape nonsense mediated decay</th>
+      <td>A mutation is said to be likely to escape nonsense mediated decay if it follows the following rules 
+        <ul>
+          <li>Location falls in the last exon of the transcript.</li>
+          <li>Location is in the 50bp towards the end of the second to the last exon.</li>
+          <li>Found in an intronless transcript.</li>
+          <li>Location is in the first 100 base pairs of the coding sequence.</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <th>part of contiguous gene duplication </th>
+      <td>creates extra copies of gene which may results in different copy numbers of a gene thereby altering gene dosage.</td>
+    </tr>
+    <tr>
+      <th>part of contiguous genomic interval deletion</th>
+      <td>Changes the DNA sequences depending on the size and location of the deleted sequence in the genome.</td>
+    </tr>
+    <tr>
+      <th>restricted repertoire of mutations</th>
+      <td>restricted mutation set.</td>
     </tr>
   </table>
 </div>
