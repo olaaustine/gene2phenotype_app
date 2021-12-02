@@ -8,7 +8,7 @@ consequence. The header fields are:
   - gene mim:                     OMIM number for a gene entry
   - disease name:                 Name provided by the curator
   - disease mim:                  OMIM number for a disease entry
-  - disease confidence:           One value from the list of possible categories: both DD and IF, confirmed, possible, probable
+  - disease confidence:           One value from the list of possible categories: both RD and IF, definitive, strong, moderate, limited.
   - allelic requirement:          One value from the list of possible allelic requirement attributes. Possible values are:   
                                   biallelic_autosomal, monoallelic_autosomal, monoallelic_PAR, 
                                   biallelic_PAR, mitochondrial, monoallelix_X_hem, monallelic_X_het, monoallelic_Y_hem.   
@@ -26,5 +26,5 @@ consequence. The header fields are:
   - mutation consequences flag    One value from the list of possible flags : 
                                   likely to escape nonsense mediated decay, part of contiguous gene duplication, part of contiguous genomic interval deletion, restricted repertoire of mutations.  
 
-The old files are supported and can be found in  http://ftp.ebi.ac.uk/pub/databases/gene2phenotype/
+These release files are generated on the fly to include the latest data. Previous data freezes, including a set from 1/12/2021 using the original terms for confidence, allelic requirement etc, are available on the G2P FT site: ttp://ftp.ebi.ac.uk/pub/databases/gene2phenotype/’
 The _md5.txt file has the checksum value that is used to check the integrity of the file downloaded. 
