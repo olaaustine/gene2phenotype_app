@@ -15,22 +15,6 @@
           %= link_to Downloads => '/gene2phenotype/downloads' => (class => 'navbar-brand')
         </li>
 
-        <% if ($logged_in) { %>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button">Curator views <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li>
-                %= link_to 'Duplicated LGM entries' => '/gene2phenotype/curator/show_all_duplicated_LGM_by_panel' => (class => 'navbar-brand')
-              </li>
-              <li>
-                %= link_to 'Entries without publications' => '/gene2phenotype/curator/no_publication' => (class => 'navbar-brand')
-              </li>
-              <li>
-                %= link_to 'Restricted entries' => '/gene2phenotype/curator/restricted_entries' => (class => 'navbar-brand')
-              </li>
-            </ul>
-          </li>
-        <% } %>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button">Documentation <span class="caret"></span></a>
           <ul class="dropdown-menu">
@@ -70,27 +54,27 @@
 </div>
 
 <div class="container">
-  <div class="alert alert-danger" role="alert">
-    <h1>We are updating our terminology</h1>
-    <p>The <a href="https://thegencc.org/about.html">GenCC</a> develops consistent terminology for describing gene-disease validity. As part of the GenCC we are aligning our existing terms to the new terminology.</p>
-    <p>We are updating our terms in the following categories:
+  <div class="alert alert-success" role="alert">
+    <h1>We have updated our terminology</h1>
+    <p>The <a href="https://thegencc.org/about.html">GenCC</a> develops consistent terminology for describing gene-disease validity. As part of the GenCC we aligned our existing terms to the new terminology.</p>
+    <p>Find out more about the update
       <ul>
         <li><a href="#confidence_value">Confidence value</a></li>
         <li><a href="#allelic_requirement">Allelic requirement</a></li>
         <li><a href="#mutation_consequence">Mutation consequence</a></li>
       </ul>
-      <p>We are introducing a new category:
+      <p>We introduced a new category:
       <ul>
         <li><a href="#cross_cutting_modifier">Cross cutting modifier</a></li>
       </ul>
-      <p>We are introducing new flags which can be used for adding granularity in the curation process:
+      <p>We introduced new flags which can be used for adding granularity in the curation process:
       <ul>
         <li><a href="#new_confidence_value_flag">Confidence value flag</a></li>
         <li><a href="#new_mutation_consequence_flag">Mutation consequence flag</a></li>
       </ul>
     </p>
-    <h3>We are planning to move to the new terminology this autumn</h3>
-    <p>Our download files will only contain the new terminology after the move. We will create a final data export which uses our current terminology before the switch. Those files will remain available from our website, but won't be updated anymore.</p>
+    <h3>We moved our terminology on 02-12-2021</h3>
+    <p>Our download files only contains the new terminology. A final data export which was created on the 01-12-2021 uses our old terminology. Those files will remain available on our FTP site, but will not be updated anymore.</p>
     <p>Please direct any questions to <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a></p>
   </div>
 
@@ -98,7 +82,7 @@
     <a name="new_confidence_value_flag"></a>
     <h3>NEW: Confidence value flag</h3>
     <ul>
-      <li>clinical review</li>
+      <li>requires clinical review</li>
     </ul>
   </div>
   <a name="confidence_value"></a>
@@ -113,12 +97,12 @@
     <tr>
       <td>both RD and IF</td>
       <td class="info">both RD and IF</td>
-      <td>Can be coded with flag <span class="label label-info">clincial review</span></td>
+      <td>coded with flag <span class="label label-info">requires clincial review</span></td>
     </tr>
     <tr>
       <td>child IF</td>
       <td class="info">child IF</td>
-      <td>Plan to remove</td>
+      <td>removed, no longer supported.</td>
     </tr>
     <tr>
       <td>confirmed</td>
@@ -128,11 +112,16 @@
     <tr>
       <td>possible</td>
       <td class="info">limited</td>
-      <td></td>
+      <td>coded with flag <span class="label label-info">requires clincial review</span></td>  
     </tr>
     <tr>
       <td>probable</td>
       <td class="info">strong</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>New flag</td>
+      <td class="info">moderate</td>
       <td></td>
     </tr>
   </table>
@@ -146,6 +135,7 @@
       <li>typically mosaic</li>
       <li>typified by age related penetrance</li>
       <li>typified by reduced penetrance</li>
+      <li>imprinted</li>
     </ul>
   </div>
 
@@ -166,7 +156,7 @@
     <tr>
       <td>digenic</td>
       <td class="info">digenic</td>
-      <td>Plan to remove</td>
+      <td>removed</td>
     </tr>
     <tr>
       <td>hemizygous</td>
@@ -175,8 +165,8 @@
     </tr>
     <tr>
       <td>imprinted</td>
-      <td class="info">imprinted</td>
-      <td></td>
+      <td>imprinted</td>
+      <td>No longer supported as an allelic requirement, now a cross cutting modifier</td>
     </tr>
     <tr>
       <td>mitochondrial</td>
@@ -195,13 +185,13 @@
     </tr>
     <tr>
       <td>mosaic</td>
-      <td></td>
-      <td>Code with flag <span class="label label-info">typically mosaic</span></td>
+      <td>mosaic</td>
+      <td>No longer supported as an allelic requirement, now a cross cutting modifier (typically mosaic)</td>
     </tr>
     <tr>
       <td>uncertain</td>
       <td class="info">uncertain</td>
-      <td>Plan to remove</td>
+      <td>removed</td>
     </tr>
     <tr>
       <td>x-linked dominant</td>
@@ -232,7 +222,7 @@
       <li>likely to escape nonsense mediated decay</li>
       <li>part of contiguous gene duplication</li>
       <li>part of contiguous genomic interval deletion</li>
-      <li>restricted mutation set</li>
+      <li>restricted repertoire of mutations</li>
     </ul>
   </div>
 
