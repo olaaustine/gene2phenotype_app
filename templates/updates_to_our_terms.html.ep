@@ -15,22 +15,6 @@
           %= link_to Downloads => '/gene2phenotype/downloads' => (class => 'navbar-brand')
         </li>
 
-        <% if ($logged_in) { %>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button">Curator views <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li>
-                %= link_to 'Duplicated LGM entries' => '/gene2phenotype/curator/show_all_duplicated_LGM_by_panel' => (class => 'navbar-brand')
-              </li>
-              <li>
-                %= link_to 'Entries without publications' => '/gene2phenotype/curator/no_publication' => (class => 'navbar-brand')
-              </li>
-              <li>
-                %= link_to 'Restricted entries' => '/gene2phenotype/curator/restricted_entries' => (class => 'navbar-brand')
-              </li>
-            </ul>
-          </li>
-        <% } %>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button">Documentation <span class="caret"></span></a>
           <ul class="dropdown-menu">
@@ -70,7 +54,7 @@
 </div>
 
 <div class="container">
-  <div class="alert alert-danger" role="alert">
+  <div class="alert alert-success" role="alert">
     <h1>We have updated our terminology</h1>
     <p>The <a href="https://thegencc.org/about.html">GenCC</a> develops consistent terminology for describing gene-disease validity. As part of the GenCC we aligned our existing terms to the new terminology.</p>
     <p>Please find out more about the update here.
