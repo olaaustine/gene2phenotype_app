@@ -21,7 +21,7 @@ consequence. The header fields are:
   - prev symbols:                 Symbols previously approved by the HGNC for this gene
   - hgnc id:                      HGNC identifier
   - gene disease pair entry date: Entry date for the gene disease pair into the database
-  - cross cutting modifier        semi-colon seperated list of possible cross cutting modifier attributes. : 
+  - cross cutting modifier        semi-colon separated list of possible cross cutting modifier attributes : 
                                   requires heterozygosity, typically de novo, typically mosaic, imprinted, typified by age related penetrance, typified by reduced penetrance.
   - mutation consequences flag    One value from the list of possible flags : 
                                   likely to escape nonsense mediated decay, part of contiguous gene duplication, part of contiguous genomic interval deletion, restricted repertoire of mutations.  
