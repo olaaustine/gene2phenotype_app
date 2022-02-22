@@ -27,6 +27,13 @@
   %= include 'gene'
   %= include 'statistics'
   %= include 'disease'
+  <div>
+    <% foreach my $comment (@{$gfd->{comments}}) { %>
+      % if ($comment->{is_public} == 1){
+        <div class="align_left"><p><%= $comment->{comment_text} %> (<%= $comment->{user} %> <%= $comment->{date} %>)</p></div>
+      % } 
+    <% } %>
+  </div>
   %= include 'publication'
   %= include 'phenotype'
   %= include 'organ'
