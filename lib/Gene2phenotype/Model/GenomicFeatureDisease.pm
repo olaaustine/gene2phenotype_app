@@ -436,7 +436,7 @@ sub get_variant_consequence {
   }
   return \@VC_tmpl;
 }
-}
+
 
 sub _get_confidence_category_list {
   my $self = shift;
