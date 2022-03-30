@@ -581,7 +581,7 @@ sub get_variant_consequence_list {
   my $variant_consequence_to_attrib = $attribute_adaptor->get_values_by_type('variant_consequence');
   my @variant_consequence_list = ();
   foreach my $value (sort keys %$variant_consequence_to_attrib) {
-    my $attrib = $variant_consequence_to_attrib->($value);
+    my $attrib = $variant_consequence_to_attrib->{$value};
     my $selected = (grep $_ eq $value, @variant_consequence) ? 'selected' : '';
     push @variant_consequence_list, {
       attrib_id => $attrib,
