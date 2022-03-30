@@ -70,7 +70,7 @@ sub fetch_by_dbID {
   my $cross_cutting_modifier = $gfd->cross_cutting_modifier;
   my $cross_cutting_modifier_list = $self->get_cross_cutting_modifier_list($gfd, $logged_in);
   my $variant_consequence = $gfd->variant_consequence;
-  my $variant_consequence_list = $gfd->get_variant_consequence_list($gfd, $logged_in);
+  my $variant_consequence_list = $self->get_variant_consequence_list($gfd, $logged_in);
   my $comments = $self->get_comments($gfd);
   my $publications = $self->get_publications($gfd);
   my $phenotypes = $self->get_phenotypes($gfd);
