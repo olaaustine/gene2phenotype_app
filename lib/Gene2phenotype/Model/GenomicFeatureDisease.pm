@@ -575,7 +575,7 @@ sub get_cross_cutting_modifier_list {
 sub get_variant_consequence_list {
   my $self = shift;
   my $GFD = shift;
-  my @variant_consequence = split(',', $GFD->variant_consequence) if ($GFD->variant_consequence)
+  my @variant_consequence = split(',', $GFD->variant_consequence) if ($GFD->variant_consequence);
   my $registry = $self->app->defaults('registry');
   my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
   my $variant_consequence_to_attrib = $attribute_adaptor->get_values_by_type('variant_consequence');
