@@ -24,6 +24,12 @@
           <dd><p><span class="label label-info"><%= $_ %></span></p></dd>
         % }
       % }
+      % if ( $gfd->{variant_consequence} ) {
+        <dt>Variant consequence</dt>
+        % for (split /,/, $gfd->{variant_consequence} ) {
+          <dd><p><span class= "label label-info"><%= $_ %></span></p></dd>
+        % }
+      % }
       <dt>Mutation consequence summary</dt>
       <dd><p><span class="badge"><%= $gfd->{mutation_consequence} %></p></dd>
       % if ($gfd->{mutation_consequence_flag}){
