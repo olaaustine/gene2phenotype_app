@@ -389,7 +389,8 @@ sub get_mutation_consequences {
     push @MC_tmpl, {
       MC_attrib_id => $attrib,
       MC_attrib_value => $mutation_consequence
-  };
+    };
+  }
   return \@MC_tmpl;
 }
 
