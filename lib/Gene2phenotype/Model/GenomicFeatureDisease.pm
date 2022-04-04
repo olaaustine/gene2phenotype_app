@@ -384,7 +384,7 @@ sub get_mutation_consequences {
   my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
   my $mutation_consequences = $attribute_adaptor->get_values_by_type('mutation_consequence');
   my @MC_tmpl = ();
-  foreach my $mutation_consequence (sort keys %$mutation_consequences) {
+  foreach my $mutation_consequence (sort keys %$mutation_consequences){
     my $attrib = $mutation_consequences->{$mutation_consequence};
     push @MC_tmpl, {
       MC_attrib_id => $attrib,
@@ -476,15 +476,15 @@ sub get_allelic_requirement_list {
 sub get_mutation_consequence_list {
   my $self = shift;
   my $GFD = shift;
-  my @mutation_consequence = split(',', $GFD->mutation_consequence);
+  my @mutation_consequences = split(',', $GFD->mutation_consequence);
   my $registry = $self->app->defaults('registry');
   my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
   my $mutation_consequence_value_to_attrib = $attribute_adaptor->get_values_by_type('mutation_consequence');
   my @mutation_consequence_list = ();
   foreach my $value (sort keys %$mutation_consequence_value_to_attrib) {
     my $attrib = $mutation_consequence_value_to_attrib->{$value};
-    my $selected = (grep $_ eq $value, @mutation_consequence ) ? 'selected' : '';
-    push @mutation_consequence_list,{
+    my $selected = (grep $_ eq $value, @mutation_consequences ) ? 'selected' : '';
+    push @mutation_consequence_list, {
       attrib_id => $attrib,
       attrib_value => $value,
       selected => $selected,
