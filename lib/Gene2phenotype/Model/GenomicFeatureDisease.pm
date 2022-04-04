@@ -517,12 +517,13 @@ sub get_mutation_consequence_flag_list {
         attrib_id => $attrib,
         attrib_value => $value,
         selected  => $selected,
-      };
+    };
    
   } 
      
   return \@mutation_consequence_flag_list;
 }
+
 
 =head2 get_cross_cutting_modifier_list
   Arg [1]    : None
