@@ -4,11 +4,19 @@
 
     <% if ($disease->{mim}) { %> 
       <dl>
-        <dt>MIM</dt>
+        <dt>OMIM</dt>
         <dd>
           <% if ($disease->{mim}) { 
             my $link = "http://omim.org/entry/" . $disease->{mim}; %>        
             <%= link_to $link => begin %><%= $disease->{mim} %> <% end %>
+          <% } %>
+        </dd>
+        <dt></dt>
+        <dd>
+          <% if ($disease->{ontologies}) { 
+            <dt>MONDO</dt>
+            my $link = "http://purl.obolibrary.org/obo/" . $disease->{ontologies}; %>        
+            <%= link_to $link => begin %><%= $disease->{ontologies} %> <% end %>
           <% } %>
         </dd>
       </dl>
