@@ -40,6 +40,7 @@ sub get_Ontology {
   my $disease = shift;
 
   my @ontologies = ();
+  my $registry = $self->app->defaults('registry');
   
   my $disease_ontology = $disease->get_DiseaseOntology;
   foreach my $do (@$disease_ontology) {
