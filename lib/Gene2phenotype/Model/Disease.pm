@@ -26,7 +26,7 @@ sub fetch_by_dbID {
   my $disease = $disease_adaptor->fetch_by_dbID($dbID);
   my $name = $disease->name;
   my $mim = $disease->mim;
-  my $ontologies = $self->get_Ontology($disease);
+  my $ontologies = $self->get_Ontology_accession($disease);
   return {
     disease_id => $dbID,
     name => $name,
@@ -35,7 +35,7 @@ sub fetch_by_dbID {
   };
 }
 
-sub get_Ontology {
+sub get_Ontology_accession {
   my $self = shift;
   my $disease = shift;
 
