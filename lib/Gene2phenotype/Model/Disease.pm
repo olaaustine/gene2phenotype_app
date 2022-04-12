@@ -26,7 +26,7 @@ sub fetch_by_dbID {
   my $disease = $disease_adaptor->fetch_by_dbID($dbID);
   my $name = $disease->name;
   my $mim = $disease->mim;
-  my $ontologies => $self->get_Ontology($disease);
+  my $ontologies = $self->get_Ontology($disease);
   return {
     disease_id => $dbID,
     name => $name,
@@ -41,7 +41,7 @@ sub get_Ontology {
 
   my @ontologies = ();
   my $registry = $self->app->defaults('registry');
-  
+
   my $disease_ontology = $disease->get_DiseaseOntology;
   foreach my $do (@$disease_ontology) {
     my $ontology = $do->get_Ontology;
