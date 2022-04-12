@@ -47,7 +47,7 @@ sub get_Ontology {
     push @ontologies, {
       ontology_accession => $ontology->ontology_accession,
       ontology_term_id => $do->ontology_term_id,
-      disease_id = $do->disease_id
+      disease_id = $do->disease_id,
     };
   }
   return \@ontologies;
