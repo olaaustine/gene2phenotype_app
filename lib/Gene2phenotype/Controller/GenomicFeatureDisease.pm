@@ -370,7 +370,7 @@ sub update_mutation_consequence {
     return $self->redirect_to("/gene2phenotype/gfd/show_attribs?GFD_id=$GFD_id");
   }
   my $gfds = $gfd_model->fetch_all_by_GenomicFeature_constraints($gf, {
-    'mutation_consequence' => split /,/, $mutation_consequence,
+    'mutation_consequence' => split(/,/, $mutation_consequence),
     'allelic_requirement' => $gfd->{allelic_requirement},
   });
   if (scalar @$gfds == 0) {
