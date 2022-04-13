@@ -182,7 +182,7 @@ sub create_gfd {
   }
   my $mutation_consequence = $self->param('mutation_consequence_to_be_added');
   if (!defined $mutation_consequence) {
-    my $mutation_consequence_attrib_ids = join(',', sort @{$self->param('mutation_consequence_attrib_id')});
+    my $mutation_consequence_attrib_ids = join(',', sort @{$self->every_param('mutation_consequence_attrib_id')});
     $mutation_consequence = $gfd_model->get_value('mutation_consequence', $mutation_consequence_attrib_ids);
   }
 
