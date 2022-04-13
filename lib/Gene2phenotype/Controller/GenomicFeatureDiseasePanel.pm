@@ -45,7 +45,7 @@ use warnings;
                      disease_name                   - Disease name representing the disease in the GFD
                      confidence_attrib_id           - Confidence attrib for the GFDPanel
                      allelic_requirement_attrib_id  - Allelic requirement attrib of the GFD. Can be more than one.
-                     mutation_consequence_attrib_id - Mutation consequence attrib of the GFD
+                     mutation_consequence_attrib_id - Mutation consequence attrib of the GFD. Can be more than one
 
                    Add exisiting GFD to target panel button:
                      add_existing_entry_to_panel  - This is set to 1 if the GFD is already in the database
@@ -74,7 +74,7 @@ sub add {
   my $disease_name                   = $self->param('disease_name');
   my $confidence_attrib_id           = $self->param('confidence_attrib_id');
   my $allelic_requirement_attrib_ids = join(',', sort @{$self->every_param('allelic_requirement_attrib_id')});
-  my $mutation_consequence_attrib_ids = join(',', sort @{$self->param('mutation_consequence_attrib_id')});
+  my $mutation_consequence_attrib_ids = join(',', sort @{$self->every_param('mutation_consequence_attrib_id')});
 
   my $email = $self->session('email');
   my $gfd_model = $self->model('genomic_feature_disease');  
