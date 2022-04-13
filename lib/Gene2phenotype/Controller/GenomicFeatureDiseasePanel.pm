@@ -74,7 +74,7 @@ sub add {
   my $disease_name                   = $self->param('disease_name');
   my $confidence_attrib_id           = $self->param('confidence_attrib_id');
   my $allelic_requirement_attrib_ids = join(',', sort @{$self->every_param('allelic_requirement_attrib_id')});
-  my $mutation_consequence_attrib_id = join(',', sort @{$self->param('mutation_consequence_attrib_id')});
+  my $mutation_consequence_attrib_ids = join(',', sort @{$self->param('mutation_consequence_attrib_id')});
 
   my $email = $self->session('email');
   my $gfd_model = $self->model('genomic_feature_disease');  
