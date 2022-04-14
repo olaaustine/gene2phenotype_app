@@ -11,11 +11,7 @@
       <div class="col-sm-8">
         <% foreach my $mc ( @{$mutation_consequences} ) { %>
           <% if (my $mutation_consequence = stash 'mutation_consequence') { %>
-            <% if ($mutation_consequence eq $mc->[0]) { %>
-              %= check_box  mutation_consequence_attrib_id => $mc->{MC_attrib_id}, selected => "selected"
-            <% } else { %>
-              %= check_box mutation_consequence_attrib_id => $mc->{MC_attrib_id}
-            <% } %>
+            %= check_box  mutation_consequence_attrib_id => $mc->{MC_attrib_id}, selected => "selected"
           <% } else { %>
              %= check_box mutation_consequence_attrib_id => $mc->{MC_attrib_id}
           <% } %>
