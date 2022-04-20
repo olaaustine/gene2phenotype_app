@@ -11,16 +11,23 @@
             <%= link_to $link => begin %><%= $disease->{mim} %> <% end %>
           <% } %>
         </dd>
-        <dt></dt>
-        <dd>
-          <% if ($disease->{ontologies}) { 
-            <dt>MONDO</dt>
-            my $link = "http://purl.obolibrary.org/obo/" . $disease->{ontologies}; %>        
-            <%= link_to $link => begin %><%= $disease->{ontologies} %> <% end %>
-          <% } %>
-        </dd>
       </dl>
     <% } %>
+      <dl>
+        <dd>
+          <%foreach my $ontology (@{$disease->{ontologies}}) { %>
+            <% if (defined($ontology->{ontology_accession})) { %>
+              <dt>MONDO</dt>
+              <dd>
+                <% if ($ontology->{ontology_accession}) {
+                  my $link = "https://www.ebi.ac.uk/ols/ontologies/mondo/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2F" . $ontology->{ontology_accession}; %>
+                  <%= link_to $link => begin %><%= $ontology->{ontology_accession} %> <% end %>   
+                <% } %>
+              </dd>
+             <% } %>
+           <% } %>
+        </dd>
+      </dl>
     <% if ($logged_in) { %>
       <div class="show_toggle_view_button">
         <input type="button" name="show_edit_content" value="Edit Disease Attributes" class="btn btn-primary btn-sm edit"/>
