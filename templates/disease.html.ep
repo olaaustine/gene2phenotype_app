@@ -23,7 +23,7 @@
                   my $old_ontology = $ontology->{ontology_accession};
                   $old_ontology =~ s/:/_/;
                   my $link = "http://purl.obolibrary.org/obo/" . $old_ontology; %>
-                  <%= link_to $link => begin %><%= $ontology->{ontology_accession} %> <% end %>   
+                  <%= link_to $link => begin %><%= $old_ontology %> <% end %>   
                 <% } %>
               </dd>
              <% } %>
