@@ -13,13 +13,25 @@
           <dd><p><span class="label label-info"><%= $_ %></span></p></dd>
         % }
       % }
-     <dt>Mutation consequence summary</dt>
-      <dd><p><span class="badge"><%= $gfd->{mutation_consequence} %></p></dd>
+      <dt>Mutation consequence summary</dt>
+      % for (split /,/, $gfd->{mutation_consequence}) {
+        <dd><p><span class="badge"><%= $_ %></p></dd>
+      % }
       % if ($gfd->{mutation_consequence_flag}){
         <dt>Mutation consequences flag</dt> 
         <dd><p><span class="label label-info"><%= $gfd->{mutation_consequence_flag} %></span></p></dd>
       % }
      </dl>
+
+     <dl>
+      <br>
+        % if ( $gfd->{variant_consequence} ) {
+          <dt>Variant consequence</dt>
+          % for (split /,/, $gfd->{variant_consequence} ) {
+            <dd><p><span class= "badge"><%= $_ %></span></p></dd>
+          % }
+        % }
+    </dl>
   </div>
   <div class="clear"></div>
 
@@ -27,6 +39,7 @@
   %= include 'gene'
   %= include 'statistics'
   %= include 'disease'
+  %= include 'public_comments'
   %= include 'publication'
   %= include 'phenotype'
   %= include 'organ'
