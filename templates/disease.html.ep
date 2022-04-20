@@ -20,7 +20,9 @@
               <dt>MONDO</dt>
               <dd>
                 <% if ($ontology->{ontology_accession}) {
-                  my $link = "https://www.ebi.ac.uk/ols/ontologies/mondo/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2F" . $ontology->{ontology_accession}; %>
+                  my $old_ontology = $ontology->{ontology_accession};
+                  $old_ontology =~ s/:/_/;
+                  my $link = "http://purl.obolibrary.org/obo/" . $old_ontology; %>
                   <%= link_to $link => begin %><%= $ontology->{ontology_accession} %> <% end %>   
                 <% } %>
               </dd>
