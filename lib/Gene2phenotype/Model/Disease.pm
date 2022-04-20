@@ -17,7 +17,6 @@ limitations under the License.
 =cut
 package Gene2phenotype::Model::Disease;
 use Mojo::Base 'MojoX::Model';
-use Data::Dumper;
 
 sub fetch_by_dbID {
   my $self = shift;
@@ -45,14 +44,12 @@ sub get_Ontology_accession {
   my $disease_adaptor =  $registry->get_adaptor('human', 'gene2phenotype', 'Disease');
   foreach my $do (@{$disease->get_DiseaseOntology}) {
     my $ontology = $do->get_Ontology;
-    print Dumper($ontology);
     push @ontologies, {
       ontology_accession => $ontology->ontology_accession,
       ontology_term_id => $do->ontology_term_id,
       disease_id => $do->disease_id,
     };
   }
-  print Dumper(@ontologies);
   return \@ontologies;
 }
 sub fetch_by_name {
