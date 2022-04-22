@@ -56,13 +56,13 @@
 <div class="container">
   <div class="alert alert-success" role="alert">
     <h1>We have added more information to our curation efforts</h1>
-    <p>The Cardiac panel is now live!</p>
     <p>Find out more about the update
       <p>We introduced a new category:
       <ul>
         <li><a href="#variant_consequence">Variant consequence</a></li>
       </ul>
       </p>
+    <p>We have new Cardiac data</p>
     <h3>We moved our terminology to the GenCC terminology on 02-12-2021</h3>
     <p>Our download files only contains the new terminology. A final data export which was created on the 01-12-2021 uses our old terminology. Those files will remain available on our FTP site, but will not be updated anymore.</p>
     <p>Please direct any questions to <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a></p>
