@@ -58,11 +58,6 @@
     <h1>We have added more information to our curation efforts</h1>
     <p>The Cardiac panel is now live!</p>
     <p>Find out more about the update
-      <ul>
-        <li><a href="#confidence_value">Confidence value</a></li>
-        <li><a href="#allelic_requirement">Allelic requirement</a></li>
-        <li><a href="#mutation_consequence">Mutation consequence</a></li>
-      </ul>
       <p>We introduced a new category:
       <ul>
         <li><a href="#variant_consequence">Variant consequence</a></li>
