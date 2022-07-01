@@ -17,7 +17,11 @@
         <% end %>
       </li>
     <% } %>
-    <p>Downloads are created on the fly to provide the latest information. For static release files see the <a href="http://ftp.ebi.ac.uk/pub/databases/gene2phenotype/" target="_blank">FTP site.</a></p>
   </ul>
+  
+  <div>
+    <p class="h4">Downloads are created on the fly to provide the latest information. For static release files see the <a href="http://ftp.ebi.ac.uk/pub/databases/gene2phenotype/" target="_blank">FTP site.</a></p>
+  </div>
+  
 </div>
 %= include 'footer'
