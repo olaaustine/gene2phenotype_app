@@ -17,7 +17,7 @@
         <% end %>
       </li>
     <% } %>
-
+    <p>Monthly exports of our data can be found on the <a href="http://ftp.ebi.ac.uk/pub/databases/gene2phenotype/" target="_blank">FTP site.</a></p>
   </ul>
 </div>
 %= include 'footer'
