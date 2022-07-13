@@ -64,11 +64,7 @@
       </p>
     <p>We have new Cardiac data</p>
     <h3>We moved our terminology to the GenCC terminology on 02-12-2021</h3>
-<<<<<<< Updated upstream
-    <p>Our download files only contains the new terminology. A final data export which was created on the 01-12-2021 uses our old terminology. Those files will remain available on our <a href="http://ftp.ebi.ac.uk/pub/databases/gene2phenotype/" target="_blank">FTP site.</a></p>
-=======
     <p>Our downloads are created on the fly to provide the latest information. A final data export which was created on the 01-12-2021 uses our old terminology. Those files will remain available on our <a href="http://ftp.ebi.ac.uk/pub/databases/gene2phenotype/" target="_blank">FTP site.</a></p>
->>>>>>> Stashed changes
     <p>Please direct any questions to <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a></p>
   </div>
 

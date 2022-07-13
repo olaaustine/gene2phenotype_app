@@ -18,13 +18,8 @@
       </li>
     <% } %>
   </ul>
-  
   <div>
-<<<<<<< Updated upstream
-    <p class="h4">Downloads are created on the fly to provide the latest information. For static release files see the <a href="http://ftp.ebi.ac.uk/pub/databases/gene2phenotype/" target="_blank">FTP site.</a></p>
-=======
     <p>Downloads are created on the fly to provide the latest information. For static release files see the <a href="http://ftp.ebi.ac.uk/pub/databases/gene2phenotype/" target="_blank">FTP site.</a></p>
->>>>>>> Stashed changes
   </div>
   
 </div>
