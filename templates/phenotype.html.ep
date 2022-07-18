@@ -7,15 +7,19 @@
 
   <% if (scalar @{$gfd->{phenotypes}} > 0) { %>
     <p>
-      <label>List of phenotypes that have been assigned to the G2P entry.</label>
+      <label>List of phenotypes that have been assigned to the G2P entry:</label>
     </p>
   <% } else { %>
     <p>
       <label>No phenotypes have been assigned to the G2P entry yet.</label>
     </p>
   <% } %>
-  <% foreach my $phenotype (@{$gfd->{phenotypes}}) { %>
-    <% my $url = "https://hpo.jax.org/app/browse/term/" . $phenotype->{stable_id}; %>
-    %= link_to $phenotype->{name} => $url => (target => '_blank')
-  <% } %>
+  <ul>
+    <% foreach my $phenotype (@{$gfd->{phenotypes}}) { %>
+      <li>
+        <% my $url = "https://hpo.jax.org/app/browse/term/" . $phenotype->{stable_id}; %>
+        %= link_to $phenotype->{name} => $url => (target => '_blank')
+      </li>
+    <% } %>
+  </ul>
 </div>
