@@ -1,0 +1,29 @@
+%= include 'header'
+%= include 'search'
+<div class="container">
+  %= form_for '/gene2phenotype/gfd/variant_consequence/update' => (class => 'form-horizontal', id => 'variant_consequence') => begin
+   <div class="form-group">
+      <label class="col-sm-4 control-label">Variant_consequence:
+      % for (split /,/,  $gfd->{variant_consequence}){
+        <p><span class="label label-info"><%= $_ %></p>
+      %  }
+      </label>
+      <div class="col-sm-8">
+        <% foreach my $VC (@{$variant_consequence}) { %>
+          <% if (my $variant_consequence = stash 'variant_consequence') { %>
+            %= check_box variant_consequence_attrib_id => $VC->{VC_attrib_id},  selected => "selected"
+          <% } else { %>
+            %= check_box variant_consequence_attrib_id => $VC->{VC_attrib_id}
+          <% } %>
+          <%= $VC->{VC_attrib_value} %>
+          %= tag 'br'
+        <% } %>
+      </div>
+   </div>
+     %= hidden_field GFD_id => $gfd->{GFD_id}
+     <input id="button" type="submit" value="Update" class="btn btn-primary btn-sm" style="float: right;"/>
+   %end
+</div>
+
+
+%= include "footer"
