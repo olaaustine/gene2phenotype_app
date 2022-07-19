@@ -496,7 +496,7 @@ sub update_variant_consequence_temp {
 } 
 
 =head2 update_variant_consequence
-  Description: Updating the mutation consequence flag of a GenomicFeatureDisease
+  Description: Updating the variant consequence of a GenomicFeatureDisease
   Exceptions : None
   Caller     : Template: show_attribs.html.ep
                Request : GET /gene2phenotype/gfd/variant_consequence/update
@@ -516,8 +516,8 @@ sub update_variant_consequence {
   my $authorized_panels = $self->stash('authorized_panels');
   $gfd = $model->fetch_by_dbID($GFD_id, $logged_in, $authorized_panels);
   if (!defined $variant_consequence) {
-    my $variant_consequence_attrib_id = $self->param('variant_consequence_attrib_id');
-    $variant_consequence = $model->get_value('variant_consequence', $variant_consequence_attrib_id);
+    my $variant_consequence_attrib_ids = join(',', sort@{$self->every_param('variant_consequence_attrib_id')});
+    $variant_consequence = $model->get_value('variant_consequence', $variant_consequence_attrib_ids);
   }
   if ($variant_consequence eq $gfd->{variant_consequence})  {
      $self->feedback_message('SELECTED_VARIANT_CONSEQUENCE');
