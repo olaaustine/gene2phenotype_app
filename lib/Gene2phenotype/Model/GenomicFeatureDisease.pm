@@ -208,6 +208,21 @@ sub update_cross_cutting_modifier {
   $GFD->cross_cutting_modifier($cross_cutting_modifier);
   $GFD_adaptor->update($GFD, $user);
 }
+
+sub update_variant_consequence { 
+  my $self = shift; 
+  my $email = shift;
+  my $GFD_id = shift;
+  my $variant_consequence = shift;
+  my $registry = $self->app->defaults('registry');
+  my $GFD_adaptor = $registry->get_adaptor("human", "gene2phenotype", "GenomicFeatureDisease");
+  my $user_adaptor = $registry->get_adaptor("human", "gene2phenotype", "user");
+  my $user = $user_adaptor->fetch_by_email($email);
+  my $GFD = $GFD_adaptor->fetch_by_dbID($GFD_id);
+  $GFD->variant_consequence($variant_consequence);
+  $GFD_adaptor->update($GFD, $user);
+}
+
 sub fetch_all_by_panel_restricted {
   my $self = shift;
   my $panel = shift;
@@ -426,12 +441,12 @@ sub get_mutation_consequence_flags {
 
 sub get_variant_consequence {
   my $self = shift; 
-  my $registry = $self->app->default('registry');
+  my $registry = $self->app->defaults('registry');
   my $attribute_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'attribute');
-  my $variant_consequence = $attribute_adaptor->get_values_by_type("variant_consequence");
+  my $variant_consequences = $attribute_adaptor->get_values_by_type("variant_consequence");
   my @VC_tmpl = ();
-  foreach my $variant_consequence (sort keys %$variant_consequence){
-    my $attrib = $variant_consequence->{$variant_consequence};
+  foreach my $variant_consequence (sort keys %$variant_consequences){
+    my $attrib = $variant_consequences->{$variant_consequence};
     push @VC_tmpl, {
       VC_attrib_id => $attrib, 
       VC_attrib_value => $variant_consequence

@@ -216,6 +216,8 @@ sub startup {
   $r->get('/gene2phenotype/gfd/mutation_consequence/update')->to('genomic_feature_disease#update_mutation_consequence');
   $r->get('/gene2phenotype/gfd/mutation_consequence_flag/update')->to('genomic_feature_disease#update_mutation_consequence_flag');
   $r->get('/gene2phenotype/gfd/cross_cutting_modifier/update')->to('genomic_feature_disease#update_cross_cutting_modifier');
+  $r->get('/gene2phenotype/gfd/update_vc')->to('genomic_feature_disease#update_variant_consequence_temp'); 
+  $r->get('/gene2phenotype/gfd/variant_consequence/update')->to('genomic_feature_disease#update_variant_consequence');
   $r->get('/gene2phenotype/gfd_panel/add')->to('genomic_feature_disease_panel#add');
   $r->get('/gene2phenotype/gfd_panel/delete')->to('genomic_feature_disease_panel#delete');
   $r->get('/gene2phenotype/gfd_panel/authorised/update')->to('genomic_feature_disease_panel#update_visibility');

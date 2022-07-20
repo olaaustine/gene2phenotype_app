@@ -105,6 +105,9 @@ sub show_add_new_entry_form {
    
     my $mutation_consequences =  $gfd_model->get_mutation_consequences;
     $self->stash(mutation_consequences => $mutation_consequences);
+
+    my $variant_consequence = $gfd_model->get_variant_consequence;
+    $self->stash(variant_consequence => $variant_consequence);
  
 
   }
@@ -164,8 +167,6 @@ sub update_allelic_requirement_temp{
   my $gfd;
   my $authorised_panels = $self->stash('authorised_panels');
   my $logged_in = 0;
-
-
   my $gfd_model = $self->model('genomic_feature_disease');
   my $disease_model = $self->model('disease');
   if ($self->session('logged_in')) {
@@ -455,6 +456,76 @@ sub update_mutation_consequence_flag {
   $model->update_mutation_consequence_flag($email, $GFD_id, $mutation_consequence_flag);
   $self->session(last_url => "/gene2phenotype/gfd/show_attribs?GFD_id=$GFD_id");
   $self->feedback_message("UPDATED_MUT_CON_FLAG_SUC");
+  return $self->redirect_to("/gene2phenotype/gfd/show_attribs?GFD_id=$GFD_id");
+}
+
+=head2 update_variant_consequence_temp
+  Description: Setup the form for editing a GFD entry. Shows the values for possible :
+               variant consequence and the already selected variant consequence(if any) 
+               Only if users are  allowed to edit the panels.
+  Returntype : If the user is logged in and allowed to edit the panel  ccm.html.ep
+  Exceptions : None
+  Caller     : Template: show_attribs.html.ep
+               Request: GET /gene2phenotype/gfd/update_vc
+               Template : var_con.html.ep
+  Status     : Stable
+=cut
+sub update_variant_consequence_temp {
+  my $self = shift;
+  my $email = $self->session('email');
+  my $dbID =  $self->param('GFD_id');
+  my $gfd;
+  my $authorised_panels = $self->stash('authorised_panels');
+  my $logged_in = 0;
+
+
+  my $gfd_model = $self->model('genomic_feature_disease');
+  my $disease_model = $self->model('disease');
+  if ($self->session('logged_in')) {
+    my $user_panels = $self->stash('user_panels');
+    $logged_in = 1;
+    $gfd = $gfd_model->fetch_by_dbID($dbID, $logged_in, $authorised_panels, $user_panels);
+  }
+
+  $self->stash(gfd => $gfd);
+
+  my $variant_consequence = $gfd_model->get_variant_consequence;
+  $self->stash(variant_consequence => $variant_consequence);
+
+  $self->render('var_con');
+} 
+
+=head2 update_variant_consequence
+  Description: Updating the variant consequence of a GenomicFeatureDisease
+  Exceptions : None
+  Caller     : Template: show_attribs.html.ep
+               Request : GET /gene2phenotype/gfd/variant_consequence/update
+               Params  : 
+                   mutation_consequence_flag - The mutation consequence flag to be updated to 
+                   GFD_id - The database id of the GenomicFeatureDisease.
+  Status     : Stable 
+=cut
+sub update_variant_consequence {
+  my $self = shift;
+  my $variant_consequence = $self->param('variant_consequence');
+  my $GFD_id = $self->param("GFD_id");
+  my $model = $self->model("genomic_feature_disease");
+  my $email = $self->session("email");
+  my $gfd;
+  my $logged_in = 1;
+  my $authorized_panels = $self->stash('authorized_panels');
+  $gfd = $model->fetch_by_dbID($GFD_id, $logged_in, $authorized_panels);
+  if (!defined $variant_consequence) {
+    my $variant_consequence_attrib_ids = join(',', sort@{$self->every_param('variant_consequence_attrib_id')});
+    $variant_consequence = $model->get_value('variant_consequence', $variant_consequence_attrib_ids);
+  }
+  if ($variant_consequence eq $gfd->{variant_consequence})  {
+     $self->feedback_message('SELECTED_VARIANT_CONSEQUENCE');
+     return $self->redirect_to("/gene2phenotype/gfd/show_attribs?GFD_id=$GFD_id");
+  }
+  $model->update_variant_consequence($email, $GFD_id, $variant_consequence);
+  $self->session(last_url => "/gene2phenotype/gfd/show_attribs?GFD_id=$GFD_id");
+  $self->feedback_message("UPDATED_VAR_CON_SUCCESSFULLY");
   return $self->redirect_to("/gene2phenotype/gfd/show_attribs?GFD_id=$GFD_id");
 }
 

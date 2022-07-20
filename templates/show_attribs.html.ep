@@ -66,6 +66,27 @@
     %end
   % } 
  </div>
+
+ <div style="margin: 25px" >
+  % if ($gfd->{variant_consequence}) {
+   % if ($gfd->{variant_consequence}){
+    <dt style=font-size:15px>Variant consequence</dt> 
+    % for (split /,/, $gfd->{variant_consequence}) {
+      <dd><p><span class="badge" style="font-size:13px"><%= $_ %></span></p></dd>
+    % }
+   % }
+  %= form_for '/gene2phenotype/gfd/update_vc' => (class => 'form-horizontal', id => 'update_variant_consequence') => begin
+    %= hidden_field GFD_id => $gfd->{GFD_id}
+    <input id="button" type="submit" value="EDIT" class="btn btn-primary btn-sm" style="margin-left: 1em;">
+  %end
+% }
+% else {
+  %= form_for '/gene2phenotype/gfd/update_vc' => (class => 'form-horizontal', id => 'update_mutation_consequence_flag') => begin
+    %= hidden_field GFD_id => $gfd->{GFD_id}
+    <input id="button" type="submit" value="Add variant consequence" class="btn btn-primary btn-sm" style="float: center; text-align:center">
+  %end
+% } 
+</div>
   
  <div style="margin: 25px" >
    %= form_for '/gene2phenotype/gfd' => begin
