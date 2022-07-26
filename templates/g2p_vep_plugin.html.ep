@@ -3,12 +3,12 @@
   <h3>G2P VEP plugin</h3>
   <p>The G2P VEP plugin identifies likely disease causing genes based on the knowledge encoded in the G2P database and runs as part of the Variant Effect Predictor (VEP).</p>
   <h4><a href="https://www.ensembl.org/info/docs/tools/vep/index.html">Variant Effect Predictor</a></h4>
-  <p>VEP computes the consequence of a variant and can further annotate the variant with values from a selection of different data types specified when running the script. </p>
+  <p>The VEP computes the consequence of a variant and can further annotate the variant with values from a selection of different data types specified when running the script. In most cases the consequence is computed with respect to the transcript that overlaps the variant. </p>
   If the input file contains variant data for a set of individuals the VEP generates one line of output for each pair of variant allele and overlapping transcript per individual.</p>
   <h4>How the plugin works:</h4>
   <p>The G2P VEP plugin adds further annotation to the line of output based on the individual's genotypes and the knowledge contained in the G2P database. The G2P VEP plugin uses a set of filters for identifying potentially causal variants. If the plugin counts a sufficient number of causal variants (variant hits) for a G2P gene it will report the gene as likely disease causing and all variants that passed the filters. The number of sufficient causal variants is derived from the allelic requirement of the gene which is stored in the G2P database.</p>
-  <p>By default the plugin adds certain information to the VEP output <a href="https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#basic:~:text=%2D%2Dindividual-,%5B,-all%7Cind%20list">individual information,</a> <a href="https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_symbol:~:text=%2D%2Dsummary-,%2D%2Dsymbol,-Adds%20the%20gene">gene symbol or HGNC id,</a> <a href="https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_af:~:text=used%20by%20default-,%2D%2Daf,-Add%20the%20global">global allele frequency data from 1000 Genomes Phase 3 data for any colocated variant,</a>
-     <a href="https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_af_esp:~:text=VARIANT_CLASS-,%2D%2Dsift,-%5Bp%7Cs">SIFT information,</a> <a href="https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_af_esp:~:text=%2D%2Dsummary-,%2D%2Dpolyphen,-%5Bp%7Cs">polyphen information.</a>
+  <p>By default the plugin adds certain information to the VEP output <a href="https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_individual">individual information,</a> <a href="https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_symbol">gene symbol or HGNC id,</a> <a href="https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_af">global allele frequency data from 1000 Genomes Phase 3 data for any colocated variant,</a>
+     <a href="https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_sift">SIFT information,</a> <a href="https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_polyphen">Polyphen information.</a>
   </p> 
   <p>The plugin by default also checks for existing variants that are colocated with the given variants and will exclude those flagged as failed.</p>
   <h4>Filtering rules:</h4>
@@ -19,7 +19,9 @@
     <li>All allele <mark>frequencies</mark> from co-located variants in reference populations (1000 Genomes project, ESP, gnomAD) need to be below a given threshold. The default frequency values for an allele in a bi-allelic gene is 0.005 and for an allele in a mono-allelic gene is 0.0001.</li>
   </ol>
   <p>The Sufficient number of variant hits is determined by the gene's allelic requirement.</p>
-  <p>Presently G2P supports biallelic, biallelic_autosomal, monoallelic_autosomal, monoallelic, mitochondrial, monoallelic_Y_hem, monoallelic_X_het, monoallelic_PAR, biallelic_PAR as an allelic requirement.</p>
+  <p>Presently G2P supports biallelic_autosomal, monoallelic_autosomal, mitochondrial, monoallelic_Y_hem, monoallelic_X_hem, monoallelic_X_het, monoallelic_PAR, biallelic_PAR as an allelic requirement.
+    To ensure compatibility with our old terminologies, we still support the allelic requirements, monoallelic, biallelic, hemizygous, x-linked dominant, x-linked dominance.
+  </p>
   <table class="table">
     <thead>
       <tr>
@@ -39,7 +41,8 @@
       <tr>
         <th scope="row">monoallelic</th>
         <td><li>monoallelic (supporting old terminologies)</li> <li>monoallelic_autosomal</li> <li>monoallelic_PAR</li> <li>monoallelic_X_hem</li>
-        <li>monoallelic_X_het</li><li>monoallelic_Y_hem</li><li>mitochondrial</li></td>
+        <li>monoallelic_X_het</li><li>monoallelic_Y_hem</li><li>mitochondrial</li><li>hemizygous (supporting old terminologies)</li><li>x-linked dominant (supporting old terminologies)</li>
+        <li>x-linked dominance (supporting old terminologies)</li></td>
         <td>A count of 1 heterozygous variants or 1 homozygous variants which passes all other filtering rules
           <pre> af => 0.0001, rules => {HET => 1, HOM => 1} </pre>
         </td>
@@ -48,7 +51,7 @@
   </table>
 
   <h4>Installing and running the VEP and G2P VEP plugin</h4>
-  <p>For installation and running the VEP script please refer to the <a href="https://github.com/Ensembl/ensembl-vep" target="_blank">VEP git repository</a> and <a href="http://www.ensembl.org/info/docs/tools/vep/script/vep_options.html" target="_blank">VEP documentation pages</a>. Plugins are installed and configured during the VEP installation. The <a href="https://github.com/Ensembl/VEP_plugins/blob/release/98/G2P.pm" target="_blank">G2P VEP plugin</a> is located in the VEP plugins repository.</p>
+  <p>For installation and running the VEP script please refer to the <a href="https://github.com/Ensembl/ensembl-vep" target="_blank">VEP git repository</a> and <a href="http://www.ensembl.org/info/docs/tools/vep/script/vep_options.html" target="_blank">VEP documentation pages</a>. Plugins are installed and configured during the VEP installation. The <a href="https://github.com/Ensembl/VEP_plugins/blob/main/G2P.pm" target="_blank">G2P VEP plugin</a> is located in the VEP plugins repository.</p>
 
   <h4>To run the G2P VEP plugin add the following argument to the VEP command:</h4>
   <p>The file to be used for running G2P plugin is the panel file from G2P or PanelApp. The plugin can not be run without the file. </p>
@@ -109,7 +112,7 @@
         <th scope="row">af_from_vcf_keys</th>
         <td>Select VCF collections. Separate multiple values with '&'. Should be only be used if option af_from_vcf is used.
         </td>
-        <td>VCF collections presently supported are - uk10k (assembly GRCh37 and GRCh38), topmed (assembly GRCh37 and GRCh38), gnomADe (assembly GRCh37), gnomADe_r2.1.1 (assembly GRCh38), gnomADg (assembly GRCh37), gnomADg_v3.1.2 (assembly GRCh378).
+        <td>VCF collections presently supported are - uk10k (assembly GRCh37 and GRCh38), topmed (assembly GRCh37 and GRCh38), gnomADe (assembly GRCh37), gnomADe_r2.1.1 (assembly GRCh38), gnomADg (assembly GRCh37), gnomADg_v3.1.2 (assembly GRCh38).
         <td>Seperate keys that can be selected are uk10k, topmed, gnomADe, gnomADe_r2.1.1, gnomADg, gnomADg_v3.1.2</td>
         </td>
       </tr>
@@ -154,7 +157,7 @@
 
   <h4>Allele frequencies</h4>
 
-  <p>The G2P plugin filters input variants on allele frequencies. The allele frequencies are retrieved from major genotyping projects like the 1000 Genomes project, gnomAD. The VEP provides a cache which contains allele frequencies in order to speed up the variant annotation.</p>
+  <p>The G2P plugin filters input variants on allele frequencies. The allele frequencies are retrieved from major genotyping projects like the 1000 Genomes project and gnomAD. The VEP provides a cache which contains allele frequencies in order to speed up the variant annotation.</p>
 
   <p>To use the VCF file for filtering, the G2P plugin option af_from_vcf needs to be set to 1.  <pre>./vep -i input.vcf --plugin G2P,file='DDG2P.csv,af_from_vcf=1'</pre></p>
 
