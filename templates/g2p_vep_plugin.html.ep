@@ -93,8 +93,10 @@
       <tr>
         <th scope="row">confidence_levels</th>
         <td>We still support confidence levels of our old terminology. Confidence levels to include: definitive, strong, limited, moderate, confirmed, probable, possible, both RD and IF. Separate multiple values with '&'.<br> https://www.ebi.ac.uk/gene2phenotype/terminology</td>
-        <td>definitive, strong, moderate, confirmed, probable</td>
-        <td>Confidence levels are used to determine which gene are considered G2P gene and are used in the filtering process</td>
+        <td>definitive, strong, moderate, confirmed, probable, limited</td>
+        <td>Confidence levels are used to determine which gene are considered G2P gene and are used in the filtering process.
+            Some G2P confidence levels have the confidence value flag "Requires clinical review", this is reported in the HTML and text output.
+        </td>
       </tr>
       <tr>
         <th scope="row">all_confidence_levels</th>
@@ -106,14 +108,14 @@
         <th scope="row">af_from_vcf</th>
         <td>set value to 1 to include allele frequencies from VCF files. The location of the VCF file is configured in <a href="https://github.com/Ensembl/ensembl-variation/blob/main/modules/Bio/EnsEMBL/Variation/DBSQL/vcf_config.json">ensembl-vcf_config.json.</a</td>
         <td>0</td>
-        <td>From Ensembl release 107, the cache file contains most of the allele frequencies that can be found in the VCF file excluding UK10K and topmed. You can use the VCF file or cache files if you want to filter using gnomAD or 1000 genomes. </td>
+        <td>From Ensembl release 107, the cache file contains most of the allele frequencies that can be found in the VCF file excluding UK10K and topmed. VCF file or cache files can be used to filter using gnomAD. To filter using 1000 genomes, cache file can be used.  </td>
       </tr>
       <tr>
         <th scope="row">af_from_vcf_keys</th>
         <td>Select VCF collections. Separate multiple values with '&'. Should be only be used if option af_from_vcf is used.
         </td>
         <td>VCF collections presently supported are - uk10k (assembly GRCh37 and GRCh38), topmed (assembly GRCh37 and GRCh38), gnomADe (assembly GRCh37), gnomADe_r2.1.1 (assembly GRCh38), gnomADg (assembly GRCh37), gnomADg_v3.1.2 (assembly GRCh38).
-        <td>Seperate keys that can be selected are uk10k, topmed, gnomADe, gnomADe_r2.1.1, gnomADg, gnomADg_v3.1.2</td>
+        <td>The VCF keys specified are used in the filtering process, to determine maximum allele frequency. For example, if the variants in gnomADg_v3.1.2 has an allele frequency higher than the frequency specified for the G2P gene, it is excluded.</td>
         </td>
       </tr>
       <tr>
@@ -248,25 +250,19 @@
     </tr>
     <tr>
       <td>Definitive</td>
-      <td rowspan="3">Green</td>
+      <td>Green</td>
     </tr>
     <tr>
       <td>Strong</td>
+      <td>Green</td>
     </tr>
     <tr>
       <td>Moderate</td>
+      <td>Green</td>
     </tr>
     <tr>
       <td>Limited</td>
-    </tr>
-    <tr>
-      <td>Confirmed</td>
-    </tr>
-    <tr>
-      <td>Probable</td>
-    </tr>
-    <tr>
-      <td>Possible</td>
+      <td>Red</td>
     </tr>
     <tr>
       <th>Allelic requirement</th>
@@ -274,7 +270,6 @@
     </tr>
     <tr>
       <td rowspan="6"><li>monoallelic_autosomal</li>
-      <li>monoallelic</li>
       <li>monoallelic_PAR</li></td>
       <td>MONOALLELIC, autosomal or pseudoautosomal, not imprinted</td>
     </tr>
@@ -294,7 +289,7 @@
       <td>BOTH monoallelic and biallelic (but BIALLELIC mutations cause a more SEVERE disease form), autosomal or pseudoautosomal</td>
     </tr>
     <tr>
-      <td rowspan="3"><li>biallelic_autosomal</li> <li>biallelic</li> <li>biallelic_PAR</li></td>
+      <td rowspan="3"><li>biallelic_autosomal</li> <li>biallelic_PAR</li></td>
       <td>BIALLELIC, autosomal or pseudoautosomal</td>
     </tr>
     <tr>
@@ -304,11 +299,11 @@
       <td>BOTH monoallelic and biallelic (but BIALLELIC mutations cause a more SEVERE disease form), autosomal or pseudoautosomal</td>
     </tr>
     <tr>
-      <td><li>monoallelic_X_hem</li>  <li>hemizygous</li></td>
+      <td><li>monoallelic_X_hem</li></td>
       <td>X-LINKED: hemizygous mutation in males, biallelic mutations in females</td>
     </tr>
     <tr>
-      <td> <li>monoallelic_X_het</li> <li>X-linked dominant</li> </td>
+      <td> <li>monoallelic_X_het</li></td>
       <td>X-LINKED: hemizygous mutation in males, monoallelic mutations in females may cause disease (may be less severe, later onset than males)</td>
     </tr>
   </table>
