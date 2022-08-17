@@ -150,9 +150,9 @@
       </tr>
       <tr>
         <th scope="row">filter_by_gene_symbol</td>
-        <td>The plugin filters by HGNC ID. Set this option to 1 to filter by gene symbol</td>
+        <td>The plugin by default filters by HGNC ID using G2P panel files. Set this option to 1 to filter by gene symbol</td>
         <td>0</td>
-        <td>This option is to ensure backwards compatibility.</td>
+        <td>This is the default option using PanelApp files.</td>
       </tr>
     </tbody>
   </table>
