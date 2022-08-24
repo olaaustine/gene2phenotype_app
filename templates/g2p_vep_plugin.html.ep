@@ -3,7 +3,7 @@
   <h3>G2P VEP plugin</h3>
   <p>The G2P VEP plugin identifies likely disease causing genes based on the knowledge encoded in the G2P database and runs as part of the Variant Effect Predictor (VEP).</p>
   <h4><a href="https://www.ensembl.org/info/docs/tools/vep/index.html">Ensembl Variant Effect Predictor</a></h4>
-  <p>Ensembl VEP predicts the molecular consequence of a variant and reports further optional annotation. In most cases the consequence is computed with respect to the transcript that overlaps the variant. </p>
+  <p>Ensembl VEP predicts the molecular consequence of a variant and reports further optional annotation. </p>
   If the input file contains variant data for a set of individuals the VEP generates one line of output for each pair of variant allele and overlapping transcript per individual.</p>
   <h4>How the plugin works:</h4>
   <p>The G2P VEP plugin adds further annotation to the line of output based on the individual's genotypes and the knowledge contained in the G2P database. The G2P VEP plugin uses a set of filters for identifying potentially causal variants. If the plugin counts a sufficient number of causal variants (variant hits) for a G2P gene it will report the gene as likely disease causing and all variants that passed the filters. The number of sufficient causal variants is derived from the allelic requirement of the gene which is stored in the G2P database.</p>
@@ -18,7 +18,7 @@
     <li>The variant <mark>consequence</mark> is in the list of severe consequences. The default list contains the following terms: splice_donor_variant, splice_acceptor_variant, stop_gained, frameshift_variant,stop_lost,initiator_codon_variant, inframe_insertion, inframe_deletion, missense_variant, coding_sequence_variant, start_lost, transcript_ablation, transcript_amplification, protein_altering_variant</li>
     <li>All allele <mark>frequencies</mark> from co-located variants in reference populations (1000 Genomes project, gnomAD) need to be below a given threshold. The default frequency values for an allele in a bi-allelic gene is 0.005 and for an allele in a mono-allelic gene is 0.0001.</li>
   </ol>
-  <p>The Sufficient number of variant hits is determined by the gene's allelic requirement.</p>
+  <p>The sufficient number of variant hits is determined by the gene's allelic requirement.</p>
   <p>G2P supports biallelic_autosomal, monoallelic_autosomal, mitochondrial, monoallelic_Y_hem, monoallelic_X_hem, monoallelic_X_het, monoallelic_PAR, biallelic_PAR as an allelic requirement.
     To ensure compatibility with our old terminologies, we still support the allelic requirements, monoallelic, biallelic, hemizygous, x-linked dominant, x-linked dominance.
   </p>
@@ -55,7 +55,6 @@
 
   <h4>To run the G2P VEP plugin add the following argument to the VEP command:</h4>
   <p>The file to be used for running G2P plugin is the panel file from G2P or PanelApp. The plugin can not be run without the file. </p>
-  <pre>./vep -i input.vcf --plugin G2P,file='DDG2P.csv'</pre>
   <p> 
     %=image '/gene2phenotype/images/G2P_overview.png', alt => 'vep_g2p_plugin_overview', width => '85%', height => 'auto'
   </p>
@@ -74,83 +73,83 @@
     <tbody>
       <tr>
         <th scope="row">file</th>
-        <td>Path to G2P data file. The file needs to be uncompressed.<br>- Download from http://www.ebi.ac.uk/gene2phenotype/downloads<br>- Download from PanelApp</td>
+        <td style="height:120px;width:1000px">Path to G2P data file. The file needs to be uncompressed.<br>- Download from http://www.ebi.ac.uk/gene2phenotype/downloads<br>- Download from PanelApp</td>
         <td>The plugin can not run without this data file.</td>
         <td>Data from this file is used in the filtering process. The text output and html output are also annotated with data from this file</td>
       </tr>
       <tr>
         <th scope="row">af_monoallelic</th>
-        <td>maximum allele frequency for inclusion for monoallelic genes</td>
+        <td style="height:120px;width:1000px">maximum allele frequency for inclusion for monoallelic genes</td>
         <td>0.0001</td>
-        <td>The default value is 0.0001, a different value can be used by <pre>./vep -i input.vcf --plugin G2P,file='DDG2P.csv',af_monoallelic=0.00001</pre></td>
+        <td>A different value can be used by <pre>./vep -i input.vcf --plugin G2P,file='DDG2P.csv',af_monoallelic=0.00001</pre></td>
       </tr>
       <tr>
         <th scope="row">af_biallelic</th>
-        <td>maximum allele frequency for inclusion for biallelic genes</td>
+        <td style="height:120px;width:1000px">maximum allele frequency for inclusion for biallelic genes</td>
         <td>0.005</td>
-        <td>The default value is 0.005, a different value can be used by <pre>./vep -i input.vcf --plugin G2P,file='DDG2P.csv',af_biallelic=0.05</pre></td></td>
+        <td>A different value can be used by <pre>./vep -i input.vcf --plugin G2P,file='DDG2P.csv',af_biallelic=0.05</pre></td></td>
       </tr>
       <tr>
         <th scope="row">confidence_levels</th>
-        <td>We still support confidence levels of our old terminology. Confidence levels to include: definitive, strong, limited, moderate, confirmed, probable, possible, both RD and IF. Separate multiple values with '&'.<br> https://www.ebi.ac.uk/gene2phenotype/terminology</td>
+        <td style="height:120px;width:1000px">We still support confidence levels of our old terminology. Confidence levels to include: definitive, strong, limited, moderate, confirmed, probable, possible, both RD and IF. Separate multiple values with '&'.<br> https://www.ebi.ac.uk/gene2phenotype/terminology</td>
         <td>definitive, strong, moderate, confirmed, probable, limited</td>
-        <td>Confidence levels are used to determine which gene are considered G2P gene and are used in the filtering process. The G2P confidence levels is reported in the HTML and text output.
+        <td>Confidence levels are used to determine which genes are used in the filtering process. The G2P confidence levels is reported in the HTML and text output.
             Some G2P entries have the flag "Requires clinical review", this is reported in the HTML and text output to show careful consideration of the results are required
         </td>
       </tr>
       <tr>
         <th scope="row">all_confidence_levels</th>
-        <td>Set value to 1 to include all confidence levels: definitive, strong, limited, moderate, confirmed, probable and possible</td>
+        <td style="height:120px;width:1000px">Set value to 1 to include all confidence levels: definitive, strong, limited, moderate, confirmed, probable and possible</td>
         <td>0</td>
         <td></td>
       </tr>
       <tr>
         <th scope="row">af_from_vcf</th>
-        <td>set value to 1 to include allele frequencies from VCF files. The location of the VCF file is configured in ensembl-variation/modules/Bio/EnsEMBL/Variation/DBSQL/vcf_config.json or ensembl-vep/Bio/EnsEMBL/Variation/DBSQL/vcf_config.json depending on how the ensembl-variation API was installed</td>
+        <td style="height:120px;width:1000px">set value to 1 to include allele frequencies from VCF files. The location of the VCF file is configured in ensembl-variation/modules/Bio/EnsEMBL/Variation/DBSQL/vcf_config.json or ensembl-vep/Bio/EnsEMBL/Variation/DBSQL/vcf_config.json depending on how the ensembl-variation API was installed</td>
         <td>0</td>
-        <td>From Ensembl release 107, the VEP cache contains allele frequencies from 1000 genomes and gnomAD. VCF file can be used to filter using gnomAD, UK10K and topmed. VCF file or cache files can be used to filter using gnomAD. To filter using 1000 genomes, cache file can be used.  </td>
+        <td>This option can be used to filter against population frequency sets (UK10K and TOPMed) which are not in the Ensembl VEP reference data cache but for which VCF files are available. Filtering using additional VCF files takes more time than using the VEP cache only. </td>
       </tr>
       <tr>
         <th scope="row">af_from_vcf_keys</th>
-        <td>Select VCF collections. Separate multiple values with '&'. Should be only be used if option af_from_vcf is used.
+        <td style="height:120px;width:1000px">Select VCF collections. Separate multiple values with '&'. Should be only be used if option af_from_vcf is used.
         </td>
-        <td>VCF collections presently supported are - uk10k (assembly GRCh37 and GRCh38), topmed (assembly GRCh37 and GRCh38), gnomADe (assembly GRCh37), gnomADe_r2.1.1 (assembly GRCh38), gnomADg (assembly GRCh37), gnomADg_v3.1.2 (assembly GRCh38).
+        <td>VCF collections presently supported are - uk10k (assembly GRCh37 and GRCh38), topmed (assembly GRCh37 and GRCh38).
         <td>The VCF collection specified are used in the filtering process, to determine maximum allele frequency. For example, if the variants in gnomADg_v3.1.2 has an allele frequency higher than the frequency specified for the G2P gene, it is excluded.</td>
         </td>
       </tr>
       <tr>
         <th scope="row">variant_include_list</th>
-        <td>A list of variants to include even if variants do not pass allele frequency filtering. The include list needs to be a sorted, bgzipped and tabixed VCF file.
+        <td style="height:120px;width:1000px">A list of variants to include even if variants do not pass allele frequency filtering. The include list needs to be a sorted, bgzipped and tabixed VCF file.
         </td>
         <td>
         </td>
       </tr>
       <tr>
         <th scope="row">types</th>
-        <td>SO consequence types to include. Separate multiple values with '&'.</td>
+        <td style="height:120px;width:1000px">SO consequence types to include. Separate multiple values with '&'.</td>
         <td>splice_donor_variant, splice_acceptor_variant, stop_gained, frameshift_variant, stop_lost, initiator_codon_variant, inframe_insertion, inframe_deletion, missense_variant, coding_sequence_variant, start_lost, transcript_ablation, transcript_amplification, protein_altering_variant</td>
       </tr>
       <tr>
         <th scope="row">log_dir</td>
-        <td>The log_dir is required to store log_files which are used for writting intermediate results. The log_dir should be empty. The log_files can be consulted for any frequency filtering decisions.</td>
+        <td style="height:120px;width:1000px">The log_dir is required to store log_files which are used for writting intermediate results. The log_dir should be empty. The log_files can be consulted for any frequency filtering decisions.</td>
         <td>current_working_dir/g2p_log_dir_[year]_[mon]_[mday]_[hour]_[min]_[sec]</td>
         <td>log_dir contains information of gene and variants that did not pass all the filtering rules.</td>
       </tr>
       <tr>
         <th scope="row">txt_report</td>
-        <td>Write all G2P complete genes and attributes to txt file</td>
+        <td style="height:120px;width:1000px">Write all G2P complete genes and attributes to txt file</td>
         <td>current_working_dir/txt_report_[year]_[mon]_[mday]_[hour]_[min]_[sec].txt</td>
         <td>The G2P plugin output that contains a summary report of genes passing VEP-G2P filtering</td>
       </tr>
       <tr>
         <th scope="row">html_report</td>
-        <td>Write all G2P complete genes and attributes to html file</td>
+        <td style="height:120px;width:1000px">Write all G2P complete genes and attributes to html file</td>
         <td>current_working_dir/html_report_[year]_[mon]_[mday]_[hour]_[min]_[sec].html</td>
         <td>The G2P plugin output that contains a summary report of genes passing VEP-G2P filtering for visualization in a web browser.</td>
       </tr>
       <tr>
         <th scope="row">filter_by_gene_symbol</td>
-        <td>The plugin by default filters by HGNC ID using G2P panel files. Set this option to 1 to filter by gene symbol</td>
+        <td style="height:120px;width:1000px">The plugin by default filters by HGNC ID using G2P panel files. Set this option to 1 to filter by gene symbol</td>
         <td>0</td>
         <td>This is the default option using PanelApp files.</td>
       </tr>
