@@ -263,6 +263,7 @@
             <th scope="col">Gene symbol</th>
             <th scope="col">Allelic requirement</th>
             <th scope="col">Mutation consequence</th>
+            <th scope="col">Variant consequence</th>
             <th scope="col">Disease</th>
             <th scope="col">Confidence value</th>
             <th scope="col">Add</th>
@@ -273,6 +274,7 @@
               <td><%= $new_gfd->{gene_symbol} %></td>
               <td><%= $new_gfd->{allelic_requirement_to_be_added} %></td>
               <td><%= $new_gfd->{mutation_consequence_to_be_added} %></td>
+              <td><%= $new_gfd->{variant_consequence_to_be_added} %></td>
               <td><%= $new_gfd->{disease_name} %></td>
               <td>
                 <% if (my $confidence_value_to_be_added = stash 'confidence_value_to_be_added') { %>
@@ -286,6 +288,7 @@
                   %= hidden_field disease_name => $new_gfd->{disease_name}
                   %= hidden_field allelic_requirement_to_be_added => $new_gfd->{allelic_requirement_to_be_added}
                   %= hidden_field mutation_consequence_to_be_added => $new_gfd->{mutation_consequence_to_be_added}
+                  %= hidden_field variant_consequence_to_be_added => $new_gfd->{variant_consequence_to_be_added}
                   <% if (my $confidence_value_to_be_added = stash 'confidence_value_to_be_added') { %>
                     %= hidden_field confidence_value_to_be_added => $confidence_value_to_be_added
                   <% } %>
