@@ -75,6 +75,9 @@ sub add {
   my $confidence_attrib_id           = $self->param('confidence_attrib_id');
   my $allelic_requirement_attrib_ids = join(',', sort @{$self->every_param('allelic_requirement_attrib_id')});
   my $mutation_consequence_attrib_ids = join(',', sort @{$self->every_param('mutation_consequence_attrib_id')});
+  my $variant_consequence_attrib_ids = join(',', sort @{$self->every_param('variant_consequence_attrib_id')});
+
+  
 
   my $email = $self->session('email');
   my $gfd_model = $self->model('genomic_feature_disease');  
@@ -136,27 +139,32 @@ sub add {
       my $allelic_requirement_to_be_added = $gfd_model->get_value('allelic_requirement', $allelic_requirement_attrib_ids);
       my $mutation_consequence_to_be_added = $gfd_model->get_value('mutation_consequence', $mutation_consequence_attrib_ids);
       my $confidence_value_to_be_added = $gfd_model->get_value('confidence_category', $confidence_attrib_id);
+      my $variant_consequence_to_be_added = $gfd_model->get_value('variant_consequence', $variant_consequence_attrib_ids);
       my $user = $user_model->fetch_by_email($email);
       my @panels = split(',', $user->panel);
       $self->stash(
         existing_gfds => $existing_gfds,
-        new_gfd => {
+          new_gfd => {
+            mutation_consequence_to_be_added => $mutation_consequence_to_be_added,
+            allelic_requirement_to_be_added => $allelic_requirement_to_be_added,
+            variant_consequence_to_be_added => $variant_consequence_to_be_added,
+            gene_symbol => $gene_symbol,
+            disease_name => $disease_name,
+          },
+          confidence_value_to_be_added => $confidence_value_to_be_added,
+          confidence_values => $gfd_model->get_confidence_values,
+          mutation_consequences =>  $gfd_model->get_mutation_consequences,
           mutation_consequence_to_be_added => $mutation_consequence_to_be_added,
+          allelic_requirements => $gfd_model->get_allelic_requirements,
           allelic_requirement_to_be_added => $allelic_requirement_to_be_added,
+          variant_consequences => $gfd_model->get_variant_consequence,
+          variant_consequence_to_be_added => $variant_consequence_to_be_added,
           gene_symbol => $gene_symbol,
           disease_name => $disease_name,
-        },
-        confidence_value_to_be_added => $confidence_value_to_be_added,
-        confidence_values => $gfd_model->get_confidence_values,
-        mutation_consequences =>  $gfd_model->get_mutation_consequences,
-        mutation_consequence_to_be_added => $mutation_consequence_to_be_added,
-        allelic_requirements => $gfd_model->get_allelic_requirements,
-        allelic_requirement_to_be_added => $allelic_requirement_to_be_added,
-        gene_symbol => $gene_symbol,
-        disease_name => $disease_name,
-        panel => $target_panel,
-        panels => \@panels
+          panel => $target_panel,
+          panels => \@panels
       );
+      
       return $self->render(template => 'add_new_entry');
     }
   }
@@ -185,14 +193,29 @@ sub create_gfd {
     my $mutation_consequence_attrib_ids = join(',', sort @{$self->every_param('mutation_consequence_attrib_id')});
     $mutation_consequence = $gfd_model->get_value('mutation_consequence', $mutation_consequence_attrib_ids);
   }
+  my $variant_consequence;
+  if ( defined ($self->every_param('variant_consequence_attrib_id'))) {
+    $variant_consequence = $self->param('variant_consequence_to_be_added');
+    if (!defined $variant_consequence) {
+      my $variant_consequence_attrib_ids = join(',', sort @{$self->every_param('variant_consequence_attrib_id')});
+      if ($variant_consequence_attrib_ids eq ''){
+        $variant_consequence = '';
+      }
+      else {
+         $variant_consequence = $gfd_model->get_value('variant_consequence', $variant_consequence_attrib_ids);
+      }
+    }
+  }
 
   my $gfd = $gfd_model->add(
     $self->param('gene_symbol'),
     $self->param('disease_name'),
     $allelic_requirement,
     $mutation_consequence,
+    $variant_consequence,
     $email
   );
+
   return $gfd;
 }
 

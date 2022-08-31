@@ -302,12 +302,7 @@ sub fetch_by_panel_GenomicFeature_Disease {
 }
 
 sub add {
-  my $self = shift;
-  my $gene_symbol = shift;
-  my $disease_name = shift;
-  my $allelic_requirement = shift;
-  my $mutation_consequence = shift;
-  my $email = shift;
+  my ($self, $gene_symbol, $disease_name, $allelic_requirement, $mutation_consequence, $variant_consequence, $email) = @_;
 
   my $registry = $self->app->defaults('registry');
   my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease');
@@ -317,14 +312,28 @@ sub add {
   my $genomic_feature = $genomic_feature_adaptor->fetch_by_gene_symbol($gene_symbol);
 
   my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
+  my $gfd;
 
-  my $gfd =  Bio::EnsEMBL::G2P::GenomicFeatureDisease->new(
-    -disease_id => $disease->dbID,
-    -genomic_feature_id => $genomic_feature->dbID,
-    -mutation_consequence => $mutation_consequence,
-    -allelic_requirement => $allelic_requirement,
-    -adaptor => $GFD_adaptor,
-  );
+  if ($variant_consequence ne '') {
+    $gfd =  Bio::EnsEMBL::G2P::GenomicFeatureDisease->new(
+      -disease_id => $disease->dbID,
+      -genomic_feature_id => $genomic_feature->dbID,
+      -mutation_consequence => $mutation_consequence,
+      -allelic_requirement => $allelic_requirement,
+      -variant_consequence => $variant_consequence,
+      -adaptor => $GFD_adaptor,
+    );
+  } else {
+    $gfd =  Bio::EnsEMBL::G2P::GenomicFeatureDisease->new(
+      -disease_id => $disease->dbID,
+      -genomic_feature_id => $genomic_feature->dbID,
+      -mutation_consequence => $mutation_consequence,
+      -allelic_requirement => $allelic_requirement,
+      -variant_consequence => undef,
+      -adaptor => $GFD_adaptor,
+    );
+  }
+ 
   my $user = $user_adaptor->fetch_by_email($email);
   $gfd = $GFD_adaptor->store($gfd, $user);
   return $gfd;

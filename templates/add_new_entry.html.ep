@@ -49,8 +49,8 @@
       <label class="col-sm-2 control-label">Mutation consequence</label>
       <div class="col-sm-10">
         <% foreach my $mc ( @{$mutation_consequences} ) { %>
-          <% if (my $mutation_consequence = stash 'mutation_consequence') { %>
-            <% if ($mutation_consequence eq $mc->[0]) { %>
+          <% if (my $mutation_consequence_to_be_added = stash 'mutation_consequence_to_be_added') { %>
+            <% if ($mutation_consequence_to_be_added eq $mc->[0]) { %>
               %= check_box  mutation_consequence_attrib_id => $mc->{MC_attrib_id}, selected => "selected"
             <% } else { %>
               %= check_box mutation_consequence_attrib_id => $mc->{MC_attrib_id}
@@ -64,6 +64,24 @@
       </div>
     </div>  
 
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Variant consequence</label>
+      <div class="col-sm-10">
+        <% foreach my $vc ( @{$variant_consequences} ) { %>
+          <% if (my $variant_consequence_to_be_added = stash 'variant_consequence_to_be_added') { %>
+            <% if ($variant_consequence_to_be_added eq $vc->[0]) { %>
+              %= check_box  variant_consequence_attrib_id => $vc->{VC_attrib_id}, selected => "selected"
+            <% } else { %>
+              %= check_box variant_consequence_attrib_id => $vc->{VC_attrib_id}
+            <% } %>
+          <% } else { %>
+            %= check_box variant_consequence_attrib_id => $vc->{VC_attrib_id}, selected => ''
+         <% } %>
+          <%= $vc->{VC_attrib_value} %>
+          %= tag 'br'
+        <% } %>
+      </div>
+    </div>  
 
     <div class="form-group">
       <label class="col-sm-2 control-label">Panel </label>
