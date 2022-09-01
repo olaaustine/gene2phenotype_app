@@ -77,8 +77,6 @@ sub add {
   my $mutation_consequence_attrib_ids = join(',', sort @{$self->every_param('mutation_consequence_attrib_id')});
   my $variant_consequence_attrib_ids = join(',', sort @{$self->every_param('variant_consequence_attrib_id')});
 
-  
-
   my $email = $self->session('email');
   my $gfd_model = $self->model('genomic_feature_disease');  
   my $gfd_panel_model = $self->model('genomic_feature_disease_panel');
@@ -95,8 +93,6 @@ sub add {
     my $gfd_id = $gfd->dbID;
     $self->add_gfd_to_panel($gfd_id);
     return;
-    use Data::Dumper;
-    print Dumper($gfd);
   } 
 
   my $gf_model = $self->model('genomic_feature');
@@ -173,7 +169,7 @@ sub add {
           panel => $target_panel,
           panels => \@panels
       );
-      
+ 
       return $self->render(template => 'add_new_entry');
     }
   }

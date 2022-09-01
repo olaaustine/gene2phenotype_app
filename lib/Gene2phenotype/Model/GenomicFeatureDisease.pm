@@ -314,9 +314,6 @@ sub add {
   my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
   my $gfd;
 
-  use Data::Dumper;
-  print Dumper ($variant_consequence);
-
   if ($variant_consequence eq '') {
     $gfd =  Bio::EnsEMBL::G2P::GenomicFeatureDisease->new(
       -disease_id => $disease->dbID,
