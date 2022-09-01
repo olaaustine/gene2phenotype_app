@@ -314,13 +314,16 @@ sub add {
   my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
   my $gfd;
 
-  if ($variant_consequence ne '') {
+  use Data::Dumper;
+  print Dumper ($variant_consequence);
+
+  if ($variant_consequence eq '') {
     $gfd =  Bio::EnsEMBL::G2P::GenomicFeatureDisease->new(
       -disease_id => $disease->dbID,
       -genomic_feature_id => $genomic_feature->dbID,
       -mutation_consequence => $mutation_consequence,
       -allelic_requirement => $allelic_requirement,
-      -variant_consequence => $variant_consequence,
+      -variant_consequence => undef,
       -adaptor => $GFD_adaptor,
     );
   } else {
@@ -329,7 +332,7 @@ sub add {
       -genomic_feature_id => $genomic_feature->dbID,
       -mutation_consequence => $mutation_consequence,
       -allelic_requirement => $allelic_requirement,
-      -variant_consequence => undef,
+      -variant_consequence =>  $variant_consequence,
       -adaptor => $GFD_adaptor,
     );
   }

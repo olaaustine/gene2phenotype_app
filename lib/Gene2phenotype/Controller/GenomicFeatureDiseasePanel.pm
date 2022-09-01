@@ -95,6 +95,8 @@ sub add {
     my $gfd_id = $gfd->dbID;
     $self->add_gfd_to_panel($gfd_id);
     return;
+    use Data::Dumper;
+    print Dumper($gfd);
   } 
 
   my $gf_model = $self->model('genomic_feature');
@@ -139,7 +141,14 @@ sub add {
       my $allelic_requirement_to_be_added = $gfd_model->get_value('allelic_requirement', $allelic_requirement_attrib_ids);
       my $mutation_consequence_to_be_added = $gfd_model->get_value('mutation_consequence', $mutation_consequence_attrib_ids);
       my $confidence_value_to_be_added = $gfd_model->get_value('confidence_category', $confidence_attrib_id);
-      my $variant_consequence_to_be_added = $gfd_model->get_value('variant_consequence', $variant_consequence_attrib_ids);
+      my $variant_consequence_to_be_added;
+      if ($variant_consequence_attrib_ids eq ''){
+        $variant_consequence_to_be_added = ''
+      }
+      else {
+        $variant_consequence_to_be_added = $gfd_model->get_value('variant_consequence', $variant_consequence_attrib_ids);
+     
+      }
       my $user = $user_model->fetch_by_email($email);
       my @panels = split(',', $user->panel);
       $self->stash(
@@ -168,6 +177,7 @@ sub add {
       return $self->render(template => 'add_new_entry');
     }
   }
+
 }
 
 =head2 create_gfd
@@ -206,7 +216,7 @@ sub create_gfd {
       }
     }
   }
-
+  
   my $gfd = $gfd_model->add(
     $self->param('gene_symbol'),
     $self->param('disease_name'),

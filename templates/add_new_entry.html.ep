@@ -274,7 +274,10 @@
               <td><%= $new_gfd->{gene_symbol} %></td>
               <td><%= $new_gfd->{allelic_requirement_to_be_added} %></td>
               <td><%= $new_gfd->{mutation_consequence_to_be_added} %></td>
-              <td><%= $new_gfd->{variant_consequence_to_be_added} %></td>
+              <td><% if (my $variant_consequence_to_be_added = stash 'variant_consequence_to_be_added') { %>
+                    <%= $variant_consequence_to_be_added %>
+                  <% } %>
+              </td>
               <td><%= $new_gfd->{disease_name} %></td>
               <td>
                 <% if (my $confidence_value_to_be_added = stash 'confidence_value_to_be_added') { %>
@@ -288,7 +291,9 @@
                   %= hidden_field disease_name => $new_gfd->{disease_name}
                   %= hidden_field allelic_requirement_to_be_added => $new_gfd->{allelic_requirement_to_be_added}
                   %= hidden_field mutation_consequence_to_be_added => $new_gfd->{mutation_consequence_to_be_added}
-                  %= hidden_field variant_consequence_to_be_added => $new_gfd->{variant_consequence_to_be_added}
+                  <% if (my $variant_consequence_to_be_added = stash 'variant_consequence_to_be_added') { %>
+                    %= hidden_field variant_consequence_to_be_added => $variant_consequence_to_be_added
+                  <% } %>
                   <% if (my $confidence_value_to_be_added = stash 'confidence_value_to_be_added') { %>
                     %= hidden_field confidence_value_to_be_added => $confidence_value_to_be_added
                   <% } %>
