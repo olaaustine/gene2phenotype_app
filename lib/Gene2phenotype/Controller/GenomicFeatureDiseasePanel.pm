@@ -239,6 +239,7 @@ sub add_gfd_to_panel {
   my $email = $self->session('email');
   my $gfd_panel_model = $self->model('genomic_feature_disease_panel');
   my $gfd_model = $self->model('genomic_feature_disease');
+  
 
   my $confidence_value = $self->param('confidence_value_to_be_added');
   if (!defined $confidence_value) {
@@ -246,6 +247,22 @@ sub add_gfd_to_panel {
     $confidence_value = $gfd_model->get_value('confidence_category', $confidence_attrib_id);
   }
 
+  if ( defined ($self->every_param('variant_consequence_attrib_id'))) {
+    my $variant_consequence = $self->param('variant_consequence_to_be_added');
+    if (!defined $variant_consequence) {
+      my $variant_consequence_attrib_ids = join(',', sort @{$self->every_param('variant_consequence_attrib_id')});
+      if ($variant_consequence_attrib_ids eq ''){
+        $variant_consequence = '';
+      }
+      else {
+         $variant_consequence = $gfd_model->get_value('variant_consequence', $variant_consequence_attrib_ids);
+         $gfd_model->update_variant_consequence($email, $gfd_id, $variant_consequence);
+      }
+    }
+  }
+  use Data::Dumper;
+  print Dumper ($self->every_param('variant_consequence_attrib_id'));
+  
   my $gfd_panel = $gfd_panel_model->add(
     $gfd_id,
     $self->param('panel'),
