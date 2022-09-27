@@ -196,7 +196,7 @@
               <td><%= join(',', @{$gfd->{disease_name_synonyms}}) %></td>
               <td><%= join(',', @{$gfd->{panels}}) %></td>
               <td>
-                %= form_for '/gene2phenotype/gfd_panel/add' => begin
+                %= form_for '/gene2phenotype/gfd_panel/add' => ( id => 'add_con') => begin
                   %= hidden_field add_existing_entry_to_panel => 1
                   %= hidden_field gfd_id => $gfd->{gfd_id}
                   <% if (my $confidence_value_to_be_added = stash 'confidence_value_to_be_added') { %>
@@ -246,6 +246,9 @@
                   %= hidden_field gfd_id => $gfd->{gfd_id}
                   <% if (my $confidence_value_to_be_added = stash 'confidence_value_to_be_added') { %>
                     %= hidden_field confidence_value_to_be_added => $confidence_value_to_be_added
+                  <% } %>
+                  <% if (my $variant_consequence_to_be_added = stash 'variant_consequence_to_be_added') { %>
+                    %= hidden_field variant_consequence_to_be_added => $variant_consequence_to_be_added
                   <% } %>
                   %= hidden_field panel => $panel
                   <input id="button" type="submit" value="Add to <%= $panel %> panel" class="btn btn-primary btn-sm"/>
