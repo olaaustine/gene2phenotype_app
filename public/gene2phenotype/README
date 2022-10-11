@@ -8,7 +8,7 @@ consequence. The header fields are:
   - gene mim:                     OMIM number for a gene entry
   - disease name:                 Name provided by the curator
   - disease mim:                  OMIM number for a disease entry
-  - disease confidence:           One value from the list of possible categories: both RD and IF, definitive, strong, moderate, limited.
+  - disease confidence:           One value from the list of possible categories: definitive, strong, moderate, limited.
   - allelic requirement:          One value from the list of possible allelic requirement attributes. Possible values are:   
                                   biallelic_autosomal, monoallelic_autosomal, monoallelic_PAR, 
                                   biallelic_PAR, mitochondrial, monoallelix_X_hem, monallelic_X_het, monoallelic_Y_hem.   

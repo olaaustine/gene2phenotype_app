@@ -23,10 +23,6 @@
       <th>Limited</th>
       <td>Little human evidence exists to support a casual role for this gene in this disease, but not all evidence has been refuted. For example, there may be a collection of rare missense variants in humans but without convincing functional impact, segegration data that could either arise by chance (e.g across one or two meioses) or does not implicate a single gene, or functional data without direct recapitulation of the phenotype. Overall, the body of evidence does not meet contemporary criteria for claiming a valid association with disease. The majority are probably false associations. <b>(previously labelled as possible).</b></td>
     </tr>
-    <tr>
-      <th>Both RD and IF</th>
-      <td>Plausible disease-causing mutations within, affecting or encompassing the coding region of a single gene identified in multiple (&gt;3) unrelated cases/families with both the relevant disease (RD) and an incidental disorder.</td>
-    </tr>
   </table>
   
   <h4>Confidence value flag</h4>
