@@ -98,18 +98,14 @@ sub show_add_new_entry_form {
     my $confidence_values = $gfd_model->get_confidence_values;
     $self->stash(confidence_values => $confidence_values);
     
-    
     my $allelic_requirements = $gfd_model->get_allelic_requirements;
     $self->stash(allelic_requirements => $allelic_requirements);
   
-   
     my $mutation_consequences =  $gfd_model->get_mutation_consequences;
     $self->stash(mutation_consequences => $mutation_consequences);
-
-    my $variant_consequence = $gfd_model->get_variant_consequence;
-    $self->stash(variant_consequence => $variant_consequence);
  
-
+    my $variant_consequences = $gfd_model->get_variant_consequence;
+    $self->stash(variant_consequences => $variant_consequences);
   }
 
   $self->render(template => 'add_new_entry');
@@ -160,7 +156,7 @@ sub edit_allelic_mutation_form {
                Template : allelic.html.ep
   Status     : Stable
 =cut
-sub update_allelic_requirement_temp{
+sub update_allelic_requirement_temp {
   my $self = shift;
   my $email = $self->session('email');
   my $dbID =  $self->param('GFD_id');
