@@ -8,7 +8,7 @@ consequence. The header fields are:
   - gene mim:                     OMIM number for a gene entry
   - disease name:                 Name provided by the curator
   - disease mim:                  OMIM number for a disease entry
-  - confidence category:          One value from the list of possible categories: definitive, strong, moderate, limited.
+  - confidence category:          One of definitive, strong, moderate, limited.
   - allelic requirement:          One value from the list of possible allelic requirement attributes. Possible values are:   
                                   biallelic_autosomal, monoallelic_autosomal, monoallelic_PAR, 
                                   biallelic_PAR, mitochondrial, monoallelix_X_hem, monallelic_X_het, monoallelic_Y_hem.   
@@ -26,16 +26,16 @@ consequence. The header fields are:
   - mutation consequences flag    One value from the list of possible flags : 
                                   likely to escape nonsense mediated decay, part of contiguous gene duplication, part of contiguous genomic interval deletion,
                                   restricted repertoire of mutations, activating, dominant negative.  
-  - confidence value flag         The flag "Requires clinical review" associated with confidence category limited
+  - confidence value flag         The flag "Requires clinical review" is associated with entries rated  limited confidence - these should be reviewed with care.
   - comments                      Public comments made by our curator 
-  - variant consequence           semi-colon separated list of possible variant consequence attributes :
+  - variant consequence           semi-colon separated list of observed variant consequences attributes :
                                   splice_region_variant, splice_acceptor_variant, splice_donor_variant, start_lost, frameshift_variant,stop_gained, stop_lost, missense_variant, 
                                   inframe_deletion, 5_prime_UTR_variant, 3_prime_UTR_variant,synonymous_variant, intron_variant, regulatory_region_variant, intergenic_variant, 
                                   inframe_insertion, NMD_triggering,
                                   NMD_escaping, stop_gained_NMD_triggering, stop_gained_NMD_escaping,splice_donor_variant_NMD_triggering, 
                                   frameshift_variant_NMD_triggering,splice_acceptor_variant_NMD_escaping, splice_acceptor_variant_NMD_triggering, splice_donor_variant_NMD_escaping, 
                                   frameshift_variant_NMD_escaping, loss_of_function_variant, gain_of_function_variant
-  - disease ontology              Disease ontology accession               
+  - disease ontology              MONDO accession               
   
 
 
