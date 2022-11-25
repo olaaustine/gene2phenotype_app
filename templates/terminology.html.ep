@@ -173,6 +173,14 @@
       <th>restricted repertoire of mutations</th>
       <td>restricted mutation set.</td>
     </tr>
+    <tr>
+      <th>activating</th>
+      <td>Mutation usually missense that results in a constituative functional activation of the gene product.</td>
+    </tr>
+    <tr>
+      <th>dominant negative</th>
+      <td>Mutation within one allele of a gene that creates a significantly greater deleterious effect on gene product function than a monoallelic loss of function mutation.</td>
+    </tr>
   </table>
 
   <h4>Variant consequence</h4>
@@ -205,6 +213,8 @@
     <li>splice_acceptor_variant_NMD_triggering</li>
     <li>splice_donor_variant_NMD_escaping</li>
     <li>frameshift_variant_NMD_escaping</li>
+    <li>gain_of_function_variant</li>
+    <li>loss_of_function_variant</li>
   </ul>
 </div>
 %= include 'footer'

@@ -214,6 +214,8 @@
       <li>part of contiguous gene duplication</li>
       <li>part of contiguous genomic interval deletion</li>
       <li>restricted repertoire of mutations</li>
+      <li>activating</li>
+      <li>dominant negative</li>
     </ul>
   </div>
 
@@ -234,7 +236,8 @@
     <tr>
       <td>activating</td>
       <td class="info">altered gene product structure</td>
-      <td>Code with flag <span class="label label-info">restricted repertoire of mutations</span></td>
+      <td>Code with flag <span class="label label-info">restricted repertoire of mutations</span>
+      <p>Now a mutation consequence flag</p></td>
     </tr>
     <tr>
       <td>all missense/in frame</td>
@@ -249,7 +252,8 @@
     <tr>
       <td>dominant negative</td>
       <td class="info">altered gene product structure</td>
-      <td>Code with flag <span class="label label-info">restricted repertoire of mutations</span></td>
+      <td>Code with flag <span class="label label-info">restricted repertoire of mutations</span>
+      <p>Now a mutation consequence flag</p></td>
     </tr>
     <tr>
       <td>gain of function</td>
@@ -321,6 +325,8 @@
       <li>splice_acceptor_variant_NMD_triggering</li>
       <li>splice_donor_variant_NMD_escaping</li>
       <li>frameshift_variant_NMD_escaping</li>
+      <li>gain_of_function_variant</li>
+      <li>loss_of_function_variant</li>
     </ul>
   </div>
   
