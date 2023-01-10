@@ -75,8 +75,10 @@ sub add {
   my $confidence_attrib_id           = $self->param('confidence_attrib_id');
   my $allelic_requirement_attrib_ids = join(',', sort @{$self->every_param('allelic_requirement_attrib_id')});
   my $mutation_consequence_attrib_ids = join(',', sort @{$self->every_param('mutation_consequence_attrib_id')});
+  my $mutation_consequence_flag_attrib_ids = join(',', sort @{$self->every_param('mutation_consequence_flag_attrib_id')});
+  my $cross_cutting_modifier_attrib_ids = join(',', sort @{$self->every_param('cross_cutting_modifier_attrib_id')});
   my $variant_consequence_attrib_ids = join(',', sort @{$self->every_param('variant_consequence_attrib_id')});
-
+  
   my $email = $self->session('email');
   my $gfd_model = $self->model('genomic_feature_disease');  
   my $gfd_panel_model = $self->model('genomic_feature_disease_panel');
@@ -85,11 +87,25 @@ sub add {
   if (defined $self->param('add_existing_entry_to_panel') && $self->param('add_existing_entry_to_panel') == 1) {
     my $gfd_id = $self->param('gfd_id');
     my $variant_consequence_to_be_added;
+    my $cross_cutting_modifier_to_be_added;
+    my $mutation_consequence_flags_to_be_added;
     if ($variant_consequence_attrib_ids eq ''){
       $variant_consequence_to_be_added = '';
-    }else {
+    } else {
       $variant_consequence_to_be_added = $gfd_model->get_value('variant_consequence', $variant_consequence_attrib_ids);
       $gfd_model->update_variant_consequence($gfd_id, $email, $variant_consequence_to_be_added);
+    }
+    if ($cross_cutting_modifier_attrib_ids eq '') {
+      $cross_cutting_modifier_to_be_added = '';
+    } else {
+      $cross_cutting_modifier_to_be_added = $gfd_model->get_value('cross_cutting_modifier', $cross_cutting_modifier_attrib_ids);
+      $gfd_model->update_cross_cutting_modifier($gfd_id, $email, $cross_cutting_modifier_to_be_added);
+    }
+    if ($mutation_consequence_flag_attrib_ids eq '') {
+      $mutation_consequence_flags_to_be_added = '';
+    } else {
+      $mutation_consequence_flags_to_be_added = $gfd_model->get_value('mutation_consequence_flags', $mutation_consequence_flag_attrib_ids);
+      $gfd_model->update_mutation_consequence_flags($gfd_id, $email, $mutation_consequence_flags_to_be_added);
     }
     $self->add_gfd_to_panel($gfd_id);
     return;
@@ -145,9 +161,21 @@ sub add {
       my $mutation_consequence_to_be_added = $gfd_model->get_value('mutation_consequence', $mutation_consequence_attrib_ids);
       my $confidence_value_to_be_added = $gfd_model->get_value('confidence_category', $confidence_attrib_id);
       my $variant_consequence_to_be_added;
-      if ($variant_consequence_attrib_ids eq ''){
-        $variant_consequence_to_be_added = ''
-      }else {
+      my $cross_cutting_modifier_to_be_added;
+      my $mutation_consequence_flags_to_be_added;
+      if ($cross_cutting_modifier_attrib_ids eq '') {
+        $cross_cutting_modifier_to_be_added = '';
+      } else {
+        $cross_cutting_modifier_to_be_added = $gfd_model->get_value('cross_cutting_modifier', $cross_cutting_modifier_attrib_ids);
+      }
+      if ($mutation_consequence_flag_attrib_ids eq '') {
+        $mutation_consequence_flags_to_be_added = '';
+      } else {
+        $mutation_consequence_flags_to_be_added = $gfd_model->get_value('mutation_consequence_flag', $mutation_consequence_flag_attrib_ids);
+      }
+      if ($variant_consequence_attrib_ids eq '') {
+        $variant_consequence_to_be_added = '';
+      } else {
         $variant_consequence_to_be_added = $gfd_model->get_value('variant_consequence', $variant_consequence_attrib_ids);
       }
       my $user = $user_model->fetch_by_email($email);
@@ -157,6 +185,8 @@ sub add {
           new_gfd => {
             mutation_consequence_to_be_added => $mutation_consequence_to_be_added,
             allelic_requirement_to_be_added => $allelic_requirement_to_be_added,
+            cross_cutting_modifier_to_be_added => $cross_cutting_modifier_to_be_added,
+            mutation_consequence_flags_to_be_added => $mutation_consequence_flags_to_be_added,
             variant_consequence_to_be_added => $variant_consequence_to_be_added,
             gene_symbol => $gene_symbol,
             disease_name => $disease_name,
@@ -169,6 +199,10 @@ sub add {
           allelic_requirement_to_be_added => $allelic_requirement_to_be_added,
           variant_consequences => $gfd_model->get_variant_consequence,
           variant_consequence_to_be_added => $variant_consequence_to_be_added,
+          mutation_consequence_flags => $gfd_model->get_mutation_consequence_flags,
+          mutation_consequence_flags_to_be_added => $mutation_consequence_flags_to_be_added,
+          cross_cutting_modifier => $gfd_model->get_cross_cutting_modifiers,
+          cross_cutting_modifier_to_be_added => $cross_cutting_modifier_to_be_added,
           gene_symbol => $gene_symbol,
           disease_name => $disease_name,
           panel => $target_panel,
@@ -204,6 +238,32 @@ sub create_gfd {
     my $mutation_consequence_attrib_ids = join(',', sort @{$self->every_param('mutation_consequence_attrib_id')});
     $mutation_consequence = $gfd_model->get_value('mutation_consequence', $mutation_consequence_attrib_ids);
   }
+  my $cross_cutting_modifier;
+  if ( defined ($self->every_param('cross_cutting_modifier_attrib_id'))) {
+    $cross_cutting_modifier = $self->param('cross_cutting_modifier_to_be_added');
+    if (!defined $cross_cutting_modifier) {
+      my $cross_cutting_modifier_attrib_ids = join(',', sort @{$self->every_param('cross_cutting_modifier_attrib_id')});
+      if ($cross_cutting_modifier_attrib_ids eq ''){
+        $cross_cutting_modifier = '';
+      }
+      else {
+         $cross_cutting_modifier = $gfd_model->get_value('cross_cutting_modifier', $cross_cutting_modifier_attrib_ids);
+      }
+    }
+  }
+  my $mutation_consequence_flags;
+  if ( defined ($self->every_param('mutation_consequence_flag_attrib_id'))) {
+    $mutation_consequence_flags = $self->param('mutation_consequence_flags_to_be_added');
+    if (!defined $mutation_consequence_flags) {
+      my $mutation_consequence_flag_attrib_ids = join(',', sort @{$self->every_param('mutation_consequence_flag_attrib_id')});
+      if ($mutation_consequence_flag_attrib_ids eq ''){
+        $mutation_consequence_flags = '';
+      }
+      else {
+         $mutation_consequence_flags = $gfd_model->get_value('mutation_consequence_flag', $mutation_consequence_flag_attrib_ids);
+      }
+    }
+  }
   my $variant_consequence;
   if ( defined ($self->every_param('variant_consequence_attrib_id'))) {
     $variant_consequence = $self->param('variant_consequence_to_be_added');
@@ -217,12 +277,13 @@ sub create_gfd {
       }
     }
   }
-  
   my $gfd = $gfd_model->add(
     $self->param('gene_symbol'),
     $self->param('disease_name'),
     $allelic_requirement,
     $mutation_consequence,
+    $cross_cutting_modifier,
+    $mutation_consequence_flags,
     $variant_consequence,
     $email
   );
@@ -262,6 +323,32 @@ sub add_gfd_to_panel {
   $self->feedback_message('ADDED_GFD_SUC');
 
   $self->redirect_to("/gene2phenotype/gfd?GFD_id=$gfd_id");
+}
+
+
+sub show_add_entry_panel_form {
+  my $self = shift;
+  my $email = $self->session('email');
+  my $dbID =  $self->param('GFD_id');
+  my $gfd;
+  my $authorised_panels = $self->stash('authorised_panels');
+  my $logged_in = 0;
+  
+  my $gfd_model = $self->model('genomic_feature_disease');
+  my $disease_model = $self->model('disease');
+  if ($self->session('logged_in')) {
+    my $user_panels = $self->stash('user_panels');
+    $logged_in = 1;
+    $gfd = $gfd_model->fetch_by_dbID($dbID, $logged_in, $authorised_panels, $user_panels);
+  }
+  
+  $self->stash(gfd => $gfd);
+
+  my $confidence_values = $gfd_model->get_confidence_values;
+  $self->stash(confidence_values => $confidence_values);
+
+  $self->render(template => 'add_topanel');
+
 }
 
 =head2 _get_exisiting_gfds

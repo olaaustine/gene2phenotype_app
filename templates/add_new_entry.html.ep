@@ -45,7 +45,7 @@
       </div>
     </div>
 
-     <div class="form-group">
+    <div class="form-group">
       <label class="col-sm-2 control-label">Mutation consequence</label>
       <div class="col-sm-10">
         <% foreach my $mc ( @{$mutation_consequences} ) { %>
@@ -63,6 +63,37 @@
         <% } %>
       </div>
     </div>  
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Cross cutting modifier (optional)</label>
+      <div class="col-sm-10">
+        <% foreach my $CCM (@{$cross_cutting_modifiers}) { %>
+          <% if (my $cross_cutting_modifier = stash 'cross_cutting_modifier') { %>
+            %= check_box cross_cutting_modifier_attrib_id => $CCM->{CCM_attrib_id},  selected => "selected"
+          <% } else { %>
+            %= check_box cross_cutting_modifier_attrib_id => $CCM->{CCM_attrib_id}
+          <% } %>
+          <%= $CCM->{CCM_attrib_value} %>
+          %= tag 'br'
+        <% } %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Mutation consequence flags (optional)</label>
+      <div class="col-sm-10">
+        <% foreach my $MCF (@{$mutation_consequences_flags}) { %>
+          <% if (my $mutation_consequence_flag = stash 'mutation_consequence_flag') { %>
+            %= radio_button mutation_consequence_flag_attrib_id => $MCF->{MFC_attrib_id}, selected => "selected"
+          <% } else { %>
+            %= radio_button mutation_consequence_flag_attrib_id => $MCF->{MFC_attrib_id}
+          <% } %>
+          <%= $MCF->{MFC_attrib_value} %>
+          %= tag 'br'
+        <% } %>
+      </div>
+
+    </div>
 
     <div class="form-group">
       <label class="col-sm-2 control-label">Variant consequence (optional)</label>

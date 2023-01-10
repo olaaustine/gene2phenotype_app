@@ -302,7 +302,7 @@ sub fetch_by_panel_GenomicFeature_Disease {
 }
 
 sub add {
-  my ($self, $gene_symbol, $disease_name, $allelic_requirement, $mutation_consequence, $variant_consequence, $email) = @_;
+  my ($self, $gene_symbol, $disease_name, $allelic_requirement, $mutation_consequence, $cross_cutting_modifier, $mutation_consequence_flags, $variant_consequence, $email) = @_;
 
   my $registry = $self->app->defaults('registry');
   my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease');
@@ -313,17 +313,18 @@ sub add {
 
   my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
   my $gfd;
-
-  if ($variant_consequence eq '') {
+  if ($variant_consequence eq '' && $mutation_consequence_flags eq '' && $cross_cutting_modifier eq '') {
     $gfd =  Bio::EnsEMBL::G2P::GenomicFeatureDisease->new(
       -disease_id => $disease->dbID,
       -genomic_feature_id => $genomic_feature->dbID,
       -mutation_consequence => $mutation_consequence,
       -allelic_requirement => $allelic_requirement,
+      -cross_cutting_modifier => undef,
+      -mutation_consequence_flag => undef,
       -variant_consequence => undef,
       -adaptor => $GFD_adaptor,
     );
-  } else {
+  } elsif ($variant_consequence ne '' && $mutation_consequence_flags eq '' && $cross_cutting_modifier eq '') {
     $gfd =  Bio::EnsEMBL::G2P::GenomicFeatureDisease->new(
       -disease_id => $disease->dbID,
       -genomic_feature_id => $genomic_feature->dbID,
@@ -332,8 +333,67 @@ sub add {
       -variant_consequence =>  $variant_consequence,
       -adaptor => $GFD_adaptor,
     );
+  } elsif ($cross_cutting_modifier ne '' && $variant_consequence eq '' && $mutation_consequence_flags eq '') {
+    $gfd =  Bio::EnsEMBL::G2P::GenomicFeatureDisease->new(
+      -disease_id => $disease->dbID,
+      -genomic_feature_id => $genomic_feature->dbID,
+      -mutation_consequence => $mutation_consequence,
+      -allelic_requirement => $allelic_requirement,
+      -cross_cutting_modifier => $cross_cutting_modifier,
+      -adaptor => $GFD_adaptor,
+    );
+  } elsif ($mutation_consequence_flags ne '' && $cross_cutting_modifier eq '' && $variant_consequence eq '' ){
+    $gfd =  Bio::EnsEMBL::G2P::GenomicFeatureDisease->new(
+      -disease_id => $disease->dbID,
+      -genomic_feature_id => $genomic_feature->dbID,
+      -mutation_consequence => $mutation_consequence,
+      -allelic_requirement => $allelic_requirement,
+      -mutation_consequence_flag => $mutation_consequence_flags,
+      -adaptor => $GFD_adaptor,
+    );
+  } elsif ($mutation_consequence_flags ne '' && $cross_cutting_modifier ne '' && $variant_consequence eq '') {
+    $gfd =  Bio::EnsEMBL::G2P::GenomicFeatureDisease->new(
+      -disease_id => $disease->dbID,
+      -genomic_feature_id => $genomic_feature->dbID,
+      -mutation_consequence => $mutation_consequence,
+      -allelic_requirement => $allelic_requirement,
+      -mutation_consequence_flag => $mutation_consequence_flags,
+      -cross_cutting_modifier => $cross_cutting_modifier,
+      -adaptor => $GFD_adaptor,
+    );
+  } elsif ($mutation_consequence_flags ne '' && $variant_consequence ne '' && $cross_cutting_modifier eq '') {
+    $gfd =  Bio::EnsEMBL::G2P::GenomicFeatureDisease->new(
+      -disease_id => $disease->dbID,
+      -genomic_feature_id => $genomic_feature->dbID,
+      -mutation_consequence => $mutation_consequence,
+      -allelic_requirement => $allelic_requirement,
+      -mutation_consequence_flag => $mutation_consequence_flags,
+      -variant_consequence => $variant_consequence,
+      -adaptor => $GFD_adaptor,
+    );
+  } elsif ($cross_cutting_modifier ne '' && $variant_consequence ne '' && $mutation_consequence_flags eq '') {
+    $gfd =  Bio::EnsEMBL::G2P::GenomicFeatureDisease->new(
+      -disease_id => $disease->dbID,
+      -genomic_feature_id => $genomic_feature->dbID,
+      -mutation_consequence => $mutation_consequence,
+      -allelic_requirement => $allelic_requirement,
+      -cross_cutting_modifier => $cross_cutting_modifier,
+      -variant_consequence =>  $variant_consequence,
+      -adaptor => $GFD_adaptor,
+    );
+  } else {
+    $gfd =  Bio::EnsEMBL::G2P::GenomicFeatureDisease->new(
+      -disease_id => $disease->dbID,
+      -genomic_feature_id => $genomic_feature->dbID,
+      -mutation_consequence => $mutation_consequence,
+      -allelic_requirement => $allelic_requirement,
+      -mutation_consequence_flag => $mutation_consequence_flags,
+      -cross_cutting_modifier => $cross_cutting_modifier,
+      -variant_consequence =>  $variant_consequence,
+      -adaptor => $GFD_adaptor,
+    );
   }
- 
+  
   my $user = $user_adaptor->fetch_by_email($email);
   $gfd = $GFD_adaptor->store($gfd, $user);
   return $gfd;

@@ -100,10 +100,16 @@ sub show_add_new_entry_form {
     
     my $allelic_requirements = $gfd_model->get_allelic_requirements;
     $self->stash(allelic_requirements => $allelic_requirements);
-  
+    
+    my $cross_cutting_modifiers = $gfd_model->get_cross_cutting_modifiers;
+    $self->stash(cross_cutting_modifiers => $cross_cutting_modifiers);
+    
     my $mutation_consequences =  $gfd_model->get_mutation_consequences;
     $self->stash(mutation_consequences => $mutation_consequences);
- 
+
+    my $mutation_consequences_flags = $gfd_model->get_mutation_consequence_flags;
+    $self->stash(mutation_consequences_flags => $mutation_consequences_flags);
+    
     my $variant_consequences = $gfd_model->get_variant_consequence;
     $self->stash(variant_consequences => $variant_consequences);
   }
