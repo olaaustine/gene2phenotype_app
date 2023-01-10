@@ -12,7 +12,7 @@ consequence. The header fields are:
   - allelic requirement:          One value from the list of possible allelic requirement attributes. Possible values are:   
                                   biallelic_autosomal, monoallelic_autosomal, monoallelic_PAR, 
                                   biallelic_PAR, mitochondrial, monoallelix_X_hem, monallelic_X_het, monoallelic_Y_hem.   
-  - mutation consequence:         One value from the list of possible consequences: 5_prime or 3_prime UTR mutation, 
+  - mutation consequence:         semi-colon separated list of possible consequences: 5_prime or 3_prime UTR mutation, 
                                   cis-regulatory or promotor mutation, absent gene product, altered gene product structure, increased gene product level, uncertain.
   - phenotypes:                   semicolon-separated list of HPO (http://www.human-phenotype-ontology.org/) IDs
   - organ specificity list:       semicolon-separated list of organs
