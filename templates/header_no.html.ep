@@ -1,0 +1,51 @@
+<div>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <ul class="nav navbar-nav">
+          <li>
+            %= link_to Gene2Phenotype  => '/gene2phenotype' => (class => 'navbar-brand')
+          </li>
+          <li>
+            %= link_to About => '/gene2phenotype/about' => (class => 'navbar-brand')
+          </li>
+          <li>
+            %= link_to 'G2P VEP Plugin' => '/gene2phenotype/g2p_vep_plugin' => (class => 'navbar-brand')
+          </li>
+          <li>
+            %= link_to Downloads => '/gene2phenotype/downloads' => (class => 'navbar-brand')
+          </li>
+          <li>
+            %= link_to 'Create your own panel' => '/gene2phenotype/create_panel' => (class => 'navbar-brand')
+          </li>
+          <li>
+            %= link_to 'Terminology' => '/gene2phenotype/terminology' => (class => 'navbar-brand')
+          </li>
+          <li>
+            <% if ($logged_in) { %>
+              <li>
+                %= link_to 'Enter a new gene-disease pair' => '/gene2phenotype/documentation/enter_new_gene_disease_pair' => (class => 'navbar-brand')
+              </li>
+            <% } %>
+          </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <% if ($logged_in) { %>
+            <li>
+              %= link_to 'Sign out' => '/gene2phenotype/logout'
+            </li>
+            <li>
+              %= link_to 'Account' => '/gene2phenotype/account'
+            </li>
+          <% } else { %>
+            <li>
+              %= link_to 'Sign in' => '/gene2phenotype/login'
+            </li>
+          <% } %>
+        </ul>
+
+      </div>
+      
+    </nav>
+  
+    %= include 'alerts'
+</div>
