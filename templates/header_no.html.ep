@@ -42,7 +42,9 @@
             </li>
           <% } %>
         </ul>
+
       </div>
+      
     </nav>
   
     %= include 'alerts'
