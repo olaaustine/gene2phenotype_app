@@ -3,6 +3,16 @@
   <h3>Publications</h3>
   %= include 'user/add_publication'  
 
+  <% if (scalar @{$gfd->{publications}} > 0) { %>
+    <p>
+      <label>List of publications that have been assigned to the G2P entry:</label>
+    </p>
+  <% } else { %>
+    <p>
+      <label>No publications have been assigned to the G2P entry yet.</label>
+    </p>
+  <% } %>
+
   <% foreach my $publication (@{$gfd->{publications}}) { %>
     <div class="publication">
       <% if ($publication->{pmid}) { %>

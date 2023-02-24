@@ -18,6 +18,16 @@
     %end
   </div> <!--End show edit content-->
 
+  <% if (scalar @{$gfd->{comments}} > 0) { %>
+    <p>
+      <label>List of comments that have been assigned to the G2P entry:</label>
+    </p>
+  <% } else { %>
+    <p>
+      <label>No comments have been assigned to the G2P entry yet.</label>
+    </p>
+  <% } %>
+
   <% foreach my $comment (@{$gfd->{comments}}) { %>
     <div class="comment">
       <div class="align_left"><p><%= $comment->{comment_text} %> (<%= $comment->{user} %> <%= $comment->{date} %>)</p></div>
