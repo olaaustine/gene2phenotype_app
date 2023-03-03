@@ -11,16 +11,21 @@
     </p>
   <% } %>
   
-  <% foreach my $publication (@{$gfd->{publications}}) { %>
-    <div class="publication">
-      <% if ($publication->{pmid}) { %>
-        <p>
-          <% my $url = 'http://europepmc.org/search?query=ext_id:' . $publication->{pmid}; %>
-          <%= link_to $url => (target => '_blank') => begin %> <%= $publication->{title} %>  <% end %>
-        </p>
-      <% } else {%>
-        <p><%= $publication->{title} %></p>
-      <% } %>
-    </div> <!--div class publication-->
-  <% } %>
+  <ul>
+    <% foreach my $publication (@{$gfd->{publications}}) { %>
+      <div class="publication">
+        <% if ($publication->{pmid}) { %>
+          <li>
+            <% my $url = 'http://europepmc.org/search?query=ext_id:' . $publication->{pmid}; %>
+            <%= link_to $url => (target => '_blank') => begin %> <%= $publication->{title} %>  <% end %>
+          </li>
+        <% } else {%>
+          <li>
+            <p><%= $publication->{title} %></p>
+          </li>
+        <% } %>
+      </div> <!--div class publication-->
+    <% } %>
+  </ul>
+  
 </div>
