@@ -22,23 +22,18 @@
           </div>
         % } 
       </div>
-
-      <p>
-        <% my $link = "https://www.deciphergenomics.org/gene/" . $gene->{gene_symbol} . "/phenotypes"; %>
-        <%= link_to $link => (target => '_blank') => begin %>Look up phenotypes associated with <%= $gfd->{gene_symbol} %> in DECIPHER <% end %>
-      </p>
     
       <% if (scalar @{$gfd->{phenotypes}} > 0) { %>
         <p>
-          <label>List of phenotypes that have been assigned to the G2P entry:</label>
+          List of phenotypes that have been assigned to the G2P entry:
         </p>
       <% } else { %>
         <p>
-          <label>No phenotypes have been assigned to the G2P entry yet.</label>
+          No phenotypes have been assigned to the G2P entry yet.
         </p>
       <% } %>
-      <% foreach my $phenotype (@{$gfd->{phenotypes}}) { %>
 
+      <% foreach my $phenotype (@{$gfd->{phenotypes}}) { %>
         <div class="phenotype_list">
           <div class="align_left">
             <% my $url = "https://hpo.jax.org/app/browse/term/" . $phenotype->{stable_id}; %>
@@ -93,6 +88,14 @@
           </div>
         </div>
       <% } %>
+      
+      <div style="padding-top: 40px;">
+      <p>
+        <% my $link = "https://www.deciphergenomics.org/gene/" . $gene->{gene_symbol} . "/phenotypes"; %>
+        <%= link_to $link => (target => '_blank') => begin %>Look up phenotypes associated with <%= $gfd->{gene_symbol} %> in DECIPHER <% end %>
+      </p>
+      </div>
+      
     </div>
   </div>
 </div>
