@@ -25,11 +25,11 @@
     
       <% if (scalar @{$gfd->{phenotypes}} > 0) { %>
         <p>
-          <label>List of phenotypes that have been assigned to the G2P entry:</label>
+          List of phenotypes that have been assigned to the G2P entry:
         </p>
       <% } else { %>
         <p>
-          <label>No phenotypes have been assigned to the G2P entry yet.</label>
+          No phenotypes have been assigned to the G2P entry yet.
         </p>
       <% } %>
 

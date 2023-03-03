@@ -3,11 +3,11 @@
   
   <% if (scalar @{$gfd->{publications}} > 0) { %>
     <p>
-      <label>List of publications that have been assigned to the G2P entry:</label>
+      List of publications that have been assigned to the G2P entry:
     </p>
   <% } else { %>
     <p>
-      <label>No publications have been assigned to the G2P entry yet.</label>
+      No publications have been assigned to the G2P entry yet.
     </p>
   <% } %>
   

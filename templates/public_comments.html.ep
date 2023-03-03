@@ -9,11 +9,11 @@
     <% } %>
     % if ($count > 0) {
       <p>
-        <label>List of comments that have been assigned to the G2P entry:</label>
+        List of comments that have been assigned to the G2P entry:
       </p>
     % } else {
       <p>
-        <label>No comments have been assigned to the G2P entry yet.</label>
+        No comments have been assigned to the G2P entry yet.
       </p>
     % }
   
