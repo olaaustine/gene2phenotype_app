@@ -3,7 +3,11 @@
 <div class="container">
  %= form_for '/gene2phenotype/gfd/mutation_consequence_flag/update' => (class => 'form-horizontal', id => 'mutation consequence flag') => begin
    <div class="form-group">
-      <label class="col-sm-4 control-label">Mutation consequence flag:<p><span class="label label-info"><%= $gfd->{mutation_consequence_flag} %></p></label>
+      <label class="col-sm-4 control-label">Mutation consequence flag:
+       % for (split /,/, $gfd->{mutation_consequence_flag}) {
+        <p><span class="label label-info"><%= $_ %></span></p>
+      % }
+      </label>
       <div class="col-sm-8">
         <% foreach my $MCF (@{$mutation_consequence_flags}) { %>
           <% if (my $mutation_consequence_flag = stash 'mutation_consequence_flag') { %>
