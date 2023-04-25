@@ -50,10 +50,11 @@
 
   <div style="margin: 25px" >
     % if ($gfd->{mutation_consequence_flag}) {
-     % if ($gfd->{mutation_consequence_flag}){
-      <dt style=font-size:15px>Mutation consequences flag</dt> 
-      <dd><p><span class="label label-info" style="font-size:13px"><%= $gfd->{mutation_consequence_flag} %></span></p></dd>
-    % }
+      <dt style=font-size:15px>Mutation consequence flag</dt> 
+      % for (split /,/, $gfd->{mutation_consequence_flag}) {
+        <dd><p><span class="label label-info" style="font-size:13px"><%= $_ %></span></p></dd>
+      % }
+
     %= form_for '/gene2phenotype/gfd/update_mcf' => (class => 'form-horizontal', id => 'update_mutation_consequence_flag') => begin
       %= hidden_field GFD_id => $gfd->{GFD_id}
       <input id="button" type="submit" value="EDIT" class="btn btn-primary btn-sm" style="margin-left: 1em;">
@@ -69,12 +70,10 @@
 
  <div style="margin: 25px" >
   % if ($gfd->{variant_consequence}) {
-   % if ($gfd->{variant_consequence}){
     <dt style=font-size:15px>Variant consequence</dt> 
     % for (split /,/, $gfd->{variant_consequence}) {
       <dd><p><span class="badge" style="font-size:13px"><%= $_ %></span></p></dd>
     % }
-   % }
   %= form_for '/gene2phenotype/gfd/update_vc' => (class => 'form-horizontal', id => 'update_variant_consequence') => begin
     %= hidden_field GFD_id => $gfd->{GFD_id}
     <input id="button" type="submit" value="EDIT" class="btn btn-primary btn-sm" style="margin-left: 1em;">
