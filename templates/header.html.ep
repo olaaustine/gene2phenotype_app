@@ -45,5 +45,4 @@
     </div>
   </nav>
 
-  %= include 'alerts'
 </div>
