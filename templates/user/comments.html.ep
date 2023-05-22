@@ -18,11 +18,7 @@
     %end
   </div> <!--End show edit content-->
 
-  <% if (scalar @{$gfd->{comments}} > 0) { %>
-    <p>
-      List of comments that have been assigned to the G2P entry:
-    </p>
-  <% } else { %>
+  <% if (scalar @{$gfd->{comments}} == 0) { %>
     <p>
       No comments have been assigned to the G2P entry yet.
     </p>
