@@ -1,15 +1,12 @@
 <div>
   <h3>Phenotypes</h3>
 
-  <% if (scalar @{$gfd->{phenotypes}} > 0) { %>
-    <p>
-      List of phenotypes that have been assigned to the G2P entry:
-    </p>
-  <% } else { %>
+  <% if (scalar @{$gfd->{phenotypes}} == 0) { %>
     <p>
       No phenotypes have been assigned to the G2P entry yet.
     </p>
   <% } %>
+
   <ul>
     <% foreach my $phenotype (@{$gfd->{phenotypes}}) { %>
       <li>

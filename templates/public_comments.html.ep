@@ -7,11 +7,7 @@
           % $count += 1;
         % }
     <% } %>
-    % if ($count > 0) {
-      <p>
-        List of comments that have been assigned to the G2P entry:
-      </p>
-    % } else {
+    % if ($count == 0) {
       <p>
         No comments have been assigned to the G2P entry yet.
       </p>

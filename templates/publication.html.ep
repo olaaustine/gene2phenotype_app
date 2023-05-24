@@ -1,11 +1,7 @@
 <div>
   <h3>Publications</h3>
   
-  <% if (scalar @{$gfd->{publications}} > 0) { %>
-    <p>
-      List of publications that have been assigned to the G2P entry:
-    </p>
-  <% } else { %>
+  <% if (scalar @{$gfd->{publications}} == 0) { %>
     <p>
       No publications have been assigned to the G2P entry yet.
     </p>
