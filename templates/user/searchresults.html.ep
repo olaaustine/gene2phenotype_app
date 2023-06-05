@@ -2,7 +2,7 @@
 %= include 'search'
 
 <div class="container">
-  <% if (! defined $search_results || scalar @{$search_results->{gfd_results}} == 0) { %>
+  <% if (! defined $search_result) { %>
     <h3>No search results for <%= $search_term %></h3>
     <p>If you are expecting results please contact <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a>.</p>
     <h3>Search results for <%= $search_term %></h3>
