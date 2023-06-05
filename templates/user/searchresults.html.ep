@@ -7,7 +7,7 @@
     <p>If you are expecting results please contact <a href="mailto:g2p-help@ebi.ac.uk">g2p-help@ebi.ac.uk</a>.</p>
     <h3>Search results for <%= $search_term %></h3>
   <% } elsif  ( scalar @{$search_results->{gfd_results}} == 0) { %>
-    <h3><%= $search_term %> not yet in G2P</h3>
+    <h3>No result for <%= $search_term %>. Information about this <%= $search_term %> not yet in G2P</h3>
     %= form_for '/gene2phenotype/gfd/show_add_new_entry_form' => begin
       <input id="button" type="submit" class="btn btn-primary" value="Add New Gene Disease Entry"/>
     %end
