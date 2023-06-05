@@ -96,6 +96,8 @@ sub results {
   my $search_results;
   if ($search_type eq 'gene_symbol') {
     $search_results = $model->fetch_all_by_gene_symbol($search_term, \@search_panels, $logged_in);
+    use Data::Dumper;
+    print Dumper($search_results);
   } elsif ($search_type eq 'disease_name') {
     $search_results = $model->fetch_all_by_disease_name($search_term, \@search_panels, $logged_in);
   } elsif ($search_type eq 'contains_search_term') {
