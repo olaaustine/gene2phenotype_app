@@ -17,6 +17,10 @@ limitations under the License.
 =cut
 package Gene2phenotype::Model::GenomicFeatureDisease; 
 use Mojo::Base 'MojoX::Model';
+use HTTP::Tiny;
+use JSON;
+
+my $http = HTTP::Tiny->new();
 
 sub fetch_by_dbID {
   my $self = shift;
@@ -706,8 +710,18 @@ sub get_publications {
     my $pmid = $publication->pmid;
     my $title = $publication->title;
     my $source = $publication->source;
-
-    $title ||= 'PMID:' . $pmid;
+    
+    if (!($title)) {
+      my $server = 'https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=ext_id:';
+      my $format = "&format=json";
+      my $request = $server . $pmid . $format;
+      my $response = $http->get($request);
+      warn "Failed!\n" unless $response->{success};
+      my $result = $response->{content};
+      my $decoded_json = decode_json($result);
+      # Access the "title" field
+      $title = $decoded_json->{'resultList'}->{'result'}->[0]->{'title'};
+    }
     $title .= " ($source)" if ($source);
 
     push @publications, {
