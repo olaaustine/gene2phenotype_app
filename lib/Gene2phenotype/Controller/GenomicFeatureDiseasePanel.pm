@@ -110,9 +110,9 @@ sub add {
       $gfd_model->update_mutation_consequence_flags($gfd_id, $email, $mutation_consequence_flags_to_be_added);
     }
     if ($publications eq '') {
-      $publications = '';
+      $publications = undef;
     } else {
-      $gfd_model->add_publications($gfd_id, $publication, $email);
+      $gfd_model->add_publications($gfd_id, $publications, $email);
     }
     $self->add_gfd_to_panel($gfd_id);
     return;
@@ -197,6 +197,7 @@ sub add {
             variant_consequence_to_be_added => $variant_consequence_to_be_added,
             gene_symbol => $gene_symbol,
             disease_name => $disease_name,
+            publications => $publications,
           },
           confidence_value_to_be_added => $confidence_value_to_be_added,
           confidence_values => $gfd_model->get_confidence_values,
@@ -212,6 +213,7 @@ sub add {
           cross_cutting_modifier_to_be_added => $cross_cutting_modifier_to_be_added,
           gene_symbol => $gene_symbol,
           disease_name => $disease_name,
+          publication => $publications,
           panel => $target_panel,
           panels => \@panels
       );
@@ -292,7 +294,7 @@ sub create_gfd {
     $cross_cutting_modifier,
     $mutation_consequence_flags,
     $variant_consequence,
-    $self->param('publication');
+    $self->param('publication'),
     $email
   );
 

@@ -674,28 +674,26 @@ sub add_publications {
   my $GFDPub_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseasePublication');
   my $pub_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'Publication');
 
-  my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
 
-  my $user = $user_adaptor->fetch_by_email($email);
-  my @publication = shift(",", $publications) if defined($publications);
+  my @publications = shift(",", $publications) if defined($publications);
   
   if (defined ($gfd_id) ){
     foreach my $publication (@publications) {
-      my $pub_avail = $publication_adaptor->fetch_by_PMID($publication);
+      my $pub_avail = $pub_adaptor->fetch_by_PMID($publication);
     
       if (!$pub_avail) {
-        $new_pub = Bio::EnsEMBL::G2P::Publication->new(
+        my $new_pub = Bio::EnsEMBL::G2P::Publication->new(
           -pmid => $publication,
         );
-        $publication = $publication_adaptor->store($publication);
+        $publication = $pub_adaptor->store($publication);
       }
 
       my $gfd_publication = $GFDPub_adaptor->fetch_by_GFD_id_publication_id($gfd_id, $publication->dbID);
       if (!$gfd_publication) {
         $gfd_publication = Bio::EnsEMBL::G2P::GenomicFeatureDiseasePublication->new(
           -genomic_feature_disease_id => $gfd_id,
-          -publication_id = $publication->dbID,
-          -adaptor => $GFDComment_adaptor,
+          -publication_id => $publication->dbID,
+          -adaptor => $GFDPub_adaptor,
         );
         $gfd_publication->store($gfd_publication);
      }
