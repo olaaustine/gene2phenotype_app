@@ -112,6 +112,12 @@ sub show_add_new_entry_form {
     
     my $variant_consequences = $gfd_model->get_variant_consequence;
     $self->stash(variant_consequences => $variant_consequences);
+
+    if (defined $self->param('publications')) {
+      $self->stash(publications => $self->param('publications'));
+    } else {
+      $self->stash(publication => undef);
+    }
   }
 
   $self->render(template => 'add_new_entry');

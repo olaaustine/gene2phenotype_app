@@ -78,6 +78,7 @@ sub add {
   my $mutation_consequence_flag_attrib_ids = join(',', sort @{$self->every_param('mutation_consequence_flag_attrib_id')});
   my $cross_cutting_modifier_attrib_ids = join(',', sort @{$self->every_param('cross_cutting_modifier_attrib_id')});
   my $variant_consequence_attrib_ids = join(',', sort @{$self->every_param('variant_consequence_attrib_id')});
+  my $publications = $self->param('publication');
   
   my $email = $self->session('email');
   my $gfd_model = $self->model('genomic_feature_disease');  
@@ -89,6 +90,7 @@ sub add {
     my $variant_consequence_to_be_added;
     my $cross_cutting_modifier_to_be_added;
     my $mutation_consequence_flags_to_be_added;
+    my $publications;
     if ($variant_consequence_attrib_ids eq ''){
       $variant_consequence_to_be_added = '';
     } else {
@@ -106,6 +108,11 @@ sub add {
     } else {
       $mutation_consequence_flags_to_be_added = $gfd_model->get_value('mutation_consequence_flags', $mutation_consequence_flag_attrib_ids);
       $gfd_model->update_mutation_consequence_flags($gfd_id, $email, $mutation_consequence_flags_to_be_added);
+    }
+    if ($publications eq '') {
+      $publications = '';
+    } else {
+      $gfd_model->add_publications($gfd_id, $publication, $email);
     }
     $self->add_gfd_to_panel($gfd_id);
     return;
@@ -285,6 +292,7 @@ sub create_gfd {
     $cross_cutting_modifier,
     $mutation_consequence_flags,
     $variant_consequence,
+    $self->param('publication');
     $email
   );
 

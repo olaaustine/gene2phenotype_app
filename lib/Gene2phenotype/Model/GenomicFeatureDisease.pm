@@ -306,7 +306,7 @@ sub fetch_by_panel_GenomicFeature_Disease {
 }
 
 sub add {
-  my ($self, $gene_symbol, $disease_name, $allelic_requirement, $mutation_consequence, $cross_cutting_modifier, $mutation_consequence_flags, $variant_consequence, $email) = @_;
+  my ($self, $gene_symbol, $disease_name, $allelic_requirement, $mutation_consequence, $cross_cutting_modifier, $mutation_consequence_flags, $variant_consequence, $publication, $email) = @_;
 
   my $registry = $self->app->defaults('registry');
   my $GFD_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease');
@@ -325,6 +325,7 @@ sub add {
       -mutation_consequence_flag => $mutation_consequence_flags,
       -cross_cutting_modifier => $cross_cutting_modifier,
       -variant_consequence =>  $variant_consequence,
+      -publication => $self->add_publications($publication),
       -adaptor => $GFD_adaptor,
   );
   my $user = $user_adaptor->fetch_by_email($email);
@@ -662,6 +663,46 @@ sub get_publications {
     };
   }
   return \@publications;
+}
+
+sub add_publications {
+  my $self = shift; 
+  my $gfd_id = shift;
+  my $publications = shift;
+  
+  my $registry = $self->app->defaults('registry');
+  my $GFDPub_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseasePublication');
+  my $pub_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'Publication');
+
+  my $user_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'user');
+
+  my $user = $user_adaptor->fetch_by_email($email);
+  my @publication = shift(",", $publications) if defined($publications);
+  
+  if (defined ($gfd_id) ){
+    foreach my $publication (@publications) {
+      my $pub_avail = $publication_adaptor->fetch_by_PMID($publication);
+    
+      if (!$pub_avail) {
+        $new_pub = Bio::EnsEMBL::G2P::Publication->new(
+          -pmid => $publication,
+        );
+        $publication = $publication_adaptor->store($publication);
+      }
+
+      my $gfd_publication = $GFDPub_adaptor->fetch_by_GFD_id_publication_id($gfd_id, $publication->dbID);
+      if (!$gfd_publication) {
+        $gfd_publication = Bio::EnsEMBL::G2P::GenomicFeatureDiseasePublication->new(
+          -genomic_feature_disease_id => $gfd_id,
+          -publication_id = $publication->dbID,
+          -adaptor => $GFDComment_adaptor,
+        );
+        $gfd_publication->store($gfd_publication);
+     }
+
+    }
+  }
+
 }
 
 sub get_comments {
