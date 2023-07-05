@@ -19,18 +19,30 @@ package Gene2phenotype::Controller::GenomicFeatureDiseaseComment;
 use base qw(Gene2phenotype::Controller::BaseController);
 
 sub add {
+
   my $self = shift;
   my $GFD_id = $self->param('GFD_id'); 
   my $GFD_comment = $self->param('GFD_comment'); 
+  my $GFDC_public = $self->param('submit_public');
+  my $GFDC_private = $self->param('submit_private');
 
-  if ($GFD_comment) {
+  if ($GFD_comment && $GFDC_private) {
     my $email = $self->session('email');
     my $model = $self->model('genomic_feature_disease_comment');
-    $model->add($GFD_id, $GFD_comment, $email);
-    $self->feedback_message('ADDED_COMMENT_SUC');
-  } else {
-    $self->feedback_message('EMPTY_COMMENT');
+    my $is_public = 0;
+    $model->add($GFD_id, $GFD_comment,  $is_public, $email);
+    $self->feedback_message('ADDED_PRIVATE_COMMENT_SUC');
+  } 
+  if ($GFD_comment && $GFDC_public) {
+     my $email = $self->session('email');
+    my $model = $self->model('genomic_feature_disease_comment');
+    my $is_public = 1;
+    $model->add($GFD_id, $GFD_comment,$is_public, $email);
+    $self->feedback_message('ADDED_PUBLIC_COMMENT_SUC');
   }
+
+  $self->feedback_message('EMPTY_COMMENT');
+  
   return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
 
