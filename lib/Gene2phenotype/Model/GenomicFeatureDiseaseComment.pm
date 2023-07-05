@@ -19,10 +19,7 @@ package Gene2phenotype::Model::GenomicFeatureDiseaseComment;
 use Mojo::Base 'MojoX::Model';
 
 sub add {
-  my $self = shift;
-  my $GFD_id = shift;
-  my $comment = shift;
-  my $email = shift;
+  my ($self, $GFD_id, $comment, $is_public, $email) = @_;
 
   my $registry = $self->app->defaults('registry');  
   my $GFDComment_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'GenomicFeatureDiseaseComment');
@@ -33,6 +30,7 @@ sub add {
   my $GFDComment = Bio::EnsEMBL::G2P::GenomicFeatureDiseaseComment->new(
     -comment_text => $comment,
     -genomic_feature_disease_id => $GFD_id,
+    -is_public => $is_public,
     -adaptor => $GFDComment_adaptor,
   );
 
