@@ -3,11 +3,7 @@
     <div class="show_db_content">
       <h3>Organ specificity</h3>
       
-      <% if (scalar @{$gfd->{organs}} > 0) { %>
-        <p>
-          List of organs that have been assigned to the G2P entry:
-        </p>
-      <% } else { %>
+      <% if (scalar @{$gfd->{organs}} == 0) { %>
         <p>
           No organs have been assigned to the G2P entry yet.
         </p>

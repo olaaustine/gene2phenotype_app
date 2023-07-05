@@ -12,17 +12,14 @@
       <div class="form-group comment_text_area"><textarea class="form-control" name="GFD_comment" rows="3"></textarea></div>
       <div class="align_buttons_right">
         %= hidden_field GFD_id => $gfd->{GFD_id}
-        <input id="button" type="submit" value="Add" class="btn btn-primary btn-sm"/>
+        <input id="button" type="submit" name ="submit_public" value="Add public comment" class="btn btn-primary btn-sm"/>
+        <input id="button" type="submit" name ="submit_private" value="Add private comment" class="btn btn-primary btn-sm"/>
         <input type="button" value="Discard" class="btn btn-primary btn-sm discard"/>
       </div>
     %end
   </div> <!--End show edit content-->
 
-  <% if (scalar @{$gfd->{comments}} > 0) { %>
-    <p>
-      List of comments that have been assigned to the G2P entry:
-    </p>
-  <% } else { %>
+  <% if (scalar @{$gfd->{comments}} == 0) { %>
     <p>
       No comments have been assigned to the G2P entry yet.
     </p>

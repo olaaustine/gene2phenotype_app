@@ -18,8 +18,10 @@
         <dd><p><span class="badge"><%= $_ %></p></dd>
       % }
       % if ($gfd->{mutation_consequence_flag}){
-        <dt>Mutation consequences flag</dt> 
-        <dd><p><span class="label label-info"><%= $gfd->{mutation_consequence_flag} %></span></p></dd>
+        <dt>Mutation consequence flag</dt> 
+        % for (split /,/, $gfd->{mutation_consequence_flag}) {
+          <dd><p><span class="label label-info"><%= $_ %></span></p></dd>
+        % }
       % }
      </dl>
 

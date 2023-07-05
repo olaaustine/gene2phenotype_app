@@ -42,6 +42,10 @@
     <li>Michael Gollob</li>
     <li><a href="https://clinicalgenome.org/working-groups/clinical-domain/cardiovascular/">The ClinGen Genome Resource Heritable Cardiovascular Disorders Gene Curation Expert Panel</a></li>
   </ul>
+  <h4>Skeletal Panel</h4>
+  <ul class="list-unstyled">
+  <li><a href="https://www.sydney.edu.au/medicine-health/about/our-people/academic-staff/andreas-zankl.html">Andreas Zankl</a></li>
+  </ul>
 </div>
 <div class="container">
   <h3>Publications</h3>
@@ -51,9 +55,14 @@
         <p class="h5">Thormann A, Halachev M, McLaren W, Moore DJ, Svinti V, Campbell A, Kerr SM, Tischkowitz M, Hunt SE, Dunlop MG, Hurles ME, Wright CF, Firth HV, Cunningham F, FitzPatrick DR (2019).</p>
       </li>
       <li>
-        <p class="h4"><a href="https://doi.org/10.1101/2021.07.23.21261017" target="_blank">EyeG2P: an automated variant filtering approach improves efficiency of diagnostic genomic testing for inherited ophthalmic disorders.</a></p>
-        <p class="h5">Eva Lenassi, Ana Carvalho, Anja Thormann, Tracy Fletcher, Claire Hardcastle, Sarah E Hunt, Panagiotis I Sergouniotis, Michel Michaelides, Andrew R Webster, F Cunningham, Simon Ramsden, David R FitzPatrick, Graeme CM Black, Jamie M Ellingford (2021).</p>
-      </li
+        <p class="h4"><a href="https://jmg.bmj.com/content/early/2023/01/19/jmg-2022-108618" target="_blank">EyeG2P: an automated variant filtering approach improves efficiency of diagnostic genomic testing for inherited ophthalmic disorders.</a></p>
+        <p class="h5">
+          Eva Lenassi, Ana Carvalho, Anja Thormann, Liam Abrahams, Gavin Arno, Tracy Fletcher, Claire Hardcastle, Javier Lopez, Sarah E Hunt, Patrick Short, Panagiotis I Sergouniotis, Michel Michaelides, Andrew Webster, Fiona Cunningham, Simon C Ramsden, Dalia Kasperaviciute, David R Fitzpatrick, Genomics England Research Consortium, Graeme C Black, Jamie M Ellingford (2023).</p>
+      </li>
+      <li>
+        <p class="h4"><a href="https://www.medrxiv.org/content/10.1101/2023.04.03.23287612v1" target="_blank">Beyond gene-disease validity: capturing structured data on inheritance, allelic-requirement, disease-relevant variant classes, and disease mechanism for inherited cardiac conditions.</a></p>
+        <p class="h5">Katherine S Josephs, Angharad M Roberts, Pantazis Theotokis, Roddy Walsh, Philip J Ostrowski, Matthew Edwards, Andrew Fleming, Courtney Thaxton, Jason D Roberts, Melanie Care, Wojciech Zareba, Arnon Adler, Amy C Sturm, Rafik Tadros, Valeria Novelli, Emma Owens, Lucas Bronicki, Olga Jarinova, Bert Callewaert, Stacey Peters, Tom Lumbers, Elizabeth Jordan, Babken Asatryan, Neesha Krishnan, Ray E Hershberger, C. Anwar A. Chahal, Andrew P. Landstrom, Cynthia James, Elizabeth M McNally, Daniel P Judge, Peter van Tintelen, Arthur Wilde, Michael Gollob, Jodie Ingles, James S Ware (2023).</p>
+      </li>
     </ul>
 </div>
 <div class="container">

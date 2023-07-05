@@ -45,11 +45,4 @@
     </div>
   </nav>
 
-  <div class="alert alert-success container" role="alert">
-    <h1>We have updated our terminology</h1>
-    <p>The <a href="https://thegencc.org/about.html">GenCC</a> develops consistent terminology for describing gene-disease validity. As part of the GenCC we aligned our existing terms to the new terminology.</p>
-    <p>Please find out more about the update <%= link_to '/gene2phenotype/updates_to_our_terms' => begin %>here<% end %>.</p>
-  </div>
-
-  %= include 'alerts'
 </div>

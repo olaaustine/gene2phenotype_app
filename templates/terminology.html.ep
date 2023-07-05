@@ -107,6 +107,10 @@
       <th>potential IF</th>
       <td>Plausible disease-causing mutations within, affecting or encompassing the coding region of a single gene identified in multiple (&gt;3) unrelated cases/families with both the relevant disease (RD) and an incidental disorder.</td>
     </tr>
+    <tr>
+      <th>incomplete penetrance</th>
+      <td>Plausible disease-causing mutations from an apparently unaffected parent on several occasions.</td>
+    </tr>
   </table>
   <h4>Mutation consequence</h4>
   <table class="table">
