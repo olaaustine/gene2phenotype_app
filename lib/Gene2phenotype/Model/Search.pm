@@ -44,6 +44,10 @@ sub identify_search_type {
   if ($disease_adaptor->fetch_by_name($search_term)) {
     return 'disease_name';
   }
+  my $phenotype_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'phenotype');
+  if($phenotype_adaptor->fetch_by_name($search_term)) {
+    return 'phenotype_name';
+  }
   my $diseases = $disease_adaptor->fetch_all_by_substring($search_term);
   my $genomic_features = $gf_adaptor->fetch_all_by_substring($search_term);
   if (@$diseases || @$genomic_features) {
@@ -103,10 +107,10 @@ sub fetch_all_by_substring {
 
   my $registry = $self->app->defaults('registry');
   my $disease_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'disease');
+  my $phenotype_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'phenotype');
   my $gfd_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease'); 
   my $gf_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeature'); 
 
-  my @disease_names = ();
   my $diseases = $disease_adaptor->fetch_all_by_substring($search_term);
   my @gfd_results = ();
   foreach my $disease ( sort { $a->name cmp $b->name } @$diseases) {
@@ -114,6 +118,13 @@ sub fetch_all_by_substring {
     push @gfd_results, @{$self->_get_gfd_results($gfds)};
 
   }
+
+  my $phenotypes = $phenotype_adaptor->fetch_all_by_substring($search_term);
+  foreach my $phenotype ( sort { $a->name cmp $b->name } @$phenotypes) {
+    my $gfds = $gfd_adaptor->fetch_all_by_Disease_panels($phenotype, $search_panels, $is_authorised);
+    push @gfd_results, @{$self->_get_gfd_results($gfds)};
+  }
+
   my $genes = $gf_adaptor->fetch_all_by_substring($search_term);
   foreach my $gene ( sort { $a->gene_symbol cmp $b->gene_symbol } @$genes) {
     my $gfds = $gfd_adaptor->fetch_all_by_GenomicFeature_panels($gene, $search_panels, $is_authorised);
@@ -244,6 +255,25 @@ sub fetch_all_by_disease_name {
   return {gfd_results => $gfd_results};
 }
 
+
+sub fetch_all_by_phenotype_name {
+  my $self = shift;
+  my $search_term = shift;
+  my $search_panels = shift;
+  my $is_authorised = shift;
+  my $registry = $self->app->defaults('registry');
+  my $phenotype_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'phenotype');
+  my $gfdp_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturediseasephenotype');
+  my $panel_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'panel');
+
+  my $phenotype = $phenotype_adaptor->fetch_by_name($search_term);
+
+  my $gfdps = $gfdp_adaptor->fetch_all_by_phenotype_id($phenotype->dbID);
+  my $gfdp_results = $self->_get_gfdp_results($gfdps, $panel_adaptor, $search_panels, $is_authorised);
+
+  return {gfd_results => $gfdp_results};
+}
+
 =head2 _get_gfd_results
 
   Arg [1]    : Arrayref of GenomicFeatureDisease $gfds
@@ -298,6 +328,78 @@ sub _get_gfd_results {
       panels => $panels};
   }
   return \@gfd_results;
+}
+
+
+sub _get_gfdp_results {
+  my $self = shift;
+  my $gfds = shift;
+  my $panel_adaptor = shift;
+  my $search_panels = shift;
+  my $is_authorised = shift;
+
+  my @gfd_results = ();
+  my %gfd_list;
+  
+  foreach my $gfdp (@$gfds) {
+    my $gfd = $gfdp->get_GenomicFeatureDisease;
+    my $is_visible = 0;
+    my $gfd_panels = $gfd->panels(); # match the panels and check if it has permissions to access the panel
+    foreach my $panel_name (@{$gfd_panels}) {
+      my $panel = $panel_adaptor->fetch_by_name($panel_name);
+      $is_visible = 1 if($panel && $panel->is_visible());
+    }
+    
+    my $show_panel = 0;
+    my $find_panel = _find_in_arrays($gfd_panels, $search_panels);
+    
+    if( $search_panels && $find_panel && ($is_authorised || (!$is_authorised && $is_visible)) ) {
+      $show_panel = 1;
+    }
+    elsif(!$search_panels && ($is_authorised || (!$is_authorised && $is_visible))) {
+      $show_panel = 1;
+    }
+    
+    my $genomic_feature = $gfd->get_GenomicFeature;
+    my $gene_symbol = $genomic_feature->gene_symbol;
+    my $disease = $gfd->get_Disease;
+    my $disease_name = $disease->name;
+    my $dbID = $gfd->dbID;
+    my $panels = join(',', sort @{$gfd->panels});
+    my $allelic_requirement = $gfd->allelic_requirement || 'not specified';
+    my $mutation_consequence = $gfd->mutation_consequence || 'not specified';
+
+    if( scalar @{$gfd_panels} > 0 && $show_panel && !$gfd_list{$dbID}) {
+      push @gfd_results, {
+        gene_symbol => $gene_symbol,
+        disease_name => $disease_name,
+        genotype => $allelic_requirement,
+        mechanism => $mutation_consequence,
+        search_type => 'gfd',
+        dbID => $dbID,
+        panels => $panels};
+
+        $gfd_list{$dbID} = 1;
+    }
+  }
+  return \@gfd_results;
+}
+
+sub _find_in_arrays {
+  my $gfd_panels = shift;
+  my $search_panels = shift;
+  
+  my $flag = 0;
+  
+  foreach my $search_panel (@{$search_panels}) {
+    foreach my $gfd_panel (@{$gfd_panels}) {
+      if($search_panel eq $gfd_panel) {
+        return 1;
+      }
+    }
+  }
+  
+  return $flag;
 }
 
 1;
