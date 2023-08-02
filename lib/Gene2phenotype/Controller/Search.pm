@@ -98,8 +98,6 @@ sub results {
     $search_results = $model->fetch_all_by_gene_symbol($search_term, \@search_panels, $logged_in);
   } elsif ($search_type eq 'disease_name') {
     $search_results = $model->fetch_all_by_disease_name($search_term, \@search_panels, $logged_in);
-  } elsif ($search_type eq 'phenotype_name') {
-    $search_results = $model->fetch_all_by_phenotype_name($search_term, \@search_panels, $logged_in);
   } elsif ($search_type eq 'contains_search_term') {
     $search_results = $model->fetch_all_by_substring($search_term, \@search_panels, $logged_in); 
   } else {
