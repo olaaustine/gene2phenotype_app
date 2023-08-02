@@ -245,7 +245,7 @@ sub fetch_all_by_disease_name {
   my $gfd_results = $self->_get_gfd_results($gfds);
 
   # Search by phenotypes
-  my $phenotype = $phenotype_adaptor->fetch_by_name($search_term);
+  my $phenotype = $phenotype_adaptor->fetch_by_name_substring($search_term);
   my $gfdps = $gfdp_adaptor->fetch_all_by_phenotype_id($phenotype->dbID);
   my $gfdp_results = $self->_get_gfdp_results($gfd_results, $gfdps, $panel_adaptor, $search_panels, $is_authorised);
 
