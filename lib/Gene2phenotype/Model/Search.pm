@@ -44,6 +44,10 @@ sub identify_search_type {
   if ($disease_adaptor->fetch_by_name($search_term)) {
     return 'disease_name';
   }
+  my $phenotype_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'phenotype');
+  if ($phenotype_adaptor->fetch_by_name($search_term)) {
+    return 'phenotype_name';
+  }
   my $diseases = $disease_adaptor->fetch_all_by_substring($search_term);
   my $genomic_features = $gf_adaptor->fetch_all_by_substring($search_term);
   if (@$diseases || @$genomic_features) {
@@ -246,8 +250,12 @@ sub fetch_all_by_disease_name {
 
   # Search by phenotypes
   my $phenotype = $phenotype_adaptor->fetch_by_name_substring($search_term);
-  my $gfdps = $gfdp_adaptor->fetch_all_by_phenotype_id($phenotype->dbID);
-  my $gfdp_results = $self->_get_gfdp_results($gfd_results, $gfdps, $panel_adaptor, $search_panels, $is_authorised);
+  my @pheno_ids;
+  foreach my $pheno (@{$phenotype}) {
+    push (@pheno_ids, $pheno->phenotype_id);
+  }
+  my $gfdps = $gfdp_adaptor->fetch_all_by_phenotype_ids(\@pheno_ids);
+  my $gfdp_results = $self->_get_gfdp_results($gfdps, $panel_adaptor, $search_panels, $is_authorised, $gfd_results);
 
   # Merge results
   my @final = (@{$gfd_results}, @{$gfdp_results});
@@ -255,6 +263,27 @@ sub fetch_all_by_disease_name {
   return {gfd_results => \@final};
 }
 
+
+sub fetch_all_by_phenotype_name {
+  my $self = shift;
+  my $search_term = shift;
+  my $search_panels = shift;
+  my $is_authorised = shift;
+  my $registry = $self->app->defaults('registry');
+  my $phenotype_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'phenotype');
+  my $gfdp_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturediseasephenotype');
+  my $panel_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'panel');
+
+  my $phenotype = $phenotype_adaptor->fetch_by_name_substring($search_term);
+  my @pheno_ids;
+  foreach my $pheno (@{$phenotype}) {
+    push (@pheno_ids, $pheno->phenotype_id);
+  }
+  my $gfdps = $gfdp_adaptor->fetch_all_by_phenotype_ids(\@pheno_ids);
+  my $gfdp_results = $self->_get_gfdp_results($gfdps, $panel_adaptor, $search_panels, $is_authorised);
+
+  return {gfd_results => $gfdp_results};
+}
 
 =head2 _get_gfd_results
 
@@ -347,11 +376,11 @@ sub _get_gfd_results {
 
 sub _get_gfdp_results {
   my $self = shift;
-  my $disease_results = shift;
   my $gfds = shift;
   my $panel_adaptor = shift;
   my $search_panels = shift;
   my $is_authorised = shift;
+  my $disease_results = shift;
 
   my @gfd_results = ();
   my %gfd_list;
