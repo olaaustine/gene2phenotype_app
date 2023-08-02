@@ -344,8 +344,11 @@ sub _get_gfd_results {
 
 =head2 _get_gfdp_results
 
-  Arg [1]    : Arrayref of hashref where each hasref represents key attributes of a GenomicFeatureDisease
-  Arg [2]    : Arrayref of GenomicFeatureDiseasePhenotype $gfdps
+  Arg [1]    : Arrayref of GenomicFeatureDiseasePhenotype $gfdps
+  Arg [2]    : Panel adaptor
+  Arg [3]    : Arrayref of panels $search_panels for which to return search results
+  Arg [4]    : Boolean $is_authorised - indicates if user is logged in.
+  Arg [5]    : Arrayref of hashref where each hasref represents key attributes of a GenomicFeatureDisease (optional)
   Description: Creates a hasref with key properties of a GenomicFeatureDisease
   Returntype : Arrayref of hashref where each hasref represents key attributes of a GenomicFeatureDisease 
                   [
