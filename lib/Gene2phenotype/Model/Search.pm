@@ -103,7 +103,6 @@ sub fetch_all_by_substring {
 
   my $registry = $self->app->defaults('registry');
   my $disease_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'disease');
-  my $phenotype_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'phenotype');
   my $gfd_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeaturedisease'); 
   my $gf_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'genomicfeature'); 
 
@@ -113,12 +112,6 @@ sub fetch_all_by_substring {
     my $gfds = $gfd_adaptor->fetch_all_by_Disease_panels($disease, $search_panels, $is_authorised);
     push @gfd_results, @{$self->_get_gfd_results($gfds)};
 
-  }
-
-  my $phenotypes = $phenotype_adaptor->fetch_all_by_substring($search_term);
-  foreach my $phenotype ( sort { $a->name cmp $b->name } @$phenotypes) {
-    my $gfds = $gfd_adaptor->fetch_all_by_Disease_panels($phenotype, $search_panels, $is_authorised);
-    push @gfd_results, @{$self->_get_gfd_results($gfds)};
   }
 
   my $genes = $gf_adaptor->fetch_all_by_substring($search_term);
@@ -401,8 +394,6 @@ sub _get_gfdp_results {
     my $panels = join(',', sort @{$gfd->panels});
     my $allelic_requirement = $gfd->allelic_requirement || 'not specified';
     my $mutation_consequence = $gfd->mutation_consequence || 'not specified';
-
-    # print "GFD: $dbID\n";
 
     if( scalar @{$gfd_panels} > 0 && $show_panel && !$gfd_list{$dbID}) {
       push @gfd_results, {
