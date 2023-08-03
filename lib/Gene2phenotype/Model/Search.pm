@@ -249,12 +249,13 @@ sub fetch_all_by_disease_name {
   my $gfd_results = $self->_get_gfd_results($gfds);
 
   # Search by phenotypes
+  my $gfdps;
   my $phenotype = $phenotype_adaptor->fetch_by_name_substring($search_term);
   my @pheno_ids;
   foreach my $pheno (@{$phenotype}) {
     push (@pheno_ids, $pheno->phenotype_id);
   }
-  my $gfdps = $gfdp_adaptor->fetch_all_by_phenotype_ids(\@pheno_ids);
+  $gfdps = $gfdp_adaptor->fetch_all_by_phenotype_ids(\@pheno_ids) if(scalar @pheno_ids > 0);
   my $gfdp_results = $self->_get_gfdp_results($gfdps, $panel_adaptor, $search_panels, $is_authorised, $gfd_results);
 
   # Merge results
