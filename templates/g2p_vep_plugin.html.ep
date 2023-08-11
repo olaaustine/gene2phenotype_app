@@ -92,7 +92,7 @@
       <tr>
         <th scope="row">confidence_levels</th>
         <td style="height:120px;width:1000px">We still support confidence levels of our old terminology. Confidence levels to include: definitive, strong, limited, moderate, confirmed, probable, possible, both RD and IF. Separate multiple values with '&'.<br> https://www.ebi.ac.uk/gene2phenotype/terminology</td>
-        <td>definitive, strong, moderate, confirmed, probable, limited</td>
+        <td>Supported values: definitive, strong, moderate, confirmed, probable, limited. By default the plugin reports: definitive, strong, moderate, confirmed, probable</td>
         <td>Confidence levels are used to determine which genes are used in the filtering process. The G2P confidence levels is reported in the HTML and text output.
             Some G2P entries have the flag "Requires clinical review", this is reported in the HTML and text output to show careful consideration of the results are required
         </td>
