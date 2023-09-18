@@ -74,7 +74,7 @@ sub fetch_by_pmid {
   my $pmid = shift;
   my $registry = $self->app->defaults('registry');
   my $gfdp_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'Publication');
-  my $disease = $gfdp_adaptor->fetch_by_PMID($pmid);
+  $pmid = $gfdp_adaptor->fetch_by_PMID($pmid);
   return $pmid;
 }
 

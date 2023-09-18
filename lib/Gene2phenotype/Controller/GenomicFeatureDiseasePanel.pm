@@ -85,6 +85,7 @@ sub add {
   my $gfd_model = $self->model('genomic_feature_disease');  
   my $gfd_panel_model = $self->model('genomic_feature_disease_panel');
   my $gfd_publication_model = $self->model('genomic_feature_disease_publication');
+
   my $user_model = $self->model('user');
 
   if (defined $self->param('add_existing_entry_to_panel') && $self->param('add_existing_entry_to_panel') == 1) {
@@ -144,11 +145,11 @@ sub add {
     my $gfd = $self->create_gfd();
     my $gfd_id = $gfd->dbID;
     $self->add_gfd_to_panel($gfd_id);
-    #my $pub_source = undef;
-    #my $pub_title = undef;
-    $gfd_publication_model->add_publication($gfd_id, $email, undef, $publication, undef);
+    my $pmid = $gfd_publication_model->fetch_by_pmid($publication);
+    if (!$pmid) {
+      $gfd_publication_model->add_publication($gfd_id, $email, undef, $publication, undef);
+    }
     return;
-  } else {
     # Check if a GFD with same gene symbol, allelic requirement, mutation consequence and disease name exists
     my $existing_gfds = _get_existing_gfds($gfds, $disease->dbID, $target_panel);
     if ($existing_gfds->{same_disease_target_panel}) {
@@ -495,4 +496,24 @@ sub delete {
   return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
 
+
+=head
+
+sub add_publication {
+  my $self = shift;
+  my $gfd_id = shift;
+  my $publication = shift;
+  my $email = shift;
+  
+  my $gfd_publication_model = $self->model('genomic_feature_disease_publication');
+  foreach my $id (split(/,/, $publication)) {
+    my $pmid = $gfd_publication_model->fetch_by_pmid($id);
+    if ($pmid){
+      next;
+    } 
+    $gfd_publication_model->add_publication($gfd_id, $email, undef, $id, undef);
+  }
+
+}
+=cut
 1;
