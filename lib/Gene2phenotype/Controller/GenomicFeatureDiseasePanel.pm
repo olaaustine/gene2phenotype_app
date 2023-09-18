@@ -145,10 +145,7 @@ sub add {
     my $gfd = $self->create_gfd();
     my $gfd_id = $gfd->dbID;
     $self->add_gfd_to_panel($gfd_id);
-    my $pmid = $gfd_publication_model->fetch_by_pmid($publication);
-    if (!$pmid) {
-      $gfd_publication_model->add_publication($gfd_id, $email, undef, $publication, undef);
-    }
+    $gfd_publication_model->add_publication($gfd_id, $email, undef, $publication, undef);
     return;
     # Check if a GFD with same gene symbol, allelic requirement, mutation consequence and disease name exists
     my $existing_gfds = _get_existing_gfds($gfds, $disease->dbID, $target_panel);
