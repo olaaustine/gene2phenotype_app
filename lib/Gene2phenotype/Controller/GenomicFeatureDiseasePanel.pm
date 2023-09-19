@@ -501,6 +501,8 @@ sub add_publication {
   my $email = shift;
   my $publication = shift; 
 
+  $publication = undef if ($publication == '');
+
   my $gfd_publication_model = $self->model('genomic_feature_disease_publication');
   
   if (defined $publication) {

@@ -641,10 +641,10 @@ sub get_publications {
     my $title = $publication->title;
     my $source = $publication->source;
     
-    if (!($title)) {
+    if (!($title) && (defined $pmid)) {
       my $server = 'https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=ext_id:';
       my $format = "&format=json";
-      my $request = $server . $pmid . $format if (defined($pmid));
+      my $request = $server . $pmid . $format ;
       my $response = $http->get($request);
       warn "Failed!\n" unless $response->{success};
       my $result = $response->{content};
@@ -652,7 +652,8 @@ sub get_publications {
       # Access the "title" field
       $title = $decoded_json->{'resultList'}->{'result'}->[0]->{'title'};
     }
-    $title .= " ($source)" if ($source);
+
+    $title .= " ($source)" if (($source) && ($title));
 
     push @publications, {
       comments => \@comments,
