@@ -146,7 +146,7 @@ sub add {
     my $gfd = $self->create_gfd();
     my $gfd_id = $gfd->dbID;
     $self->add_gfd_to_panel($gfd_id);
-    $gfd_publication_model->add_publication($gfd_id, $email, undef, $publication, undef) if (defined $publication);
+    $self->add_publication($gfd_id, $email, $publication);
     $disease_model->add_disease_ontology($mondo, $disease_name) if (defined $mondo) && defined ($disease);
     return; 
   } else {
@@ -496,5 +496,19 @@ sub delete {
   return $self->redirect_to("/gene2phenotype/gfd?GFD_id=$GFD_id");
 }
 
+sub add_publication {
+  my $self = shift; 
+  my $gfd_id = shift;
+  my $email = shift;
+  my $publication = shift; 
 
+  my $gfd_publication_model = $self->model('genomic_feature_disease_publication');
+  
+  if (defined $publication) {
+    foreach my $id (split (/,/, $publication)){
+      $gfd_publication_model->add_publication($gfd_id, $email, undef, $id, undef);
+    }
+  }
+
+}
 1;
