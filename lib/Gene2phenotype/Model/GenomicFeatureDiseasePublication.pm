@@ -32,7 +32,7 @@ sub add_publication {
   if ($pmid) {
     $publication = $publication_adaptor->fetch_by_PMID($pmid); 
   } else {
-    $publication = $publication_adaptor->fetch_by_title($title); 
+    $publication = $publication_adaptor->fetch_by_title($title) if (defined ($title)); 
   }
 
   if (!$publication) {
@@ -43,6 +43,7 @@ sub add_publication {
     );
     $publication = $publication_adaptor->store($publication);
   }
+  
   my $GFDPublication = $GFDPublication_adaptor->fetch_by_GFD_id_publication_id($GFD_id, $publication->dbID);
   if (!$GFDPublication) {
     $GFDPublication = Bio::EnsEMBL::G2P::GenomicFeatureDiseasePublication->new(
