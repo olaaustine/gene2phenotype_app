@@ -85,7 +85,6 @@ sub add {
   my $email = $self->session('email');
   my $gfd_model = $self->model('genomic_feature_disease');  
   my $gfd_panel_model = $self->model('genomic_feature_disease_panel');
-  my $gfd_publication_model = $self->model('genomic_feature_disease_publication');
 
   my $user_model = $self->model('user');
 
