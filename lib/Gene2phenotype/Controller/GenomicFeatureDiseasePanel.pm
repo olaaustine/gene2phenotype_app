@@ -148,7 +148,8 @@ sub add {
     $self->add_gfd_to_panel($gfd_id);
     $gfd_publication_model->add_publication($gfd_id, $email, undef, $publication, undef) if (defined $publication);
     $disease_model->add_disease_ontology($mondo, $disease_name) if (defined $mondo) && defined ($disease);
-    return;
+    return; 
+  } else {
     # Check if a GFD with same gene symbol, allelic requirement, mutation consequence and disease name exists
     my $existing_gfds = _get_existing_gfds($gfds, $disease->dbID, $target_panel);
     if ($existing_gfds->{same_disease_target_panel}) {

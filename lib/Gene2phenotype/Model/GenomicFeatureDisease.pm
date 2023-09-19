@@ -644,7 +644,7 @@ sub get_publications {
     if (!($title)) {
       my $server = 'https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=ext_id:';
       my $format = "&format=json";
-      my $request = $server . $pmid . $format;
+      my $request = $server . $pmid . $format if (defined($pmid));
       my $response = $http->get($request);
       warn "Failed!\n" unless $response->{success};
       my $result = $response->{content};
