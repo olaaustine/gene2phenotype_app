@@ -74,6 +74,35 @@ sub add {
   $disease = $disease_adaptor->store($disease);
 }
 
+sub add_disease_ontology {
+  my $self = shift;
+  my $disease_mondo = shift; 
+  my $disease_name = shift; 
+
+  my $registry = $self->app->defaults('registry');
+  my $ontology_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'OntologyTerm');
+  my $disease_ontology_adaptor = $registry->get_adaptor('human', 'gene2phenotype', 'DiseaseOntology');
+   
+  my $disease = $self->fetch_by_name($disease_name);
+  my $disease_id = $disease->dbID;
+
+  my $ontology = Bio::EnsEMBL::G2P::OntologyTerm->new (
+    -ontology_accession => $disease_mondo,
+    -adaptor => $ontology_adaptor,
+  );
+  $ontology = $ontology_adaptor->store($ontology);
+
+  my $DiseaseOntology = $disease_ontology_adaptor->fetch_by_disease_id_ot_id($disease_id, $ontology->dbID);
+  if (!$DiseaseOntology) {
+    $DiseaseOntology = Bio::EnsEMBL::G2P::DiseaseOntology->new(
+      -disease_id => $disease_id,
+      -ontology_term_id => $ontology->dbID,
+      -adaptor => $disease_ontology_adaptor,
+    );
+    $disease_ontology_adaptor->store($DiseaseOntology);
+  }
+}
+
 sub already_in_db {
   my $self = shift;
   my $disease_id = shift;

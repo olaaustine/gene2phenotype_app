@@ -73,6 +73,7 @@ sub add {
   my $gene_symbol                    = $self->param('gene_symbol');
   my $disease_name                   = $self->param('disease_name');
   my $publication                    = $self->param('publications');
+  my $mondo                          = $self->param('mondo');
   my $confidence_attrib_id           = $self->param('confidence_attrib_id');
   my $allelic_requirement_attrib_ids = join(',', sort @{$self->every_param('allelic_requirement_attrib_id')});
   my $mutation_consequence_attrib_ids = join(',', sort @{$self->every_param('mutation_consequence_attrib_id')});
@@ -145,7 +146,8 @@ sub add {
     my $gfd = $self->create_gfd();
     my $gfd_id = $gfd->dbID;
     $self->add_gfd_to_panel($gfd_id);
-    $gfd_publication_model->add_publication($gfd_id, $email, undef, $publication, undef);
+    $gfd_publication_model->add_publication($gfd_id, $email, undef, $publication, undef) if (defined $publication);
+    $disease_model->add_disease_ontology($mondo, $disease_name) if (defined $mondo) && defined ($disease);
     return;
     # Check if a GFD with same gene symbol, allelic requirement, mutation consequence and disease name exists
     my $existing_gfds = _get_existing_gfds($gfds, $disease->dbID, $target_panel);
@@ -494,23 +496,4 @@ sub delete {
 }
 
 
-=head
-
-sub add_publication {
-  my $self = shift;
-  my $gfd_id = shift;
-  my $publication = shift;
-  my $email = shift;
-  
-  my $gfd_publication_model = $self->model('genomic_feature_disease_publication');
-  foreach my $id (split(/,/, $publication)) {
-    my $pmid = $gfd_publication_model->fetch_by_pmid($id);
-    if ($pmid){
-      next;
-    } 
-    $gfd_publication_model->add_publication($gfd_id, $email, undef, $id, undef);
-  }
-
-}
-=cut
 1;
