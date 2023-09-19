@@ -86,7 +86,7 @@ sub add {
   my $gfd_model = $self->model('genomic_feature_disease');  
   my $gfd_panel_model = $self->model('genomic_feature_disease_panel');
 
-  $mondo = undef if ($mondo == '');
+  $mondo = undef if ($mondo  =~ /^\s*$/);
 
   my $user_model = $self->model('user');
 
@@ -503,7 +503,7 @@ sub add_publication {
   my $email = shift;
   my $publication = shift; 
 
-  $publication = undef if ($publication == '');
+  $publication = undef if ($publication  =~ /^\s*$/);
 
   my $gfd_publication_model = $self->model('genomic_feature_disease_publication');
   
