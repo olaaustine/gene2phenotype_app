@@ -86,6 +86,8 @@ sub add {
   my $gfd_model = $self->model('genomic_feature_disease');  
   my $gfd_panel_model = $self->model('genomic_feature_disease_panel');
 
+  $mondo = undef if ($mondo == '');
+
   my $user_model = $self->model('user');
 
   if (defined $self->param('add_existing_entry_to_panel') && $self->param('add_existing_entry_to_panel') == 1) {
