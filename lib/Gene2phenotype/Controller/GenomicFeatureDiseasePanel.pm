@@ -86,7 +86,7 @@ sub add {
   my $gfd_model = $self->model('genomic_feature_disease');  
   my $gfd_panel_model = $self->model('genomic_feature_disease_panel');
 
-  $mondo = undef if ($mondo =~ /MONDO:\d+$/);
+  $mondo = undef if ($mondo !~ /MONDO:\d+$/);
 
   my $user_model = $self->model('user');
 
