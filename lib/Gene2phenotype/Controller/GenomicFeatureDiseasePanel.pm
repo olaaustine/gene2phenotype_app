@@ -20,6 +20,8 @@ package Gene2phenotype::Controller::GenomicFeatureDiseasePanel;
 use base qw(Gene2phenotype::Controller::BaseController);
 use strict;
 use warnings;
+use LWP::Simple;
+use XML::Simple;
 
 =head2 add
   Description: Add a GenomicFeatureDisease to a panel in the G2P database.
@@ -86,7 +88,7 @@ sub add {
   my $gfd_model = $self->model('genomic_feature_disease');  
   my $gfd_panel_model = $self->model('genomic_feature_disease_panel');
 
-  $mondo = undef if ($mondo !~ /MONDO:\d+$/);
+  $mondo = undef if (defined($mondo) && $mondo !~ /MONDO:\d+$/);
 
   my $user_model = $self->model('user');
 
@@ -508,8 +510,12 @@ sub add_publication {
   my $gfd_publication_model = $self->model('genomic_feature_disease_publication');
   
   if (defined $publication) {
-    foreach my $id (split (/,/, $publication)){
-      $gfd_publication_model->add_publication($gfd_id, $email, undef, $id, undef);
+    foreach my $id (split (/,/, $publication)) {
+      my $url = 'https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=:' . $id;
+      my $content = get($url);  
+      my $xml_content = XMLin($content);
+      my $title = $xml_content->{resultList}->{result}->{title};
+      $gfd_publication_model->add_publication($gfd_id, $email, undef, $id, $title) if defined ($title); 
     }
   }
 
