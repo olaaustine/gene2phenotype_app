@@ -87,14 +87,17 @@ sub add_disease_ontology {
    
   my $disease = $self->fetch_by_name($disease_name);
   my $disease_id = $disease->dbID;
-  
+  my $ontology_term = $ontology_adaptor->fetch_by_accession($disease_mondo);
+
+
   my $http = HTTP::Tiny->new();
   my $url = "https://www.ebi.ac.uk/ols4/api/search?q=" . $disease_mondo . "&ontology=mondo&exact=1";
   my $response = $http->get($url, 
              {headers => { 'Content-type' => 'application/xml' }
   });
   my $result = JSON->new->decode($response->{content});
-  if ($result->{response}->{numFound} == 1) {
+  
+  if (($result->{response}->{numFound} == 1) && (!$ontology_term)) {
     my $ontology = Bio::EnsEMBL::G2P::OntologyTerm->new (
       -ontology_accession => $disease_mondo,
       -adaptor => $ontology_adaptor,
@@ -106,6 +109,16 @@ sub add_disease_ontology {
       $DiseaseOntology = Bio::EnsEMBL::G2P::DiseaseOntology->new(
         -disease_id => $disease_id,
         -ontology_term_id => $ontology->dbID,
+        -adaptor => $disease_ontology_adaptor,
+      );
+      $disease_ontology_adaptor->store($DiseaseOntology);
+    }
+  } elsif (($result->{response}->{numFound} == 1) && (defined ($ontology_term))) {
+    my $DiseaseOntology = $disease_ontology_adaptor->fetch_by_disease_id_ot_id($disease_id, $ontology_term->dbID);
+    if (!$DiseaseOntology) {
+      $DiseaseOntology = Bio::EnsEMBL::G2P::DiseaseOntology->new(
+        -disease_id => $disease_id,
+        -ontology_term_id => $ontology_term->dbID,
         -adaptor => $disease_ontology_adaptor,
       );
       $disease_ontology_adaptor->store($DiseaseOntology);
