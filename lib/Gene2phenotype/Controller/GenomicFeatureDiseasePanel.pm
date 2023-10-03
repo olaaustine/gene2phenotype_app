@@ -505,7 +505,10 @@ sub add_publication {
   my $email = shift;
   my $publication = shift; 
 
-  $publication = undef if ($publication !~ /^\d+$/);
+  $publication = undef if ($publication !~ /\d$/);
+  use Data::Dumper;
+  print Dumper($publication);
+
 
   my $gfd_publication_model = $self->model('genomic_feature_disease_publication');
   
