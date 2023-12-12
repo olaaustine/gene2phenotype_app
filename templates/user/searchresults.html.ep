@@ -32,7 +32,7 @@
             <td><%= $gfd->{gene_symbol} %></td>
             <td><%= $gfd->{genotype} %></td>
             <td><%= $gfd->{mechanism} %></td>
-            <% if (index(lc $gfd->{disease_name}, "related") != -1 || index(lc $gfd->{disease_name}, "associated") != -1 || index(lc $gfd->{disease_name}, lc $gfd->{gene_symbol}) != -1) { %>
+            <% if ((index(lc $gfd->{disease_name}, "related") != -1 || index(lc $gfd->{disease_name}, "associated") != -1) && index(lc $gfd->{disease_name}, lc $gfd->{gene_symbol}) != -1) { %>
             <td><%= $gfd->{disease_name} %></td>
             <% } else { %>
             <td><%= $gfd->{gene_symbol} %> - related <%= $gfd->{disease_name} %></td>
