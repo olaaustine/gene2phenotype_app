@@ -520,7 +520,7 @@ sub add_publication {
       my $xml_content = $parser->parse_string($content);
       my $title = $xml_content->findvalue('//title');
       my $result_hash = $xml_content->findvalue('//result/id');
-      $title = $xml_content->findvalue('//result/id/title'); if (!defined($title)) && (scalar(keys %{$result_hash}) > 1);
+      $title = $xml_content->findvalue('//result/id/title') if (!defined($title)) && (scalar(keys %{$result_hash}) > 1);
       $gfd_publication_model->add_publication($gfd_id, $email, undef, $id, $title) if defined ($title); 
     }
   }
