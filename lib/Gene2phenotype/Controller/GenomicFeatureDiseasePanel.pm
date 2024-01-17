@@ -517,7 +517,7 @@ sub add_publication {
       my $url = 'https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=:' . $id;
       my $content = get($url);  
       my $parser = XML::LibXML->new();
-      my $xml_content = $parser->parse_string($xml_data);
+      my $xml_content = $parser->parse_string($content);
       my $title = $xml_content->findvalue('//title');
       my $result_hash = $xml_content->findvalue('//result/id');
       $title = my $result_id = $xml_content->findvalue('//result/id/title'); if (!defined($title)) && (scalar(keys %{$result_hash}) > 1);
