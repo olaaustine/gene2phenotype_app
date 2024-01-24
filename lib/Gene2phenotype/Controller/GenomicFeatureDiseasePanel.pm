@@ -119,7 +119,7 @@ sub add {
     return;
   } 
  
-  if (defined $self->param('create_new_gfd') && $self->param('create_new_gfd') == 1) {
+  if (defined $self->param('create_new_gfd') && $self->param('create_new_gfd') == 1 ) {
     my $gfd = $self->create_gfd();
     my $gfd_id = $gfd->dbID;
     $self->add_gfd_to_panel($gfd_id);
@@ -309,7 +309,15 @@ sub create_gfd {
     $email
   );
 
-  return $gfd;
+  if (!$self->session('logged_in')) {
+    $self->flash(message => 'You have been signed out', alert_class => 'alert-danger');
+    $self->render(template => 'home');
+  }
+
+  if ($self->session('logged_in')) {
+    return $gfd;
+  }
+  
 }
 
 =head2 add_gfd_to_panel
