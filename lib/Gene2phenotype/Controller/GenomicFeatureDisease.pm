@@ -112,12 +112,12 @@ sub show_add_new_entry_form {
     
     my $variant_consequences = $gfd_model->get_variant_consequence;
     $self->stash(variant_consequences => $variant_consequences);
-
     $self->render(template => 'add_new_entry');
-  
   } else {
+    $self->flash(message => 'You have been signed out', alert_class => 'alert-danger');
     return $self->redirect_to("/gene2phenotype/");
   }
+
 }
 
 =head2 edit_allelic_mutation_form

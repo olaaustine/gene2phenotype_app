@@ -308,11 +308,8 @@ sub create_gfd {
     $variant_consequence,
     $email
   );
-
-
-  return $gfd;
-
   
+  return $gfd;
 }
 
 =head2 add_gfd_to_panel
