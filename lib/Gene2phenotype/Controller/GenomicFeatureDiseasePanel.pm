@@ -309,14 +309,9 @@ sub create_gfd {
     $email
   );
 
-  if (!$self->session('logged_in')) {
-    $self->flash(message => 'You have been signed out', alert_class => 'alert-danger');
-    $self->render(template => 'home');
-  }
 
-  if ($self->session('logged_in')) {
-    return $gfd;
-  }
+  return $gfd;
+
   
 }
 
