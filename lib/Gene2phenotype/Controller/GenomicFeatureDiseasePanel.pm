@@ -308,7 +308,7 @@ sub create_gfd {
     $variant_consequence,
     $email
   );
-
+  
   return $gfd;
 }
 
