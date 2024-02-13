@@ -409,6 +409,8 @@ sub _get_gfdp_results {
 
   foreach my $gfdp (@$gfds) {
     my $gfd = $gfdp->get_GenomicFeatureDisease;
+    next if(!defined $gfd);
+
     my $gfd_id = $gfd->dbID();
     
     # If result was found by disease search then skip it
