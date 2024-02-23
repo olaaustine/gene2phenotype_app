@@ -49,8 +49,10 @@
             <% end %>
           </li>
           <li>
+            <div>
               %= image '/gene2phenotype/images/WELLCOME-logo.png', alt => 'WELLCOME-logo', width => '10%', height => 'auto' 
-            
+              <p>Funded by Wellcome</p>
+            </div>
           </li>
         </ul>
       </div>
