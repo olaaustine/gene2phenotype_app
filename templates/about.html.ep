@@ -3,6 +3,9 @@
   <h3>About</h3>
   <p>G2P is a publicly-accessible online system designed to facilitate the development, validation, curation and distribution of large-scale, evidence-based datasets for use in diagnostic variant filtering. Each G2P entry associates an allelic requirement and a mutational consequence at a defined locus with a disease entity. A confidence level and evidence link are assigned to each entry.</p>
   <h3>Curators</h3>
+  <ul class="list-unstyled">
+    <li><a href="https://www.ebi.ac.uk/people/person/elena-cibrian-uhalte/">Elena Cibrian Uhalte</a></li>
+  </ul>
   <h4>Cancer Panel</h4>
   <ul class="list-unstyled">
     <li><a href="https://www.sanger.ac.uk/people/faculty/honorary-faculty/helen-firth">Helen V Firth</a></li>
