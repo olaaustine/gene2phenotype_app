@@ -1,3 +1,4 @@
+%= include 'survey_services'
 <div>
   <nav class="navbar navbar-default">
     <div class="container-fluid">
